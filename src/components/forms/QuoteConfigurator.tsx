@@ -80,7 +80,7 @@ export const QuoteConfigurator: React.FC = () => {
   }
 
   return (
-    <div className="w-full bg-forest-950 text-cream rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl border border-forest-800 relative overflow-hidden">
+    <div className="card-highlight-green w-full text-cream rounded-3xl p-6 sm:p-10 md:p-12 shadow-2xl relative overflow-hidden">
       {/* Luz ambiental de fondo */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-avocado-600/10 rounded-full blur-3xl pointer-events-none" />
 

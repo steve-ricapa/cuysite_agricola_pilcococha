@@ -8,15 +8,32 @@ export const ProcesoCalidadPage: React.FC = () => {
     <div className="py-12 md:py-16">
       {/* Banner */}
       <section className="max-w-7xl mx-auto px-6 mb-16">
-        <div className="bg-forest-950 text-cream rounded-3xl p-8 sm:p-14 relative overflow-hidden">
-          <div className="max-w-3xl relative z-10">
-            <span className="ebrow text-avocado-400 mb-3 block">Estándares Internacionales</span>
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-black font-serif text-cream leading-tight mb-6">
-              Proceso y Calidad de la Tierra a la Mesa.
-            </h1>
-            <p className="text-cream/80 text-base sm:text-lg leading-relaxed font-light">
-              Desde el cultivo tecnificado en el Valle Sagrado hasta el arribo en los puertos de Europa y América, cada lote de palta Hass de Agrícola Pilcococha pasa por rigurosos controles fitosanitarios y de inocuidad.
-            </p>
+        <div className="bg-forest-950 text-cream rounded-3xl p-8 sm:p-12 lg:p-14 relative overflow-hidden">
+          {/* Resplandor decorativo de fondo */}
+          <div className="absolute -right-20 -bottom-20 w-96 h-96 bg-avocado-600/15 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-0 right-1/4 w-80 h-80 bg-forest-800/40 rounded-full blur-2xl pointer-events-none" />
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            {/* Texto a la izquierda */}
+            <div className="lg:col-span-7 xl:col-span-7">
+              <span className="ebrow text-avocado-400 mb-3 block">Estándares Internacionales</span>
+              <h1 className="text-3xl sm:text-5xl md:text-6xl font-black font-serif text-cream leading-tight mb-6">
+                Proceso y Calidad de la Tierra a la Mesa.
+              </h1>
+              <p className="text-cream/80 text-base sm:text-lg leading-relaxed font-light max-w-2xl">
+                Desde el cultivo tecnificado en el Valle Sagrado hasta el arribo en los puertos de Europa y América, cada lote de palta Hass de Agrícola Pilcococha pasa por rigurosos controles fitosanitarios y de inocuidad.
+              </p>
+            </div>
+
+            {/* Imagen a la derecha: sin card, sin marco, integrada naturalmente */}
+            <div className="lg:col-span-5 xl:col-span-5 flex justify-center lg:justify-end">
+              <img 
+                src="/images/gallery/paltaclaidad.png" 
+                alt="Control de calidad de la tierra a la mesa - Agrícola Pilcococha" 
+                className="w-full max-w-[280px] sm:max-w-[340px] md:max-w-[380px] lg:max-w-[420px] object-contain drop-shadow-2xl select-none pointer-events-none hover:scale-105 transition-transform duration-700 ease-out"
+                loading="eager"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -96,7 +113,7 @@ export const ProcesoCalidadPage: React.FC = () => {
 
       {/* CTA a cotizar */}
       <section className="max-w-5xl mx-auto px-6 text-center">
-        <div className="bg-forest-950 text-cream rounded-3xl p-10 sm:p-14 border border-forest-800">
+        <div className="card-highlight-green text-cream rounded-3xl p-10 sm:p-14">
           <h2 className="text-3xl sm:text-4xl font-black font-serif text-cream mb-4">
             ¿Desea solicitar especificaciones técnicas para su mercado?
           </h2>

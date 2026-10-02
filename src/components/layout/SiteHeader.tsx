@@ -38,22 +38,14 @@ export const SiteHeader: React.FC = () => {
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* LOGO */}
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-forest-950 text-avocado-400 flex items-center justify-center transition-transform group-hover:scale-105 shadow-sm">
-            <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2v20M2 12h20M4.93 4.93l2.83 2.83a8 8 0 1 1-11.31 0z" />
-              <line x1="1" y1="1" x2="23" y2="23" />
-            </svg>
-          </div>
-          <div>
-            <span className="block text-xl font-bold font-serif text-forest-950 tracking-tight leading-none">
-              Agrícola Pilcococha
-            </span>
-            <span className="text-[10px] uppercase tracking-widest text-forest-800 font-semibold">
-              Perú • Palta Hass
-            </span>
-          </div>
+        {/* LOGO PRINCIPAL (SIN CARD, SÓLO LOGO) */}
+        <Link to="/" className="flex items-center group py-0.5">
+          <img 
+            src="/images/fundo/logopilcococha.png" 
+            alt="Agrícola Pilcococha - Palta Hass Peruana de Exportación" 
+            className="h-12 sm:h-14 md:h-16 w-auto object-contain select-none transition-transform duration-300 group-hover:scale-105"
+            loading="eager"
+          />
         </Link>
 
         {/* NAVEGACIÓN DESKTOP */}

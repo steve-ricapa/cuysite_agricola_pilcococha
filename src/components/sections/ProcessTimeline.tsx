@@ -304,7 +304,7 @@ export const ProcessTimeline: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.4 }}
-          className="bg-forest-900/90 rounded-3xl p-6 sm:p-10 border border-forest-800 shadow-2xl overflow-hidden backdrop-blur-md"
+          className="card-highlight-green bg-forest-900/90 rounded-3xl p-6 sm:p-10 border border-forest-800 shadow-2xl overflow-hidden backdrop-blur-md"
         >
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
             {/* Foto de la etapa */}

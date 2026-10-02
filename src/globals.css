@@ -15,17 +15,35 @@
   --color-avocado-400: #9AB55D;
   --color-cream: #F7F4EA;
   --color-sand: #EFEBDD;
-  --color-earth: #A56F46;
+  --color-earth-950: #1D150E;
+  --color-earth-900: #251B13;
+  --color-earth-800: #382A1D;
+  --color-earth-700: #4D3A29;
+  --color-earth-600: #664E37;
+  --color-earth: #382A1D;
+  --color-chocolate: #382A1D;
+  --color-tierra: #382A1D;
   --color-charcoal: #20251F;
   --color-muted: #687168;
 }
 
 @layer base {
-  body {
+  html, body {
     font-family: var(--font-sans);
     background-color: var(--color-cream);
     color: var(--color-charcoal);
     overflow-x: hidden;
+    cursor: url('/images/cursor/palta-cursor.svg') 4 2, auto;
+  }
+
+  /* Cursor interactivo de palta iluminada para botones, enlaces y elementos interactivos */
+  a, button, [role="button"], .cursor-pointer, input[type="submit"], input[type="button"], select, summary {
+    cursor: url('/images/cursor/palta-cursor-pointer.svg') 4 2, pointer !important;
+  }
+
+  /* Mantener el cursor estándar de texto en inputs y textareas para excelente UX */
+  input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="search"], input[type="password"], textarea {
+    cursor: text !important;
   }
 
   h1, h2, h3, .font-serif, .font-display {
@@ -77,4 +95,218 @@
 
 .leaflet-popup-tip {
   background: #ffffff !important;
+}
+
+@keyframes routeFlow {
+  from {
+    stroke-dashoffset: 40;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-route-flow {
+  animation: routeFlow 1.2s linear infinite;
+}
+
+/* Partículas flotantes para formatos de exportación */
+@keyframes floatUpDrift {
+  0% {
+    transform: translateY(20px) translateX(0px) rotate(0deg) scale(0.7);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.95;
+  }
+  80% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translateY(-90px) translateX(15px) rotate(25deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+@keyframes snowFlutter {
+  0% {
+    transform: translateY(-15px) translateX(-8px) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+    transform: translateY(25px) translateX(10px) rotate(45deg) scale(1);
+  }
+  65% {
+    opacity: 0.9;
+    transform: translateY(65px) translateX(-12px) rotate(110deg) scale(1.1);
+  }
+  100% {
+    transform: translateY(115px) translateX(8px) rotate(180deg) scale(0.7);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.08);
+  }
+}
+
+.animate-float-particles {
+  animation: floatUpDrift 4s ease-in-out infinite;
+}
+
+.animate-snow-flutter {
+  animation: snowFlutter 3.8s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 2.5s ease-in-out infinite;
+}
+
+/* Animación de aura celestial / radiante para el logo central */
+@keyframes auraBreathe {
+  0%, 100% {
+    transform: scale(0.95);
+    opacity: 0.55;
+    filter: blur(26px);
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.95;
+    filter: blur(40px);
+  }
+}
+
+@keyframes auraSpinSlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-aura-pulse {
+  animation: auraBreathe 4s ease-in-out infinite;
+}
+
+.animate-aura-spin {
+  animation: auraSpinSlow 22s linear infinite;
+}
+
+/* Pulso concéntrico para marcadores de mapa (centrado 100% geométrico) */
+@keyframes mapRadarPulse {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.9;
+  }
+  70% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+.animate-radar-pulse {
+  animation: mapRadarPulse 2.4s cubic-bezier(0, 0, 0.2, 1) infinite;
+  transform-origin: center center;
+}
+
+/* Animación de borde rotativo continuo para cards interactivas */
+@keyframes borderConicSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-border-spin {
+  animation: borderConicSpin 4.5s linear infinite;
+}
+
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes rotateBorderAngle {
+  0% {
+    --border-angle: 0deg;
+  }
+  100% {
+    --border-angle: 360deg;
+  }
+}
+
+/* Efecto de borde luminoso animado para cards verdes / oscuras */
+.card-highlight-green {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 2px solid transparent !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  background-image: 
+    linear-gradient(#0e2c20, #0e2c20), 
+    conic-gradient(from var(--border-angle, 0deg), #a4e347 0%, #173d2d 25%, #9ab55d 50%, #173d2d 75%, #a4e347 100%) !important;
+  animation: rotateBorderAngle 5s linear infinite;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 16px rgba(164, 227, 71, 0.22) !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
+}
+
+.card-highlight-green:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 22px 50px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(164, 227, 71, 0.45) !important;
+}
+
+/* Efecto de borde luminoso animado para cards blancas / claras */
+.card-highlight-white {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 2px solid transparent !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  background-image: 
+    linear-gradient(#ffffff, #ffffff), 
+    conic-gradient(from var(--border-angle, 0deg), #173d2d 0%, #a4e347 25%, #2f684e 50%, #6e8f3d 75%, #173d2d 100%) !important;
+  animation: rotateBorderAngle 5s linear infinite;
+  box-shadow: 0 8px 25px -5px rgba(14, 44, 32, 0.08), 0 0 14px rgba(110, 143, 61, 0.16) !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
+}
+
+.card-highlight-white:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 20px 45px -10px rgba(14, 44, 32, 0.18), 0 0 28px rgba(110, 143, 61, 0.35) !important;
+}
+
+/* Efecto de borde luminoso animado para cards color arena / sand */
+.card-highlight-sand {
+  position: relative;
+  border-radius: 1.5rem;
+  border: 2px solid transparent !important;
+  background-origin: border-box !important;
+  background-clip: padding-box, border-box !important;
+  background-image: 
+    linear-gradient(#efebdd, #efebdd), 
+    conic-gradient(from var(--border-angle, 0deg), #173d2d 0%, #a4e347 25%, #2f684e 50%, #6e8f3d 75%, #173d2d 100%) !important;
+  animation: rotateBorderAngle 5s linear infinite;
+  box-shadow: 0 8px 25px -5px rgba(14, 44, 32, 0.08), 0 0 14px rgba(110, 143, 61, 0.16) !important;
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
+}
+
+.card-highlight-sand:hover {
+  transform: translateY(-5px) scale(1.015);
+  box-shadow: 0 20px 45px -10px rgba(14, 44, 32, 0.18), 0 0 28px rgba(110, 143, 61, 0.35) !important;
 }

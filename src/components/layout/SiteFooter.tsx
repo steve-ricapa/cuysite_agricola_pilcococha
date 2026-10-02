@@ -6,22 +6,23 @@ export const SiteFooter: React.FC = () => {
   return (
     <footer className="bg-forest-950 text-cream/80 pt-16 pb-12 border-t border-forest-900">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-forest-800/60">
-          {/* Columna 1: Marca */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 xl:gap-8 items-center pb-16 border-b border-forest-800/60">
+          {/* Columna 1: Marca & Identidad */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <svg className="h-8 w-8 text-avocado-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                <path d="M12 2v20M2 12h20M4.93 4.93l2.83 2.83a8 8 0 1 1-11.31 0z" />
-                <line x1="1" y1="1" x2="23" y2="23" />
-              </svg>
-              <span className="text-xl font-bold font-serif text-cream tracking-tight">Agrícola Pilcococha</span>
+            <div>
+              <span className="block text-xl font-bold font-serif text-cream tracking-tight">
+                Agrícola Pilcococha
+              </span>
+              <span className="text-[10px] uppercase tracking-widest text-avocado-400 font-semibold block mt-0.5">
+                Valle Sagrado de los Incas
+              </span>
             </div>
             <p className="text-sm text-cream/70 leading-relaxed">
               Fundo agroexportador peruano especializado en el cultivo sostenible, selección y exportación de Palta Hass de la más alta calidad para los mercados internacionales más exigentes.
             </p>
-            <div className="pt-2 flex items-center gap-2 text-xs text-avocado-400 font-medium">
+            <div className="pt-1 flex items-center gap-2 text-xs text-avocado-400 font-medium">
               <span className="inline-block w-2 h-2 rounded-full bg-avocado-400 animate-pulse"></span>
-              Origen Perú • Calidad de Exportación
+              <span>Origen Perú • Calidad de Exportación</span>
             </div>
           </div>
 
@@ -62,7 +63,57 @@ export const SiteFooter: React.FC = () => {
             </ul>
           </div>
 
-          {/* Columna 3: Calidad y Compromiso */}
+          {/* ================================================================= */}
+          {/* COLUMNA 3 (CENTRO): LOGO PRINCIPAL DESTACADO CON ANIMACIÓN DE AURA */}
+          {/* ================================================================= */}
+          <div className="col-span-1 sm:col-span-2 lg:col-span-1 flex flex-col items-center justify-center text-center order-first lg:order-none py-6 lg:py-0">
+            <div className="relative flex items-center justify-center">
+              
+              {/* Capa 1: Aura Ambiental Giratoria Especular (Verde Esmeralda + Sol Dorado) */}
+              <div 
+                className="absolute -inset-10 sm:-inset-12 rounded-full opacity-70 animate-aura-spin pointer-events-none"
+                style={{
+                  background: 'conic-gradient(from 0deg, rgba(16, 185, 129, 0.35) 0deg, rgba(245, 158, 11, 0.4) 90deg, rgba(164, 227, 71, 0.45) 180deg, rgba(34, 211, 238, 0.3) 270deg, rgba(16, 185, 129, 0.35) 360deg)',
+                  filter: 'blur(36px)',
+                }}
+              />
+
+              {/* Capa 2: Aura Pulsante Respirante (Lime + Oro Solar) */}
+              <div 
+                className="absolute -inset-6 sm:-inset-8 rounded-full opacity-80 animate-aura-pulse pointer-events-none"
+                style={{
+                  background: 'radial-gradient(circle, rgba(164, 227, 71, 0.45) 0%, rgba(245, 158, 11, 0.3) 40%, rgba(16, 185, 129, 0.2) 70%, transparent 100%)',
+                  filter: 'blur(28px)',
+                }}
+              />
+
+              {/* Capa 3: Halo Solar Central Detrás de la Cumbre y el Sol */}
+              <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full bg-amber-400/35 blur-xl animate-pulse pointer-events-none" />
+
+              {/* Logo Principal Grande (Sin Card, Pure Logo) */}
+              <Link to="/" className="relative z-10 group block" title="Agrícola Pilcococha - Volver al Inicio">
+                <img 
+                  src="/images/fundo/logopilcococha.png" 
+                  alt="Agrícola Pilcococha - Palta Hass de Exportación" 
+                  className="h-28 sm:h-32 md:h-36 lg:h-40 w-auto object-contain select-none transition-all duration-500 ease-out group-hover:scale-110 drop-shadow-[0_15px_35px_rgba(0,0,0,0.85)] drop-shadow-[0_0_28px_rgba(164,227,71,0.5)]"
+                  loading="lazy"
+                />
+              </Link>
+            </div>
+
+            {/* Badges / Etiqueta de procedencia */}
+            <div className="mt-4 flex flex-col items-center gap-1 relative z-10">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest-900/90 text-avocado-300 font-mono text-[10px] font-bold uppercase tracking-widest border border-avocado-400/30 shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-avocado-400 animate-pulse" />
+                Valle Sagrado • Cusco
+              </span>
+              <span className="text-[9.5px] text-cream/50 font-mono tracking-wider">
+                Fundo Productor & Empaque
+              </span>
+            </div>
+          </div>
+
+          {/* Columna 4: Estándares y Calidad */}
           <div>
             <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">Estándares y Calidad</h4>
             <ul className="space-y-3 text-sm text-cream/70">
@@ -85,7 +136,7 @@ export const SiteFooter: React.FC = () => {
             </ul>
           </div>
 
-          {/* Columna 4: Contacto */}
+          {/* Columna 5: Contacto */}
           <div>
             <h4 className="text-cream font-semibold text-sm tracking-wider uppercase mb-5">Contacto Comercial</h4>
             <ul className="space-y-3 text-sm text-cream/70">
@@ -110,7 +161,7 @@ export const SiteFooter: React.FC = () => {
             <div className="mt-6">
               <Link
                 to="/contacto"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-forest-800 hover:bg-forest-700 text-cream text-xs font-semibold tracking-wide transition-all border border-forest-700/50"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-forest-800 hover:bg-forest-700 text-cream text-xs font-semibold tracking-wide transition-all border border-forest-700/50 hover:scale-105"
               >
                 Escríbenos directamente <ArrowUpRight className="w-3.5 h-3.5" />
               </Link>
@@ -119,9 +170,16 @@ export const SiteFooter: React.FC = () => {
         </div>
 
         {/* Barra inferior */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-cream/50 gap-4">
+        <div className="pt-8 flex flex-col lg:flex-row items-center justify-between text-xs text-cream/60 gap-4">
           <p>© {new Date().getFullYear()} Agrícola Pilcococha S.A.C. Todos los derechos reservados.</p>
-          <div className="flex gap-6">
+
+          {/* Créditos de autor */}
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-forest-900/90 border border-forest-800 text-cream/80 text-[11px] shadow-xs hover:border-avocado-400/50 transition-colors">
+            <span className="w-1.5 h-1.5 rounded-full bg-avocado-400 animate-pulse" />
+            <span>Desarrollado por <strong className="text-cream font-semibold hover:text-avocado-300 transition-colors">Diego Ramos Gonzales</strong></span>
+          </div>
+
+          <div className="flex gap-6 text-cream/50">
             <span className="hover:text-cream cursor-pointer transition-colors">Términos y Condiciones</span>
             <span className="hover:text-cream cursor-pointer transition-colors">Política de Privacidad</span>
             <span className="hover:text-cream cursor-pointer transition-colors">Responsabilidad Social</span>

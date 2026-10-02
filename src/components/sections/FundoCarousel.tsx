@@ -30,7 +30,7 @@ const SLIDES: SlideItem[] = [
     tag: 'Recepción y Cuidados de Campo',
     title: 'Acopio ágil y protección térmica',
     description: 'Traslado inmediato en canastillas ventiladas hacia sombras y planta de empaque.',
-    location: 'Sector Huayllabamba - Urubamba',
+    location: 'Sector Calca - Pisac',
   },
   {
     image: '/images/hero/hero-real.jpg',
@@ -71,7 +71,7 @@ export const FundoCarousel: React.FC = () => {
       opacity: 1,
       scale: 1,
       transition: {
-        x: { type: 'spring', stiffness: 300, damping: 30 },
+        x: { type: 'spring' as const, stiffness: 300, damping: 30 },
         opacity: { duration: 0.4 },
         scale: { duration: 0.6 },
       },
@@ -81,7 +81,7 @@ export const FundoCarousel: React.FC = () => {
       opacity: 0,
       scale: 0.95,
       transition: {
-        x: { type: 'spring', stiffness: 300, damping: 30 },
+        x: { type: 'spring' as const, stiffness: 300, damping: 30 },
         opacity: { duration: 0.3 },
       },
     }),

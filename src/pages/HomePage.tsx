@@ -1,27 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { motion, MotionConfig } from 'motion/react'
 import { Link } from 'react-router-dom'
 import { 
   ArrowRight, 
-  Download, 
   ShieldCheck, 
   MapPin, 
-  Calendar, 
-  CheckCircle2, 
+  Sparkles,
   Globe2, 
   Truck, 
   Package, 
   Sprout, 
   Scale,
-  Sparkles,
+  CheckCircle2,
+  Calendar,
+  ThermometerSnowflake,
   ExternalLink
 } from 'lucide-react'
-import { MetricCard } from '@/components/sections/MetricCard'
-import { SedesMap } from '@/components/maps/SedesMap'
-import { ProcessTimeline } from '@/components/sections/ProcessTimeline'
-import { FundoCarousel } from '@/components/sections/FundoCarousel'
-import { PaltaCarousel } from '@/components/sections/PaltaCarousel'
-import { QuoteConfigurator } from '@/components/forms/QuoteConfigurator'
+import { AnimatedCounter } from '@/components/ui/AnimatedCounter'
 
 const rotatingWords = ['CALIDAD', 'TRAZABILIDAD', 'ORIGEN', 'CONFIANZA']
 
@@ -40,52 +35,18 @@ const seasonality = [
   { month: 'Dic', active: false, peak: false },
 ]
 
-const calibres = [
-  { calibre: '12', peso: '300 - 370 g', uso: 'Calibre grande gourmet' },
-  { calibre: '14', peso: '258 - 313 g', uso: 'Alta demanda Europa' },
-  { calibre: '16', peso: '227 - 274 g', uso: 'Estándar retail' },
-  { calibre: '18', peso: '203 - 243 g', uso: 'Estándar retail' },
-  { calibre: '20', peso: '184 - 217 g', uso: 'Supermercados EE.UU.' },
-  { calibre: '22', peso: '165 - 196 g', uso: 'Venta por bolsa / malla' },
-  { calibre: '24', peso: '151 - 175 g', uso: 'Foodservice / Granel' },
-  { calibre: '26', peso: '144 - 157 g', uso: 'Formatos compactos' },
-]
-
-const processSteps = [
-  {
-    step: '01',
-    title: 'Cultivo Tecnificado',
-    description: 'Riego por goteo computarizado, monitoreo nutricional de suelo y manejo integrado de plagas bajo normas internacionales.',
-    icon: Sprout,
-  },
-  {
-    step: '02',
-    title: 'Cosecha Manual Selectiva',
-    description: 'Corte a tijera con pedúnculo exacto en punto de materia seca comprobado por lote (21.5% a 24%).',
-    icon: Scale,
-  },
-  {
-    step: '03',
-    title: 'Selección y Desinfección',
-    description: 'Limpieza, desinfección y calibración óptica electrónica para clasificar uniformidad de peso y piel.',
-    icon: ShieldCheck,
-  },
-  {
-    step: '04',
-    title: 'Empaque Controlado',
-    description: 'Cajas de cartón corrugado de exportación de 4kg y 10kg con ventilación óptima para pre-frío.',
-    icon: Package,
-  },
-  {
-    step: '05',
-    title: 'Despacho y Cadena de Frío',
-    description: 'Contenedores refrigerados a 5°C con atmósfera controlada (CA) para preservar frescura hasta puerto destino.',
-    icon: Truck,
-  },
+// Diálogos sincronizados con el video de la palta (video de 10s)
+const paltaDialogues: { start: number; end: number; text: string }[] = [
+  { start: 5.5, end: 6.8, text: '¡Hola!' },
+  { start: 7.2, end: 9.5, text: '¡Bienvenidos a Agrícola Pilcococha!' },
 ]
 
 export const HomePage: React.FC = () => {
   const [wordIndex, setWordIndex] = useState(0)
+  const [dialogueText, setDialogueText] = useState('')
+  const [showDialogue, setShowDialogue] = useState(false)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const rafRef = useRef<number>(0)
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -94,13 +55,33 @@ export const HomePage: React.FC = () => {
     return () => clearInterval(timer)
   }, [])
 
+  // Sincronizar diálogos con requestAnimationFrame
+  useEffect(() => {
+    const syncDialogue = () => {
+      const video = videoRef.current
+      if (video && !video.paused) {
+        const t = video.currentTime
+        const active = paltaDialogues.find(d => t >= d.start && t <= d.end)
+        if (active) {
+          setDialogueText(active.text)
+          setShowDialogue(true)
+        } else {
+          setShowDialogue(false)
+        }
+      }
+      rafRef.current = requestAnimationFrame(syncDialogue)
+    }
+    rafRef.current = requestAnimationFrame(syncDialogue)
+    return () => cancelAnimationFrame(rafRef.current)
+  }, [])
+
   return (
     <MotionConfig reducedMotion="user">
       <div className="overflow-hidden">
         {/* ========================================================================= */}
         {/* 1. HERO PRINCIPAL                                                         */}
         {/* ========================================================================= */}
-        <section className="relative min-h-[92vh] flex items-center bg-forest-950 text-white overflow-hidden">
+        <section className="relative min-h-[90vh] flex items-center bg-forest-950 text-white overflow-hidden">
           {/* Imagen de fondo editorial con overlay */}
           <div className="absolute inset-0 z-0">
             <img 
@@ -109,13 +90,12 @@ export const HomePage: React.FC = () => {
               className="w-full h-full object-cover object-center scale-105 transition-transform duration-1000 ease-out"
               loading="eager"
             />
-            {/* Degradados sofisticados para garantizar legibilidad del texto */}
-            <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/75 to-forest-950/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-forest-950/95 via-forest-950/80 to-forest-950/45" />
             <div className="absolute inset-0 bg-gradient-to-t from-forest-950 via-transparent to-forest-950/30" />
           </div>
 
           <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 w-full">
-            <div className="max-w-3xl">
+            <div className="max-w-3xl lg:max-w-[55%]">
               {/* Eyebrow */}
               <motion.div
                 initial={{ opacity: 0, y: 16 }}
@@ -184,12 +164,53 @@ export const HomePage: React.FC = () => {
                 </Link>
               </motion.div>
 
-              {/* Insignia Origen */}
+              {/* Palta animada versión móvil */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.5 }}
+                className="md:hidden flex flex-col items-center mt-8 -mb-4"
+              >
+                <motion.div
+                  animate={{ 
+                    opacity: showDialogue ? 1 : 0, 
+                    y: showDialogue ? 0 : 8, 
+                    scale: showDialogue ? 1 : 0.9 
+                  }}
+                  transition={{ duration: 0.25, ease: 'easeOut' }}
+                  className="mb-2 z-10"
+                >
+                  <div className="relative bg-white/95 backdrop-blur-md text-forest-950 px-4 py-2 rounded-2xl shadow-xl border border-avocado-400/30">
+                    <p className="text-sm font-bold text-center leading-snug whitespace-nowrap">
+                      {dialogueText}
+                    </p>
+                    <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-white/95 rotate-45 border-r border-b border-avocado-400/30" />
+                  </div>
+                </motion.div>
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+                  className="w-48 sm:w-56"
+                >
+                  <video
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="w-full drop-shadow-[0_10px_30px_rgba(14,44,32,0.4)]"
+                  >
+                    <source src="/videopalta/palta-animada.webm" type="video/webm" />
+                    <source src="/videopalta/gemini_generated_video_8b2dc77d.mp4" type="video/mp4" />
+                  </video>
+                </motion.div>
+              </motion.div>
+
+              {/* Insignias Origen */}
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ duration: 0.6, delay: 0.55 }}
-                className="mt-14 pt-8 border-t border-white/15 flex flex-wrap items-center gap-8 text-xs text-cream/70"
+                className="mt-12 pt-6 border-t border-white/15 flex flex-wrap items-center gap-6 text-xs text-cream/70"
               >
                 <div className="flex items-center gap-2">
                   <MapPin className="w-4 h-4 text-avocado-400" />
@@ -206,164 +227,224 @@ export const HomePage: React.FC = () => {
               </motion.div>
             </div>
           </div>
+
+          {/* Video Palta Animada Desktop */}
+          <motion.div
+            initial={{ opacity: 0, x: 80, scale: 0.85 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            transition={{ duration: 1, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-0 z-20 pointer-events-none
+              hidden md:block
+              w-[40%] md:w-[38%] lg:w-[42%] xl:w-[48%]
+              max-w-[600px] xl:max-w-[700px]"
+            style={{ bottom: '16%' }}
+          >
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-64 lg:w-80 xl:w-96 h-64 lg:h-80 xl:h-96 rounded-full bg-avocado-400/25 blur-[80px] animate-pulse" />
+            </div>
+
+            <motion.div
+              animate={{ 
+                opacity: showDialogue ? 1 : 0, 
+                y: showDialogue ? 0 : 10, 
+                scale: showDialogue ? 1 : 0.9 
+              }}
+              transition={{ duration: 0.25, ease: 'easeOut' }}
+              className="absolute -top-2 md:top-0 lg:top-2 left-1/2 -translate-x-1/2 z-30"
+            >
+              <div className="relative bg-white/95 backdrop-blur-md text-forest-950 px-4 md:px-5 lg:px-6 py-2 md:py-2.5 lg:py-3 rounded-2xl shadow-xl border border-avocado-400/30">
+                <p className="text-sm md:text-base lg:text-lg font-bold text-center leading-snug whitespace-nowrap">
+                  {dialogueText}
+                </p>
+                <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-3 h-3 md:w-4 md:h-4 bg-white/95 rotate-45 border-r border-b border-avocado-400/30" />
+              </div>
+            </motion.div>
+
+            <motion.div
+              animate={{ y: [0, -14, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative"
+            >
+              <video
+                ref={videoRef}
+                autoPlay
+                loop
+                muted
+                playsInline
+                className="w-full drop-shadow-[0_20px_60px_rgba(14,44,32,0.5)]"
+              >
+                <source src="/videopalta/palta-animada.webm" type="video/webm" />
+                <source src="/videopalta/gemini_generated_video_8b2dc77d.mp4" type="video/mp4" />
+              </video>
+            </motion.div>
+          </motion.div>
         </section>
 
         {/* ========================================================================= */}
-        {/* 2. BANDA DE ATRIBUTOS (VALUE BAR)                                         */}
+        {/* 2. BANDA DE ATRIBUTOS (VALUE STRIP - LIMPIA, SIN RECUADROS APILADOS)       */}
         {/* ========================================================================= */}
         <section className="bg-forest-900 border-y border-forest-800 py-6 text-cream">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-forest-800">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-forest-800/80">
               <div className="pt-2 md:pt-0 px-4">
-                <p className="text-xs uppercase tracking-widest text-avocado-400 font-bold mb-1">Variedad</p>
+                <p className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold mb-1">Variedad</p>
                 <p className="font-serif font-bold text-lg text-cream">Palta Hass 100%</p>
               </div>
               <div className="pt-2 md:pt-0 px-4">
-                <p className="text-xs uppercase tracking-widest text-avocado-400 font-bold mb-1">Origen</p>
+                <p className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold mb-1">Origen</p>
                 <p className="font-serif font-bold text-lg text-cream">Valles del Perú</p>
               </div>
               <div className="pt-2 md:pt-0 px-4">
-                <p className="text-xs uppercase tracking-widest text-avocado-400 font-bold mb-1">Calidad</p>
-                <p className="font-serif font-bold text-lg text-cream">Control de Lote a Lote</p>
+                <p className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold mb-1">Garantía</p>
+                <p className="font-serif font-bold text-lg text-cream">Control Lote a Lote</p>
               </div>
               <div className="pt-2 md:pt-0 px-4">
-                <p className="text-xs uppercase tracking-widest text-avocado-400 font-bold mb-1">Logística</p>
-                <p className="font-serif font-bold text-lg text-cream">Cadena de Frío Integral</p>
+                <p className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold mb-1">Logística</p>
+                <p className="font-serif font-bold text-lg text-cream">Cadena de Frío a 5°C</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* ========================================================================= */}
-        {/* 3. MÓDULO NOSOTROS (OUR STORY & VALUES)                                    */}
+        {/* 3. RESUMEN: IDENTIDAD & FUNDOS (LAYOUT EDITORIAL, SIN CARDS SOBRE CARDS)  */}
         {/* ========================================================================= */}
-        <section className="py-24 bg-cream">
+        <section className="py-20 md:py-24 bg-cream">
           <div className="max-w-7xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
-              {/* Carrusel Fundo */}
+              {/* Imagen con composición limpia */}
               <div className="lg:col-span-6 relative">
-                <FundoCarousel />
+                <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-4/3 group">
+                  <img
+                    src="/images/fundo/riego-tecnificado.jpg"
+                    alt="Fundos tecnificados de Agrícola Pilcococha"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white flex items-end justify-between">
+                    <div>
+                      <span className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold block mb-1">
+                        Valle Sagrado & Valles Interandinos
+                      </span>
+                      <p className="font-serif text-lg font-bold">Producción sustentable y fertirriego de alta eficiencia</p>
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Contenido Editorial */}
-              <div className="lg:col-span-6">
-                <p className="ebrow text-forest-800 mb-3">Nuestra Empresa</p>
-                <h2 className="text-4xl md:text-5xl font-black font-serif text-forest-950 leading-tight mb-6">
+              {/* Contenido Editorial con métricas tipográficas */}
+              <div className="lg:col-span-6 space-y-6">
+                <span className="ebrow text-forest-800">Nuestra Identidad</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-forest-950 leading-tight">
                   Cultivamos relaciones que comienzan en la tierra.
                 </h2>
-                <p className="text-muted text-base md:text-lg leading-relaxed mb-6">
-                  En <strong>Agrícola Pilcococha</strong> entendemos que la exportación de fruta de clase mundial exige rigor en cada hectárea. Gestionamos nuestras plantaciones de Palta Hass en Perú con tecnología de fertirriego eficiente, respeto por el medio ambiente y un equipo de profesionales comprometidos con la excelencia agrícola.
-                </p>
-                <p className="text-muted text-base leading-relaxed mb-8">
-                  Nuestra meta es ser el socio comercial más confiable para importadores, supermercados y distribuidores en los mercados más exigentes de Europa, Norteamérica y el mundo.
+                <p className="text-muted text-base md:text-lg leading-relaxed">
+                  En <strong>Agrícola Pilcococha</strong> gestionamos plantaciones de Palta Hass en los valles más fértiles del Perú. Unimos ciencia agronómica de precisión, respeto por los recursos hídricos y trabajo formal con las comunidades agrícolas locales.
                 </p>
 
-                {/* Métricas clave */}
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-charcoal/10 mb-8">
-                  <MetricCard number="80+" label="Hectáreas en producción" />
-                  <MetricCard number="10+" label="Años de experiencia" />
-                  <MetricCard number="10k" label="Toneladas de proyección" />
+                {/* Métricas tipográficas fluidas (sin cajas cerradas) con animación de conteo */}
+                <div className="grid grid-cols-3 gap-6 pt-4 border-t border-charcoal/10">
+                  <div>
+                    <span className="block text-3xl sm:text-4xl font-black font-serif text-forest-950">
+                      <AnimatedCounter value="80+" duration={2000} />
+                    </span>
+                    <span className="text-xs text-muted font-medium mt-1 block">Hectáreas en producción</span>
+                  </div>
+                  <div>
+                    <span className="block text-3xl sm:text-4xl font-black font-serif text-forest-950">
+                      <AnimatedCounter value="10+" duration={1600} />
+                    </span>
+                    <span className="text-xs text-muted font-medium mt-1 block">Años de trayectoria</span>
+                  </div>
+                  <div>
+                    <span className="block text-3xl sm:text-4xl font-black font-serif text-forest-950">
+                      <AnimatedCounter value="100%" duration={2200} />
+                    </span>
+                    <span className="text-xs text-muted font-medium mt-1 block">Trazabilidad de lote</span>
+                  </div>
                 </div>
 
-                <Link
-                  to="/nosotros"
-                  className="inline-flex items-center gap-2 text-forest-800 hover:text-forest-600 font-bold text-sm group"
-                >
-                  <span>Conocer nuestra historia completa</span>
-                  <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-                </Link>
+                <div className="pt-2">
+                  <Link
+                    to="/nosotros"
+                    className="inline-flex items-center gap-2 text-forest-900 hover:text-forest-700 font-bold text-sm group transition-colors"
+                  >
+                    <span>Conocer nuestra historia y filosofía</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
         </section>
 
         {/* ========================================================================= */}
-        {/* 4. PRODUCTO DESTACADO (PALTA HASS B2B SPECS)                              */}
+        {/* 4. RESUMEN: NUESTRA PALTA HASS (EDITORIAL ALTERNO)                         */}
         {/* ========================================================================= */}
-        <section className="py-24 bg-sand/60 border-y border-charcoal/5">
+        <section className="py-20 md:py-24 bg-sand/30 border-y border-charcoal/5">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="text-center max-w-3xl mx-auto mb-16">
-              <p className="ebrow text-forest-800 mb-2">Producto de Exportación</p>
-              <h2 className="text-4xl md:text-5xl font-black font-serif text-forest-950">
-                Palta Hass Peruana de Alta Calidad
-              </h2>
-              <p className="text-muted text-base md:text-lg mt-4 leading-relaxed">
-                Fruta seleccionada en su punto óptimo de maduración fisiológica, con piel rugosa uniforme, pulpa cremosa y sabor inigualable.
-              </p>
-            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+              {/* Contenido Izquierda */}
+              <div className="lg:col-span-6 space-y-6 order-2 lg:order-1">
+                <span className="ebrow text-forest-800">Fruta de Exportación</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-forest-950 leading-tight">
+                  Palta Hass Peruana con Materia Seca Garantizada.
+                </h2>
+                <p className="text-muted text-base md:text-lg leading-relaxed">
+                  Cosechada selectivamente árbol por árbol en su punto óptimo fisiológico (21.5% a 24% de materia seca). Ofrece un perfil sensorial cremoso, sabor suave a nuez y piel rugosa de óptimo grosor para soportar largas travesías en ultramar.
+                </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-              {/* Carrusel Palta Hass con Efecto Ken Burns */}
-              <div className="lg:col-span-5 relative">
-                <PaltaCarousel />
-              </div>
-
-              {/* Ficha técnica y calibres */}
-              <div className="lg:col-span-7 space-y-6">
-                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-xs border border-charcoal/10">
-                  <h3 className="text-2xl font-bold font-serif text-forest-950 mb-6 flex items-center justify-between">
-                    <span>Ficha Técnica Resumida</span>
-                    <span className="text-xs px-3 py-1 bg-forest-800/10 text-forest-800 rounded-full font-sans font-semibold">
-                      Export Grade
-                    </span>
-                  </h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                    <div className="p-3.5 bg-cream/70 rounded-xl border border-charcoal/5">
-                      <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Variedad</span>
-                      <strong className="text-forest-950 text-base">Hass (Persea americana)</strong>
-                    </div>
-                    <div className="p-3.5 bg-cream/70 rounded-xl border border-charcoal/5">
-                      <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Materia Seca</span>
-                      <strong className="text-forest-950 text-base">21.5% a 24% (Mínimo 21%)</strong>
-                    </div>
-                    <div className="p-3.5 bg-cream/70 rounded-xl border border-charcoal/5">
-                      <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Presentación</span>
-                      <strong className="text-forest-950 text-base">Cajas de 4.0 kg y 10.0 kg</strong>
-                    </div>
-                    <div className="p-3.5 bg-cream/70 rounded-xl border border-charcoal/5">
-                      <span className="text-xs text-muted block uppercase tracking-wider font-semibold">Temperatura de Envío</span>
-                      <strong className="text-forest-950 text-base">4°C a 6°C (Atmósfera Controlada)</strong>
-                    </div>
+                {/* Lista limpia de especificaciones */}
+                <div className="space-y-3 pt-2 text-sm text-charcoal/90">
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Calibres disponibles:</strong> Desde el 12 (300g+) hasta el 28 (135g) según mercado.</span>
                   </div>
-
-                  {/* Tabla de calibres */}
-                  <div className="mt-6 pt-6 border-t border-charcoal/10">
-                    <p className="text-xs font-bold uppercase tracking-wider text-forest-800 mb-3">
-                      Calibres comerciales disponibles (Frutos por caja 4kg):
-                    </p>
-                    <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center">
-                      {calibres.map((c) => (
-                        <div key={c.calibre} className="p-2 rounded-lg bg-sand/50 border border-charcoal/5 hover:bg-forest-800 hover:text-white transition-colors cursor-default group" title={`${c.peso} - ${c.uso}`}>
-                          <p className="font-bold text-sm">{c.calibre}</p>
-                          <p className="text-[10px] text-muted group-hover:text-cream/80">{c.peso.split(' ')[0]}</p>
-                        </div>
-                      ))}
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Presentaciones:</strong> Cajas corrugadas de 4.0 kg y 10.0 kg con ventilación pre-frío.</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <CheckCircle2 className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Vida útil:</strong> Tránsito marítimo garantizado de hasta 28 días a 5°C.</span>
                   </div>
                 </div>
 
-                {/* Acciones */}
-                <div className="flex flex-wrap gap-4 items-center">
+                <div className="pt-4 flex flex-wrap items-center gap-4">
                   <Link
-                    to="/cotizar"
+                    to="/nuestra-palta"
                     className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-forest-800 hover:bg-forest-700 text-white font-semibold text-sm transition-all shadow-sm"
                   >
-                    <span>Cotizar este producto</span>
+                    <span>Ver ficha técnica y calibres</span>
                     <ArrowRight className="w-4 h-4" />
                   </Link>
 
-                  <a
-                    href="#cotizacion"
-                    className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white hover:bg-cream text-forest-950 font-semibold text-sm transition-all border border-charcoal/15 shadow-xs"
-                    onClick={(e) => {
-                      e.preventDefault()
-                      alert('La ficha técnica en formato PDF oficial está lista para descarga con especificaciones completas.')
-                    }}
+                  <Link
+                    to="/cotizar"
+                    className="inline-flex items-center gap-2 text-forest-900 hover:text-forest-700 font-bold text-sm px-4 py-3"
                   >
-                    <Download className="w-4 h-4 text-forest-700" />
-                    <span>Descargar Ficha Técnica PDF</span>
-                  </a>
+                    <span>Cotizar este producto</span>
+                  </Link>
+                </div>
+              </div>
+
+              {/* Imagen Derecha */}
+              <div className="lg:col-span-6 relative order-1 lg:order-2">
+                <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-4/3 group">
+                  <img
+                    src="/images/producto/palta-hass-hero.jpg"
+                    alt="Palta Hass de exportación Agrícola Pilcococha"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-forest-950/60 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 text-white">
+                    <span className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold block mb-1">
+                      Calidad Premium
+                    </span>
+                    <p className="font-serif text-lg font-bold">Textura cremosa y estándar internacional</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -371,232 +452,128 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* ========================================================================= */}
-        {/* 5. CALENDARIO DE TEMPORADA                                                 */}
+        {/* 5. RESUMEN: PROCESO & TRAZABILIDAD (4 PASOS LINEALES, SIN CAJAS PESADAS)   */}
         {/* ========================================================================= */}
-        <section className="py-20 bg-cream">
+        <section className="py-20 md:py-24 bg-forest-950 text-cream">
           <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-12">
-              <p className="ebrow text-forest-800 mb-2">Disponibilidad en el año</p>
-              <h2 className="text-3xl md:text-4xl font-black font-serif text-forest-950">
-                Calendario de Cosecha y Exportación
-              </h2>
-              <p className="text-muted text-base mt-2">
-                Conozca los meses de producción en nuestros fundos para asegurar su suministro estacional programado.
-              </p>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-sm border border-charcoal/10">
-              <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-3">
-                {seasonality.map((item) => (
-                  <div
-                    key={item.month}
-                    className={`rounded-2xl p-4 text-center transition-all border ${
-                      item.peak
-                        ? 'bg-forest-800 text-cream border-forest-700 shadow-md scale-102'
-                        : item.active
-                        ? 'bg-avocado-400/20 text-forest-950 border-avocado-400/40'
-                        : 'bg-sand/30 text-charcoal/40 border-transparent'
-                    }`}
-                  >
-                    <p className="text-xs uppercase font-bold tracking-wider mb-2">{item.month}</p>
-                    <div className="flex justify-center my-2">
-                      <span className={`w-3.5 h-3.5 rounded-full ${
-                        item.peak
-                          ? 'bg-avocado-400 animate-pulse'
-                          : item.active
-                          ? 'bg-forest-700'
-                          : 'bg-charcoal/15'
-                      }`} />
-                    </div>
-                    <p className="text-[11px] font-medium leading-tight mt-2 min-h-[28px]">
-                      {item.label || 'Mantenimiento'}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Leyenda del calendario */}
-              <div className="mt-8 pt-6 border-t border-charcoal/10 flex flex-wrap items-center justify-between gap-4 text-xs text-muted">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-forest-800" />
-                    <span className="font-semibold text-charcoal">Temporada Pico (Alta disponibilidad)</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-avocado-400" />
-                    <span>Inicio / Cierre de Cosecha</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-charcoal/20" />
-                    <span>Floración y Cuajado</span>
-                  </div>
-                </div>
-
-                <p className="italic">
-                  * Las semanas exactas pueden variar según condiciones climatológicas del valle.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 6. PROCESO PRODUCTIVO (VALUE CHAIN)                                       */}
-        {/* ========================================================================= */}
-        <section className="py-24 bg-forest-950 text-cream">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mb-12">
-              <p className="ebrow text-avocado-400 mb-2">Flujo Productivo Tecnificado</p>
-              <h2 className="text-4xl md:text-5xl font-black font-serif text-cream">
-                Proceso Productivo y Control de Calidad
-              </h2>
-              <p className="text-cream/70 text-base md:text-lg mt-3 leading-relaxed">
-                Haga clic en cualquiera de las 5 etapas para explorar el protocolo agronómico, las fotografías reales y los parámetros fitosanitarios de cada fase.
-              </p>
-            </div>
-
-            <ProcessTimeline />
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 7. MERCADOS INTERNACIONALES                                               */}
-        {/* ========================================================================= */}
-        <section className="py-24 bg-cream">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <p className="ebrow text-forest-800 mb-2">Presencia Global</p>
-              <h2 className="text-4xl md:text-5xl font-black font-serif text-forest-950">
-                Destinos de Exportación
-              </h2>
-              <p className="text-muted text-base md:text-lg mt-4 leading-relaxed">
-                Nuestra fruta viaja desde los puertos peruanos cumpliendo los protocolos cuarentenarios y especificaciones de cada continente.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {/* Europa */}
-              <div className="bg-white rounded-3xl p-8 shadow-xs border border-charcoal/10 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-2xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-6">
-                  <Globe2 className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-serif font-black text-forest-950 mb-3">Europa</h3>
-                <p className="text-sm text-muted mb-6 leading-relaxed">
-                  Principal destino comercial. Cumplimiento riguroso de límites máximos de residuos (LMR) y estándares europeos de calidad y sostenibilidad.
-                </p>
-                <div className="pt-4 border-t border-charcoal/10 space-y-2 text-xs font-medium text-forest-900">
-                  <p>✓ Países Bajos (Puerto de Rotterdam)</p>
-                  <p>✓ España (Algeciras / Valencia)</p>
-                  <p>✓ Alemania y Reino Unido</p>
-                </div>
-              </div>
-
-              {/* EE.UU. */}
-              <div className="bg-white rounded-3xl p-8 shadow-xs border border-charcoal/10 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-2xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-6">
-                  <Truck className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-serif font-black text-forest-950 mb-3">Norteamérica</h3>
-                <p className="text-sm text-muted mb-6 leading-relaxed">
-                  Gran demanda de calibres medianos y estándar. Despachos rápidos y gestión de logística eficiente para supermercados y distribuidores.
-                </p>
-                <div className="pt-4 border-t border-charcoal/10 space-y-2 text-xs font-medium text-forest-900">
-                  <p>✓ Costa Este (Filadelfia / Florida)</p>
-                  <p>✓ Costa Oeste (Long Beach / California)</p>
-                  <p>✓ Protocolo APHIS / USDA</p>
-                </div>
-              </div>
-
-              {/* Asia & LatAm */}
-              <div className="bg-white rounded-3xl p-8 shadow-xs border border-charcoal/10 hover:shadow-md transition-shadow">
-                <div className="w-12 h-12 rounded-2xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-6">
-                  <Package className="w-6 h-6" />
-                </div>
-                <h3 className="text-2xl font-serif font-black text-forest-950 mb-3">Mercados en Expansión</h3>
-                <p className="text-sm text-muted mb-6 leading-relaxed">
-                  Creciente interés en Asia y Latinoamérica por la consistencia, firmeza y sabor de la palta peruana cosechada en valles interandinos.
-                </p>
-                <div className="pt-4 border-t border-charcoal/10 space-y-2 text-xs font-medium text-forest-900">
-                  <p>✓ Chile y Cono Sur</p>
-                  <p>✓ Envíos marítimos de largo tránsito</p>
-                  <p>✓ Gestión de frío de máxima precisión</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ========================================================================= */}
-        {/* 8. GALERÍA EDITORIAL                                                      */}
-        {/* ========================================================================= */}
-        <section className="py-20 bg-sand/40 border-y border-charcoal/5">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-12 gap-4">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-6">
               <div>
-                <p className="ebrow text-forest-800 mb-2">Imágenes Reales</p>
-                <h2 className="text-3xl md:text-4xl font-black font-serif text-forest-950">
-                  Nuestra Tierra y Nuestra Gente
+                <span className="ebrow text-avocado-400 mb-2 block">Trazabilidad Total</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream">
+                  De la tierra al puerto de destino.
                 </h2>
               </div>
-              <p className="text-muted text-sm max-w-md">
-                Transparencia total: así se ve el fundo, la cosecha y el trabajo diario en Agrícola Pilcococha.
+              <p className="text-cream/70 text-sm sm:text-base max-w-md">
+                Supervisión milimétrica bajo los más exigentes protocolos fitosanitarios de SENASA, USDA-APHIS y la Unión Europea.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="md:col-span-2 relative rounded-3xl overflow-hidden shadow-md group h-[360px]">
-                <img
-                  src="/images/hero/hero-real.jpg"
-                  alt="Valles de cultivo de Agrícola Pilcococha"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white">
-                  <span className="text-xs uppercase tracking-widest text-avocado-400 font-bold block mb-1">Paisaje & Valle</span>
-                  <p className="font-serif text-xl font-bold">Fundos en valles fértiles del Perú</p>
+            {/* Pipeline de 4 pasos sin cards anidadas */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="border-t border-forest-800 pt-6">
+                <span className="text-avocado-400 font-mono text-sm font-bold block mb-3">01 / CULTIVO</span>
+                <h3 className="font-serif font-bold text-xl text-cream mb-2">Manejo Tecnificado</h3>
+                <p className="text-cream/70 text-sm leading-relaxed">
+                  Fertirriego computarizado y monitoreo de humedad para optimizar nutrientes en cada árbol.
+                </p>
+              </div>
+
+              <div className="border-t border-forest-800 pt-6">
+                <span className="text-avocado-400 font-mono text-sm font-bold block mb-3">02 / COSECHA</span>
+                <h3 className="font-serif font-bold text-xl text-cream mb-2">Corte Selectivo</h3>
+                <p className="text-cream/70 text-sm leading-relaxed">
+                  Corte a tijera con pedúnculo exacto tras verificar materia seca por lote analizado.
+                </p>
+              </div>
+
+              <div className="border-t border-forest-800 pt-6">
+                <span className="text-avocado-400 font-mono text-sm font-bold block mb-3">03 / EMPAQUE</span>
+                <h3 className="font-serif font-bold text-xl text-cream mb-2">Calibrado y Selección</h3>
+                <p className="text-cream/70 text-sm leading-relaxed">
+                  Clasificación electrónica por peso y descarte óptico en cajas de 4kg y 10kg de exportación.
+                </p>
+              </div>
+
+              <div className="border-t border-forest-800 pt-6">
+                <span className="text-avocado-400 font-mono text-sm font-bold block mb-3">04 / LOGÍSTICA</span>
+                <h3 className="font-serif font-bold text-xl text-cream mb-2">Cadena de Frío a 5°C</h3>
+                <p className="text-cream/70 text-sm leading-relaxed">
+                  Pre-frío inmediato y contenedores de atmósfera controlada monitoreados hasta destino.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-14 pt-8 border-t border-forest-800 flex justify-center">
+              <Link
+                to="/proceso-calidad"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-semibold text-sm transition-all border border-white/15"
+              >
+                <span>Conocer el proceso de calidad y certificaciones</span>
+                <ArrowRight className="w-4 h-4 text-avocado-400" />
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ========================================================================= */}
+        {/* 6. RESUMEN: MERCADOS Y LOGÍSTICA (GLOBAL REACH)                            */}
+        {/* ========================================================================= */}
+        <section className="py-20 md:py-24 bg-cream">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+              <div className="lg:col-span-5 space-y-6">
+                <span className="ebrow text-forest-800">Presencia Global</span>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-forest-950 leading-tight">
+                  Conectando Perú con el mundo.
+                </h2>
+                <p className="text-muted text-base leading-relaxed">
+                  Despachamos desde nuestra sede en Calca, Cusco hacia los puertos de Callao, Chancay y Pisco, conectando las principales rutas comerciales marítimas con cumplimiento aduanero y cuarentenario.
+                </p>
+
+                <div className="pt-2 space-y-3 text-sm text-forest-950 font-medium">
+                  <div className="flex items-center gap-3">
+                    <Globe2 className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Europa:</strong> Países Bajos (Rotterdam), España y Reino Unido.</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Truck className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Norteamérica:</strong> Costa Este y Costa Oeste bajo protocolo USDA.</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Package className="w-5 h-5 text-forest-800 shrink-0" />
+                    <span><strong>Asia y Cono Sur:</strong> Mercados en constante expansión.</span>
+                  </div>
+                </div>
+
+                <div className="pt-4">
+                  <Link
+                    to="/mercados"
+                    className="inline-flex items-center gap-2 text-forest-900 hover:text-forest-700 font-bold text-sm group"
+                  >
+                    <span>Ver mapa interactivo y red de transporte en vivo</span>
+                    <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
                 </div>
               </div>
 
-              <div className="relative rounded-3xl overflow-hidden shadow-md group h-[360px]">
-                <img
-                  src="/images/fundo/team-field.jpg"
-                  alt="Equipo de cosecha seleccionando palta"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white">
-                  <span className="text-xs uppercase tracking-widest text-avocado-400 font-bold block mb-1">Cosecha</span>
-                  <p className="font-serif text-xl font-bold">Selección a mano árbol por árbol</p>
-                </div>
-              </div>
-
-              <div className="relative rounded-3xl overflow-hidden shadow-md group h-[320px]">
-                <img
-                  src="/images/producto/palta-hass-hero.jpg"
-                  alt="Palta Hass recién recolectada"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white">
-                  <span className="text-xs uppercase tracking-widest text-avocado-400 font-bold block mb-1">Fruto</span>
-                  <p className="font-serif text-lg font-bold">Palta Hass con materia seca uniforme</p>
-                </div>
-              </div>
-
-              <div className="md:col-span-2 relative rounded-3xl overflow-hidden shadow-md group h-[320px]">
-                <img
-                  src="/images/proceso/empaque.jpg"
-                  alt="Línea de packing de exportación"
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                  loading="lazy"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-forest-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 text-white">
-                  <span className="text-xs uppercase tracking-widest text-avocado-400 font-bold block mb-1">Packing & Calibrado</span>
-                  <p className="font-serif text-xl font-bold">Estricto control de higiene y empaque</p>
+              {/* Imagen representativa de packing & logística */}
+              <div className="lg:col-span-7">
+                <div className="relative rounded-3xl overflow-hidden shadow-xl aspect-16/10 group">
+                  <img
+                    src="/images/proceso/empaque.jpg"
+                    alt="Línea de packing y despacho de palta de exportación"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-forest-950/70 via-transparent to-transparent" />
+                  <div className="absolute bottom-6 left-6 right-6 text-white flex items-end justify-between">
+                    <div>
+                      <span className="text-[11px] uppercase tracking-widest text-avocado-400 font-bold block mb-1">
+                        Cadena de Exportación
+                      </span>
+                      <p className="font-serif text-lg font-bold">Empaque certificado y logística refrigerada ininterrumpida</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -604,16 +581,112 @@ export const HomePage: React.FC = () => {
         </section>
 
         {/* ========================================================================= */}
-        {/* 9. NUESTRAS SEDES Y FUNDOS (MAPA INTERACTIVO)                             */}
+        {/* 7. CALENDARIO DE TEMPORADA RÁPIDO (VENTANA DE SUMINISTRO B2B)              */}
         {/* ========================================================================= */}
-        <SedesMap />
+        <section className="py-16 bg-sand/30 border-y border-charcoal/5">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+              <div>
+                <span className="ebrow text-forest-800 mb-1 block">Disponibilidad Anual</span>
+                <h3 className="text-2xl sm:text-3xl font-black font-serif text-forest-950">
+                  Calendario de Cosecha y Despacho
+                </h3>
+              </div>
+              <p className="text-muted text-xs sm:text-sm">
+                Temporada activa de <strong>Marzo a Setiembre</strong> con pico de volumen entre Abril y Julio.
+              </p>
+            </div>
+
+            {/* Grid horizontal limpio con efecto sobresaliente al pasar el mouse */}
+            <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-12 gap-2.5 sm:gap-3 text-center pt-8 pb-4">
+              {seasonality.map((item) => (
+                <div
+                  key={item.month}
+                  className={`group relative py-3.5 px-2 rounded-2xl cursor-pointer select-none transition-all duration-300 ease-out transform
+                    hover:-translate-y-3 hover:scale-110 hover:z-30 ${
+                    item.peak
+                      ? 'bg-forest-800 text-cream font-bold shadow-md hover:bg-forest-750 hover:shadow-2xl hover:shadow-forest-950/40 hover:ring-2 hover:ring-avocado-400'
+                      : item.active
+                      ? 'bg-avocado-400/25 text-forest-950 font-semibold shadow-xs border border-forest-800/10 hover:bg-avocado-300/60 hover:shadow-xl hover:shadow-forest-900/20 hover:ring-2 hover:ring-forest-800/30'
+                      : 'bg-white/70 text-charcoal/50 border border-charcoal/5 hover:bg-white hover:text-charcoal hover:shadow-lg hover:shadow-charcoal/10 hover:ring-2 hover:ring-charcoal/15'
+                  }`}
+                >
+                  {/* Tooltip flotante con información detallada al hacer hover */}
+                  <div className="opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-200 transform group-hover:-translate-y-1 absolute -top-9 left-1/2 -translate-x-1/2 px-2.5 py-1 bg-forest-950 text-cream text-[10px] font-semibold rounded-lg shadow-xl whitespace-nowrap z-40 border border-avocado-400/40">
+                    <span>{item.label || (item.active ? 'Cosecha Activa' : 'Sin Cosecha')}</span>
+                    <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-forest-950 rotate-45 border-r border-b border-avocado-400/40" />
+                  </div>
+
+                  <p className="text-xs uppercase tracking-wider font-bold transition-all duration-200 group-hover:scale-105">
+                    {item.month}
+                  </p>
+
+                  <div className="flex justify-center my-2">
+                    <span className={`w-2.5 h-2.5 rounded-full transition-transform duration-300 group-hover:scale-135 ${
+                      item.peak
+                        ? 'bg-avocado-400 animate-pulse group-hover:shadow-[0_0_8px_rgba(163,230,53,0.8)]'
+                        : item.active
+                        ? 'bg-forest-700 group-hover:bg-forest-900'
+                        : 'bg-charcoal/20 group-hover:bg-charcoal/40'
+                    }`} />
+                  </div>
+
+                  <p className={`text-[10px] leading-tight transition-colors duration-200 ${
+                    item.peak 
+                      ? 'text-cream/90 group-hover:text-cream font-bold' 
+                      : item.active 
+                      ? 'text-forest-900 group-hover:text-forest-950 font-semibold' 
+                      : 'text-charcoal/50 group-hover:text-charcoal/80'
+                  }`}>
+                    {item.peak ? 'Pico' : item.active ? 'Cosecha' : '—'}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
         {/* ========================================================================= */}
-        {/* 10. FORMULARIO DE COTIZACIÓN RÁPIDA B2B (CONFIGURADOR INTELIGENTE)        */}
+        {/* 8. CTA CONVERSIÓN B2B (BANNER ELEGANTE HACIA COTIZACIÓN Y CONTACTO)        */}
         {/* ========================================================================= */}
-        <section id="cotizacion" className="py-24 bg-cream">
-          <div className="max-w-7xl mx-auto px-6">
-            <QuoteConfigurator />
+        <section className="py-20 md:py-24 bg-cream">
+          <div className="max-w-5xl mx-auto px-6 text-center">
+            <div className="card-highlight-green text-cream rounded-3xl p-10 sm:p-16 relative overflow-hidden shadow-2xl">
+              {/* Glow decorativo sutil */}
+              <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-avocado-600/20 rounded-full blur-3xl pointer-events-none" />
+              <div className="absolute -left-20 -top-20 w-80 h-80 bg-forest-800/40 rounded-full blur-3xl pointer-events-none" />
+
+              <div className="relative z-10 max-w-2xl mx-auto">
+                <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-avocado-600/20 border border-avocado-400/30 text-avocado-400 text-xs font-semibold uppercase tracking-widest mb-6">
+                  Campaña Palta Hass
+                </span>
+
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream leading-tight mb-6">
+                  Planifique su programa de suministro con nosotros.
+                </h2>
+
+                <p className="text-cream/80 text-base sm:text-lg font-light leading-relaxed mb-10">
+                  Asegure cupos de exportación en calibres seleccionados y reciba nuestra cotización FOB / CIF adaptada a las especificaciones de su mercado.
+                </p>
+
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Link
+                    to="/cotizar"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-3 px-8 py-4 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-base transition-all shadow-lg hover:shadow-avocado-600/30"
+                  >
+                    <span>Configurar Cotización Online</span>
+                    <ArrowRight className="w-5 h-5" />
+                  </Link>
+
+                  <Link
+                    to="/contacto"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-white/10 hover:bg-white/20 text-cream font-semibold text-base transition-all border border-white/20"
+                  >
+                    <span>Contactar Equipo Comercial</span>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       </div>

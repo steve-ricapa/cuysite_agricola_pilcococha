@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+  <!-- Sombra exterior para visibilidad sobre cualquier fondo -->
+  <filter id="shadow" x="-20%" y="-20%" width="150%" height="150%">
+    <feDropShadow dx="1" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.4" />
+  </filter>
+
+  <g filter="url(#shadow)">
+    <!-- Tallito / Pedúnculo que sirve como punta del puntero (hotspot 4,2) -->
+    <path d="M4 2 L8 6" stroke="#4A2E16" stroke-width="2.5" stroke-linecap="round" />
+    <circle cx="4" cy="2" r="1.5" fill="#5D8536" />
+
+    <!-- Cáscara rugosa exterior verde oscuro Hass -->
+    <path d="M8 6 C13 3 20 6 23 11 C26 16 26 23 21 27 C16 30 9 29 6 24 C3 19 3 10 8 6 Z" 
+          fill="#173D2D" stroke="#0E2C20" stroke-width="1.2" stroke-linejoin="round" />
+
+    <!-- Pulpa verde cremosa -->
+    <path d="M9 7.5 C13 5 18 7.5 21 11.5 C23.5 15.5 23.5 21.5 19.5 25 C15.5 27.5 10 26.5 7.5 22.5 C5 18.5 5.5 11 9 7.5 Z" 
+          fill="#C4DA79" stroke="#9AB55D" stroke-width="0.8" />
+
+    <!-- Centro de pulpa mantecosa suave -->
+    <ellipse cx="14.5" cy="17" rx="5.5" ry="6.5" fill="#EAF2AA" transform="rotate(-25 14.5 17)" />
+
+    <!-- Pepa / Semilla central con relieve y brillo 3D -->
+    <ellipse cx="15.5" cy="18" rx="3.8" ry="4.5" fill="#673E1E" stroke="#45250E" stroke-width="0.8" transform="rotate(-25 15.5 18)" />
+    <!-- Brillo de la semilla -->
+    <ellipse cx="14.2" cy="16.5" rx="1.2" ry="1.8" fill="#996035" opacity="0.9" transform="rotate(-25 14.2 16.5)" />
+    <circle cx="13.8" cy="15.8" r="0.6" fill="#FFFFFF" opacity="0.85" />
+  </g>
+</svg>

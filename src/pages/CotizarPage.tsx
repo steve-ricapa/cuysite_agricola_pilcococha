@@ -35,7 +35,7 @@ export const CotizarPage: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
+          <div className="card-highlight-white p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-4">
               <Anchor className="w-5 h-5" />
             </div>
@@ -45,7 +45,7 @@ export const CotizarPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
+          <div className="card-highlight-white p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-4">
               <Clock className="w-5 h-5" />
             </div>
@@ -55,7 +55,7 @@ export const CotizarPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
+          <div className="card-highlight-white p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-4">
               <FileCheck className="w-5 h-5" />
             </div>
@@ -65,7 +65,7 @@ export const CotizarPage: React.FC = () => {
             </p>
           </div>
 
-          <div className="p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
+          <div className="card-highlight-white p-6 rounded-3xl bg-white border border-charcoal/10 shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-forest-800/10 text-forest-800 flex items-center justify-center mb-4">
               <ShieldCheck className="w-5 h-5" />
             </div>
