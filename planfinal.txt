@@ -1,0 +1,1385 @@
+1. Stack tecnológico final
+Mi stack recomendado sería:
+Next.js App Router
+└── React
+    └── TypeScript
+        └── Tailwind CSS v4
+            ├── shadcn/ui
+            ├── Lucide React
+            ├── Motion
+            ├── Embla Carousel
+            ├── React Hook Form
+            ├── Zod
+            ├── MapLibre GL
+            ├── react-map-gl
+            ├── Sonner
+            └── Lenis (opcional)
+
+¿Por qué Next.js y no React + Vite puro?
+React actualmente recomienda comenzar los proyectos nuevos con un framework cuando se trata de construir sitios o aplicaciones reales. Para Pilcococha usaría Next.js App Router, porque nos resuelve de forma integrada:
+- SEO.
+- renderizado estático.
+- optimización de imágenes.
+- optimización de fuentes.
+- metadata.
+- rutas.
+- sitemap.
+- internacionalización.
+- API para el formulario.
+- Server Components.
+- carga progresiva.
+- navegación optimizada.
+React recomienda actualmente utilizar un framework para proyectos nuevos, y Next.js App Router utiliza las capacidades modernas de React. React
+Además, create-next-app ya puede configurar TypeScript, Tailwind CSS, ESLint, App Router, Turbopack y alias @/* automáticamente. Next.js
+2. Arquitectura funcional
+No haría todo el sitio como una única página gigante.
+Haría un modelo híbrido:
+HOME
+│
+├── Hero
+├── Nosotros
+├── Producto destacado
+├── Proceso
+├── Calidad
+├── Temporada
+├── Mercados
+├── Galería
+├── CTA cotización
+└── Contacto
+
+PÁGINAS INTERNAS
+│
+├── /nosotros
+├── /nuestra-palta
+├── /proceso-calidad
+├── /mercados
+├── /contacto
+├── /cotizar
+├── /privacidad
+└── /cookies
+
+Esto conserva una Home muy visual, pero permite que Google indexe individualmente contenido importante.
+3. Estructura del proyecto
+Usaría algo así:
+agricola-pilcococha/
+│
+├── public/
+│   ├── brand/
+│   │   ├── logo.svg
+│   │   ├── logo-white.svg
+│   │   ├── isotipo.svg
+│   │   └── favicon.svg
+│   │
+│   ├── images/
+│   │   ├── hero/
+│   │   ├── fundo/
+│   │   ├── producto/
+│   │   ├── proceso/
+│   │   ├── calidad/
+│   │   └── gallery/
+│   │
+│   ├── certifications/
+│   └── documents/
+│       └── ficha-tecnica-palta-hass.pdf
+│
+├── src/
+│   ├── app/
+│   │   ├── [locale]/
+│   │   │   ├── layout.tsx
+│   │   │   ├── page.tsx
+│   │   │   ├── nosotros/
+│   │   │   ├── nuestra-palta/
+│   │   │   ├── proceso-calidad/
+│   │   │   ├── mercados/
+│   │   │   ├── contacto/
+│   │   │   └── cotizar/
+│   │   │
+│   │   ├── api/
+│   │   │   └── quote/
+│   │   │       └── route.ts
+│   │   │
+│   │   ├── sitemap.ts
+│   │   ├── robots.ts
+│   │   └── globals.css
+│   │
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── sections/
+│   │   ├── product/
+│   │   ├── maps/
+│   │   ├── forms/
+│   │   ├── motion/
+│   │   └── ui/
+│   │
+│   ├── content/
+│   │   ├── company.ts
+│   │   ├── products.ts
+│   │   ├── process.ts
+│   │   ├── certifications.ts
+│   │   └── markets.ts
+│   │
+│   ├── lib/
+│   │   ├── validations/
+│   │   ├── utils.ts
+│   │   ├── seo.ts
+│   │   └── map.ts
+│   │
+│   └── types/
+│
+├── package.json
+└── tsconfig.json
+
+4. Módulos visuales de la Home
+01 — Header / Navbar
+[LOGO]
+
+Nosotros
+Nuestra Palta
+Proceso y Calidad
+Mercados
+Contacto
+
+ES | EN
+
+[ Solicitar cotización ]
+
+Funciones
+- sticky.
+- transparente encima del hero.
+- cambia a fondo crema al hacer scroll.
+- menú desplegable móvil.
+- selector ES/EN.
+- CTA visible permanentemente.
+- indicador sutil de sección activa.
+Mobile
+El menú se convierte en un Sheet lateral.
+Ahí sí utilizaría shadcn/ui Sheet.
+5. Hero principal
+Sería el componente visual más importante.
+┌────────────────────────────────────────────┐
+│ FOTO REAL DEL FUNDO                       │
+│                                            │
+│ DEL CAMPO PERUANO AL MERCADO               │
+│                                            │
+│ Palta cultivada                            │
+│ para llegar más lejos.                     │
+│                                            │
+│ Texto                                      │
+│                                            │
+│ [Nuestra palta] [Cotizar]                  │
+│                                            │
+│                           PERÚ              │
+│                           Nuestro origen    │
+└────────────────────────────────────────────┘
+
+Animaciones
+Al cargar:
+Eyebrow
+   ↓ 100ms
+
+Título
+   ↓ 150ms
+
+Descripción
+   ↓ 150ms
+
+Botones
+   ↓ 100ms
+
+No haría una animación exagerada.
+Usaría:
+opacity: 0 → 1
+translateY: 24px → 0
+duration: 0.65s
+stagger: 0.08 - 0.12s
+
+6. Librería principal de animación: Motion
+Usaría:
+pnpm add motion
+
+Motion actualmente recomienda importar desde:
+import { motion } from "motion/react"
+
+y permite animaciones, gestures, keyframes, scroll animation y orchestration mediante variants. Motion
+No instalaría GSAP inicialmente.
+GSAP sería útil si quisiéramos algo extremadamente cinematográfico.
+Para Pilcococha, Motion es más que suficiente.
+7. Accesibilidad de las animaciones
+Toda la aplicación estaría envuelta en:
+<MotionConfig reducedMotion="user">
+    {children}
+</MotionConfig>
+
+Así respetamos automáticamente la configuración del sistema operativo de quienes tienen activado Reduced Motion. Motion puede eliminar transformaciones y mantener animaciones menos agresivas como opacity. Motion
+Esto es importante para UX.
+8. Efecto tipeado
+Tedcito, aquí haría algo distinto a muchos sitios.
+No pondría un typewriter en todo el H1.
+Ejemplo que NO recomiendo:
+P
+Pa
+Pal
+Palt
+Palta...
+
+Retrasa visualmente el mensaje y se siente demasiado “template”.
+El <h1> quedaría estático:
+Palta cultivada para llegar más lejos.
+
+Pero podríamos animar una segunda frase:
+Calidad.
+Trazabilidad.
+Origen.
+Confianza.
+
+Algo como:
+Cultivamos
+CALIDAD
+ORIGEN
+CONFIANZA
+
+y cambiar suavemente la última palabra.
+Lo programaría nosotros con React + Motion.
+No agregaría otra dependencia únicamente para typewriter.
+9. Scroll
+Primera opción:
+scroll-behavior: smooth;
+
+Es suficiente.
+Si queremos una experiencia visual más premium:
+Lenis
+pnpm add lenis
+
+Lenis tiene integración específica para React, funciona utilizando scroll nativo y mantiene compatibilidad con sticky elements y anchors. GitHub
+Pero lo pondría como:
+opcional, no dependencia crítica.
+10. Animación al hacer scroll
+Tendría un componente reutilizable:
+<Reveal>
+
+Por ejemplo:
+<Reveal>
+   <SectionTitle />
+</Reveal>
+
+Funcionaría con:
+opacity 0 → 1
+y 30 → 0
+
+Cuando el elemento entre aproximadamente un 20 % al viewport.
+11. Parallax
+Muy sutil.
+Por ejemplo en el Hero:
+scroll del usuario
+       ↓
+imagen de fondo
+       ↓
+movimiento vertical máximo 5-8 %
+
+No movería enormes cantidades.
+En móvil lo desactivaría.
+12. Banda de atributos
+Justo debajo del Hero:
+PALTA HASS
+──────
+
+ORIGEN PERÚ
+──────
+
+CONTROL DE CALIDAD
+──────
+
+TRAZABILIDAD
+
+Sin cards flotantes enormes.
+El objetivo es comunicar autoridad rápidamente.
+13. Módulo Nosotros
+Layout desktop:
+┌─────────────────┬─────────────────────────┐
+│                 │ NUESTRA EMPRESA         │
+│                 │                         │
+│   FOTO FUNDO    │ Cultivamos relaciones  │
+│                 │ que comienzan en        │
+│                 │ la tierra.              │
+│                 │                         │
+│                 │ descripción...          │
+│                 │                         │
+│                 │ XX ha      XX años      │
+└─────────────────┴─────────────────────────┘
+
+En mobile:
+imagen
+↓
+título
+↓
+texto
+↓
+métricas
+
+14. Sistema de Cards
+No utilizaría la misma tarjeta para todo.
+Tendríamos aproximadamente 6 tipos de cards.
+A. Metric Card
+80+
+────
+Hectáreas
+cultivadas
+
+Minimalista.
+Sin sombra fuerte.
+B. Product Card
+Mucho más grande:
+┌──────────────────┬────────────────────┐
+│                  │ PALTA HASS         │
+│                  │                    │
+│      FOTO        │ Variedad: Hass    │
+│                  │ Calibres: ...     │
+│                  │ Temporada: ...    │
+│                  │                    │
+│                  │ [Ficha técnica]   │
+└──────────────────┴────────────────────┘
+
+C. Process Card
+01
+
+Cultivo
+
+Manejo agrícola...
+
+Sin caja visual inicialmente.
+El número sería protagonista.
+D. Certification Card
+┌───────────────┐
+│               │
+│   GLOBALGAP   │
+│               │
+│ Certificación │
+└───────────────┘
+
+Solo si realmente existe.
+E. Market Card
+PERÚ → EUROPA
+
+Destino
+Información
+
+F. Gallery Card
+Imagen.
+Al pasar mouse:
+image scale 1 → 1.035
+overlay opacity
+texto aparece
+
+15. Border radius
+Mantendría consistencia:
+Botón:
+999px
+
+Cards pequeñas:
+16px
+
+Cards estándar:
+20px
+
+Cards hero/producto:
+24-28px
+
+Imágenes:
+20-24px
+
+No redondearía absolutamente todo.
+16. Sombras
+Muy discretas.
+Ejemplo:
+box-shadow:
+0 20px 50px rgba(23,61,45,.10);
+
+Nada parecido a:
+shadow-xl
+shadow-2xl
+
+por defecto en todas partes.
+El sitio debería verse editorial y premium, no como un dashboard SaaS.
+17. Sistema de colores
+La identidad propuesta del prototipo la mantendría, pero refinada.
+Token	Color	Uso
+Forest 950	#0E2C20	Footer / fondos oscuros
+Forest 800	#173D2D	Color principal
+Forest 700	#24523D	Hover
+Avocado 600	#6E8F3D	Accent
+Avocado 400	#9AB55D	Gráficos / indicadores
+Cream 50	#F7F4EA	Fondo
+Sand 100	#EFEBDD	Cards secundarias
+Earth 500	#A56F46	Accent tierra
+Charcoal	#20251F	Texto
+Muted	#687168	Texto secundario
+White	#FFFFFF	Superficies
+
+
+18. Tailwind CSS v4
+Actualmente Tailwind está en la familia v4 y la documentación consultada muestra v4.3. La configuración moderna utiliza CSS directamente y @theme. Tailwind CSS
+Nuestro globals.css comenzaría así:
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@theme {
+  --color-forest-950: #0e2c20;
+  --color-forest-800: #173d2d;
+  --color-forest-700: #24523d;
+
+  --color-avocado-600: #6e8f3d;
+  --color-avocado-400: #9ab55d;
+
+  --color-cream: #f7f4ea;
+  --color-sand: #efebdd;
+  --color-earth: #a56f46;
+
+  --color-charcoal: #20251f;
+  --color-muted: #687168;
+}
+
+shadcn/ui ya tiene soporte directo para Tailwind v4 y React moderno, incluyendo el sistema @theme. shadcn/ui
+19. Tipografía
+Aquí sí cambiaría ligeramente respecto al primer HTML.
+Títulos
+Fraunces
+Mi primera elección.
+Tiene personalidad orgánica/editorial sin parecer una revista de lujo.
+Ejemplo:
+Cultivamos relaciones que comienzan en la tierra.
+
+Texto y UI
+Manrope
+Para:
+- menús.
+- botones.
+- párrafos.
+- formularios.
+- tablas.
+- labels.
+- especificaciones técnicas.
+Combinación:
+FRAUNCES
++
+MANROPE
+
+20. Escala tipográfica
+Desktop:
+Hero H1
+80-96 px
+
+H2
+56-68 px
+
+H3
+36-42 px
+
+H4
+24-28 px
+
+Body large
+18px
+
+Body
+16px
+
+Small
+14px
+
+Eyebrow
+12px
+letter-spacing: 0.14em
+
+Mobile:
+H1 48-56px
+H2 38-44px
+H3 30-34px
+Body 16px
+
+21. Optimización de las fuentes
+Usaría next/font.
+Next puede descargar las fuentes durante build y servirlas directamente desde el propio dominio, evitando peticiones externas y reduciendo layout shift. Next.js
+Ejemplo conceptual:
+const manrope = Manrope({
+  subsets: ["latin"],
+  variable: "--font-manrope",
+})
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  variable: "--font-fraunces",
+})
+
+22. Iconos
+Librería
+Lucide React
+pnpm add lucide-react
+
+Lucide React tiene soporte React/TypeScript y actualmente se distribuye sin dependencias runtime adicionales. npm
+Ejemplos para Pilcococha:
+Leaf
+Sprout
+MapPin
+Globe2
+Package
+Truck
+ShieldCheck
+FileDown
+CalendarDays
+Phone
+Mail
+ArrowRight
+ChevronDown
+Check
+Menu
+X
+Instagram
+Linkedin
+
+23. Estilo de iconografía
+Siempre:
+stroke-width: 1.7 - 2
+
+Tamaños:
+16px → inputs
+18px → botones
+20px → navegación
+24px → features
+28-32px → cards
+
+No mezclaría:
+FontAwesome
+Lucide
+Material Icons
+SVG random
+
+Todo sería Lucide.
+24. Logo
+El logo no debe salir de Lucide.
+Debe ser SVG propio.
+Crearía:
+LOGOTIPO COMPLETO
+Agrícola Pilcococha
+
+ISOTIPO
+símbolo
+
+VERSIÓN HORIZONTAL
+
+VERSIÓN VERTICAL
+
+VERSIÓN BLANCA
+
+VERSIÓN MONOCROMÁTICA
+
+FAVICON
+
+Visualmente buscaría algo extremadamente simple:
+       hoja / fruto
+          ↓
+      [símbolo]
+
+AGRÍCOLA PILCOCOCHA
+
+No usaría una ilustración complicada de una palta abierta.
+Quiero algo que también funcione a:
+16 x 16 px
+
+como favicon.
+25. UI Components
+Aquí usaría shadcn/ui, pero con una condición:
+no copiar visualmente el aspecto de shadcn.
+Solo utilizaríamos sus primitives.
+shadcn es especialmente útil porque los componentes terminan dentro de nuestro propio código, en lugar de ocultarlos detrás de una caja negra. Su versión moderna está preparada para React y Tailwind v4. shadcn/ui
+Usaría shadcn para:
+Button
+Sheet
+Dialog
+Accordion
+Select
+Dropdown
+Tooltip
+Form primitives
+Popover
+Drawer
+Carousel wrapper
+Toast
+
+No para diseñar toda la página.
+26. Botones
+Tendríamos tres variantes.
+Primary
+[ Solicitar cotización → ]
+
+Forest.
+Secondary
+[ Nuestra palta → ]
+
+Crema/blanco.
+Ghost
+Descargar ficha ↓
+
+Sin background.
+27. Hover de botones
+Muy pequeño:
+translateY(0 → -2px)
+
+background
+forest → forest-700
+
+arrow:
+x 0 → 4px
+
+Tiempo:
+180-220ms
+
+28. Carruseles
+Usaría:
+Embla Carousel
+pnpm add embla-carousel-react
+
+Embla ofrece integración React, swipe y control completo del markup y estilos. Embla Carousel
+De hecho, el Carousel de shadcn utiliza Embla debajo. shadcn/ui
+Lo emplearía solo para:
+- testimonios.
+- certificaciones si son muchas.
+- galería móvil.
+En desktop prefiero grid.
+29. Proceso productivo
+Visual:
+01             02             03             04             05
+│              │              │              │              │
+Cultivo  →   Cosecha   →   Selección  →   Empaque   →   Despacho
+
+Desktop horizontal.
+Mobile vertical.
+Al entrar al viewport:
+línea progresa →
+
+y los pasos van apareciendo.
+30. Producto
+Este es uno de los bloques más importantes.
+PALTA HASS
+
+Variedad            Hass
+Origen              Perú
+Calibre             XX
+Materia seca        XX
+Peso por caja       XX
+Presentación        XX
+Disponibilidad      XXX
+
+CTA:
+[Solicitar información]
+
+[Descargar ficha técnica ↓]
+
+31. Calendario de temporada
+En lugar de una tabla fea:
+     E F M A M J J A S O N D
+
+Costa
+     ○ ○ ● ● ● ● ● ● ● ○ ○ ○
+
+Sierra
+     ○ ○ ○ ○ ● ● ● ● ● ● ○ ○
+
+Si finalmente solo existe una zona de producción, dejamos una línea.
+32. Mapa
+Aquí tengo una recomendación bastante clara.
+Mi elección: MapLibre GL + react-map-gl
+pnpm add maplibre-gl react-map-gl
+
+MapLibre GL JS es una librería TypeScript basada en WebGL para mapas vectoriales interactivos y personalizables. MapLibre
+react-map-gl proporciona una capa React reactiva para MapLibre. Visgl
+33. ¿Por qué MapLibre?
+Porque podremos diseñar el mapa con la identidad Pilcococha.
+En vez de:
+Google Maps tradicional
+
+tendríamos:
+Fondo crema
+Tierra beige
+Vegetación verde suave
+Océano gris azulado
+Pin Pilcococha verde oscuro
+
+Eso se integra muchísimo mejor visualmente.
+34. Qué mostraría el mapa
+No un mapa enorme.
+┌─────────────────────────────────┐
+│                                 │
+│             PERÚ                │
+│                                 │
+│               ● Fundo           │
+│                                 │
+│                                 │
+└─────────────────────────────────┘
+
+Al pulsar el marker:
+Agrícola Pilcococha
+
+Ubicación
+Altitud
+Zona de producción
+
+[Ver ubicación]
+
+Solo mostraremos los datos que la empresa quiera hacer públicos.
+35. Provider de mapas
+MapLibre renderiza el mapa, pero necesitamos tiles.
+Para producción usaría algo como:
+MapTiler
++
+MapLibre
+
+o tiles propios en el futuro.
+MapLibre permite trabajar con diferentes proveedores y también con tiles propios; react-map-gl documenta esta separación entre renderer y proveedor de datos. Visgl
+36. Lazy load del mapa
+No cargaría MapLibre inmediatamente.
+Es relativamente pesado.
+La sección:
+MarketsMap
+
+se cargaría mediante dynamic import cuando sea necesaria.
+Eso evita penalizar el primer render.
+37. Formulario de cotización
+Librerías:
+pnpm add react-hook-form zod @hookform/resolvers
+
+React Hook Form
+Gestiona el estado del formulario minimizando renders innecesarios. React Hook Form
+Zod
+Define validación fuertemente tipada con TypeScript; Zod 4 es actualmente estable. Zod
+38. Datos del formulario
+Nombre *
+Empresa *
+Correo *
+Teléfono / WhatsApp
+País *
+Producto
+
+Volumen aproximado
+    kg
+    toneladas
+    pallets
+    contenedores
+
+Frecuencia
+    única
+    semanal
+    mensual
+
+Mercado destino
+
+Presentación requerida
+
+Mensaje
+
+Eso genera leads B2B mucho más útiles.
+39. Estados del formulario
+Necesitamos:
+idle
+loading
+success
+error
+
+Botón durante envío:
+Enviando...
+
+Al completar:
+✓ Solicitud enviada correctamente
+Nuestro equipo comercial se pondrá en contacto.
+
+40. Toast
+Utilizaría Sonner.
+Está integrado con shadcn y sirve para mensajes de éxito/error. shadcn/ui
+41. Anti-spam
+Integraría:
+Cloudflare Turnstile
+No CAPTCHA tradicional.
+Cloudflare recomienda actualmente el modo Managed, que elige automáticamente cuánto desafío necesita cada visitante. Cloudflare Docs
+La arquitectura sería:
+Usuario
+   ↓
+Formulario
+   ↓
+Turnstile token
+   ↓
+Next.js API
+   ↓
+Cloudflare Siteverify
+   ↓
+válido
+   ↓
+Enviar solicitud
+
+La validación del token en servidor es obligatoria; no basta con el widget del navegador. Cloudflare Docs
+42. Galería
+Grid editorial:
+┌──────────────┬────────┬────────┐
+│              │ foto 2 │ foto 3 │
+│              ├────────┼────────┤
+│   FOTO 1     │ foto 4 │ foto 5 │
+│              │        │        │
+└──────────────┴────────┴────────┘
+
+Nada de carrusel automático gigante.
+Hover:
+zoom 3 %
+overlay verde
+label aparece
+
+43. Imágenes
+Todas deberían utilizar:
+<Image />
+
+de Next.
+Next Image ofrece optimización automática, dimensionado adaptativo, lazy loading y reducción del layout shift. Next.js
+Especialmente:
+hero
+producto
+fundo
+proceso
+galería
+
+44. Hero image
+La imagen más crítica del sitio.
+Idealmente:
+mínimo:
+2400 × 1400
+
+preferencia:
+foto profesional real
+
+orientación:
+landscape
+
+objeto importante:
+lado derecho
+
+espacio visual:
+lado izquierdo para texto
+
+Eso evita poner texto encima de la fruta o personas.
+45. Calidad y certificaciones
+Diseño:
+Calidad en cada etapa
+
+✓ Manejo agrícola
+✓ Selección
+✓ Trazabilidad
+✓ Postcosecha
+✓ Control de calidad
+
+            [ FOTO ]
+
+Abajo:
+CERTIFICACIONES
+
+[LOGO] [LOGO] [LOGO]
+
+No mostraremos ninguna hasta verificarla.
+46. Mercado / exportación
+Una sección podría mostrar:
+Desde Perú
+hacia nuevos mercados.
+
+PERÚ   →   EUROPA
+       →   EE.UU.
+       →   LATAM
+
+Pero solo cuando tengamos confirmación real.
+Distinguiría:
+Mercados actuales
+
+Mercados objetivo
+
+Nunca mezclarlos.
+47. ES / EN
+La web debería ser bilingüe desde el inicio.
+Estructura:
+/es
+/en
+
+Ejemplo:
+/es/nuestra-palta
+
+/en/our-avocados
+
+Next.js contempla directamente routing y renderizado por locale para aplicaciones internacionalizadas. Next.js
+Podemos utilizar:
+next-intl
+
+si el contenido crece.
+48. SEO
+Cada página tendría:
+title
+description
+canonical
+OpenGraph
+Twitter Card
+robots
+sitemap
+hreflang
+structured data
+
+Next dispone de Metadata API específica para SEO y Open Graph. Next.js
+49. SEO estructurado
+Añadiría JSON-LD:
+Organization
+
+LocalBusiness
+o
+AgriculturalBusiness
+
+Product
+
+Para la palta:
+Product:
+Palta Hass
+
+50. Footer
+Cuatro columnas.
+LOGO
+
+Agrícola Pilcococha
+Descripción corta
+
+EMPRESA
+Nosotros
+Proceso
+Calidad
+
+PRODUCTOS
+Palta Hass
+Ficha técnica
+Temporada
+
+CONTACTO
+Teléfono
+Correo
+Ubicación
+
+Instagram
+LinkedIn
+
+Abajo:
+© Agrícola Pilcococha 2026
+
+Privacidad
+Cookies
+
+51. Responsive design
+Diseñaría en:
+Mobile first
+
+Grid:
+Mobile
+4 columnas
+
+Tablet
+8 columnas
+
+Desktop
+12 columnas
+
+Container:
+max-width:
+1200 - 1280px
+
+52. Breakpoints conceptuales
+< 640
+Mobile
+
+640-768
+Mobile landscape
+
+768-1024
+Tablet
+
+1024-1280
+Desktop
+
+> 1280
+Large desktop
+
+53. Espaciado
+Sistema de 8.
+8
+16
+24
+32
+48
+64
+80
+96
+120
+
+Secciones desktop:
+96-120px vertical
+
+Mobile:
+64-80px
+
+54. Microinteracciones
+Estas pequeñas cosas son las que hacen que la web se sienta profesional.
+Navbar
+hover
+línea inferior aparece
+
+CTA
+arrow →
+se desplaza 4px
+
+Cards
+imagen zoom 1.03
+
+Links
+underline animado
+
+Inputs
+border forest
+label cambia color
+
+Marker del mapa
+pulse extremadamente sutil
+
+55. No abusaría de animaciones
+Evitaría:
+texto volando
+rotaciones
+zoom constante
+cards flotando
+partículas
+cursores personalizados
+fondos 3D
+
+Pilcococha debe verse:
+natural + premium + confiable + B2B.
+No “sitio experimental”.
+56. Smooth page transitions
+Cuando pasemos:
+Home
+→
+Nuestra Palta
+
+haría:
+fade 150 ms
+
+y entrada:
+fade + y 8px
+
+No usaría una transición de 2 segundos.
+57. Performance
+El objetivo sería que prácticamente todo el Home se renderice en servidor.
+Solo serían Client Components:
+Navbar mobile
+Motion components
+Carousel
+Map
+Formulario
+Language switcher
+Lightbox
+
+El resto:
+Server Components
+
+Eso reduce bastante JavaScript enviado al navegador.
+58. shadcn vs componentes propios
+Distribución aproximada:
+70 % componentes Pilcococha propios
+30 % primitives shadcn
+
+Ejemplo:
+Propios
+Hero
+ProductCard
+SeasonCalendar
+ProcessTimeline
+MarketMap
+CertificationGrid
+Gallery
+SectionHeader
+MetricCard
+
+shadcn
+Sheet
+Dialog
+Tooltip
+Select
+Popover
+Form controls
+Toast
+
+59. Dependencias que instalaría
+El paquete quedaría aproximadamente así:
+pnpm add \
+motion \
+lucide-react \
+react-hook-form \
+zod \
+@hookform/resolvers \
+maplibre-gl \
+react-map-gl \
+embla-carousel-react \
+sonner \
+class-variance-authority \
+clsx \
+tailwind-merge
+
+Opcional:
+pnpm add lenis
+
+Luego:
+pnpm dlx shadcn@latest init
+
+shadcn utiliza actualmente dependencias como class-variance-authority, lucide-react, tw-animate-css y utilidades relacionadas para su implementación Tailwind v4. shadcn/ui
+60. Stack completo resumido
+Función	Tecnología
+Framework	Next.js App Router
+UI	React
+Lenguaje	TypeScript
+CSS	Tailwind CSS v4
+UI primitives	shadcn/ui
+Animaciones	Motion
+Scroll premium	Lenis opcional
+Iconos	Lucide React
+Carousel	Embla
+Formularios	React Hook Form
+Validación	Zod
+Mapa	MapLibre GL
+Wrapper mapa	react-map-gl
+Toast	Sonner
+Anti-spam	Cloudflare Turnstile
+Fuentes	next/font
+Imágenes	next/image
+Idiomas	routing ES/EN / next-intl
+SEO	Next Metadata
+PDF	ficha técnica estática
+Analytics	GA4/Plausible según decisión
+CMS	opcional posteriormente
+
+
+61. Arquitectura de componentes que yo implementaría
+App
+│
+├── SiteHeader
+│   ├── Logo
+│   ├── DesktopNavigation
+│   ├── LanguageSwitcher
+│   ├── QuoteButton
+│   └── MobileNavigation
+│
+├── HomePage
+│   │
+│   ├── HeroSection
+│   │   ├── Eyebrow
+│   │   ├── HeroTitle
+│   │   ├── CTAGroup
+│   │   └── OriginBadge
+│   │
+│   ├── TrustStrip
+│   │
+│   ├── AboutSection
+│   │   ├── ImageFeature
+│   │   └── MetricGrid
+│   │
+│   ├── ProductSection
+│   │   ├── ProductFeature
+│   │   ├── SpecificationTable
+│   │   ├── SeasonCalendar
+│   │   └── TechnicalSheetButton
+│   │
+│   ├── ProcessSection
+│   │   └── ProcessTimeline
+│   │
+│   ├── QualitySection
+│   │   ├── QualityFeatures
+│   │   └── CertificationGrid
+│   │
+│   ├── MarketSection
+│   │   ├── MarketMap
+│   │   └── MarketInfo
+│   │
+│   ├── GallerySection
+│   │
+│   ├── QuoteSection
+│   │   └── QuoteForm
+│   │
+│   └── ContactSection
+│       ├── ContactInfo
+│       └── LocationMap
+│
+└── SiteFooter
+
+62. Jerarquía visual final
+Tedcito, quiero que el visitante vea las cosas exactamente en este orden:
+1
+QUÉ VENDE
+
+Palta Hass
+
+
+2
+DE DÓNDE VIENE
+
+Agrícola Pilcococha
+Perú
+
+
+3
+POR QUÉ CONFIAR
+
+Calidad
+Proceso
+Trazabilidad
+
+
+4
+QUÉ OFRECE
+
+Calibres
+Presentación
+Temporada
+
+
+5
+DÓNDE OPERA
+
+Mercados
+
+
+6
+PRUEBA REAL
+
+Fotos
+Certificaciones
+Fundo
+
+
+7
+CONVERSIÓN
+
+Solicitar cotización
+
+Eso es mucho más importante que llenar el Home de información.
+63. Qué conservaría del HTML inicial
+El prototipo inicial ya tenía correctamente:
+Hero
+Trust bar
+Nosotros
+Palta Hass
+Especificaciones
+Calendario
+Proceso
+Calidad
+Mercados
+Galería
+Cotización
+Contacto
+Footer
+
+La mejora no consiste tanto en cambiar el contenido sino en transformar ese HTML en:
+componentes
++
+datos tipados
++
+animaciones
++
+accesibilidad
++
+SEO
++
+responsive
++
+formularios reales
++
+mapas
++
+optimización
++
+ES/EN
+
+64. Qué NO instalaría
+No metería librerías por meter librerías.
+Evitaría inicialmente:
+Bootstrap
+Material UI
+Ant Design
+Three.js
+GSAP
+AOS
+Swiper
+FontAwesome
+jQuery
+Redux
+
+No porque sean malas, sino porque este proyecto no las necesita.
+Para este sitio, una arquitectura más contenida producirá mejor rendimiento y será mucho más fácil de mantener.
+65. La combinación que escogería definitivamente
+Tedcito, si empezara hoy el desarrollo real, mi configuración sería:
+Next.js
+React
+TypeScript
+Tailwind CSS v4
+
+        +
+
+shadcn/ui
+Lucide
+
+        +
+
+Motion
+
+        +
+
+MapLibre
+react-map-gl
+
+        +
+
+React Hook Form
+Zod
+
+        +
+
+Embla
+
+        +
+
+Cloudflare Turnstile
+
+Y visualmente:
+Fraunces
++
+Manrope
+
+Forest
++
+Avocado
++
+Cream
++
+Earth
+
+fotografía real
++
+mucho espacio negativo
++
+animaciones suaves
++
+cards editoriales
++
+datos técnicos claros
+
+Ese conjunto nos permitiría hacer una web que tome lo mejor de Westfalia, FruGlobe, Camposol, Inka Fruit, Marand y Profrutos, pero sin que Pilcococha parezca una copia de ninguna de ellas. La identidad terminaría siendo mucho más propia y, sobre todo, orientada a presentar el fundo y convertir visitantes B2B en solicitudes de cotización.
+
+
+
+
+
+    
+
+¿Te gusta esta personalidad?

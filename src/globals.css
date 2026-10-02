@@ -1,0 +1,80 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-serif: "Fraunces", Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-display: "Fraunces", Georgia, serif;
+
+  --color-forest-950: #0E2C20;
+  --color-forest-900: #123325;
+  --color-forest-800: #173D2D;
+  --color-forest-700: #24523D;
+  --color-forest-600: #2F684E;
+  --color-forest-500: #3E8B67;
+  --color-avocado-600: #6E8F3D;
+  --color-avocado-400: #9AB55D;
+  --color-cream: #F7F4EA;
+  --color-sand: #EFEBDD;
+  --color-earth: #A56F46;
+  --color-charcoal: #20251F;
+  --color-muted: #687168;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif, .font-display {
+    font-family: var(--font-serif);
+  }
+}
+
+@layer utilities {
+  .ebrow {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-size: 0.75rem;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: 200%;
+  animation: marquee 14s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+/* Custom leaflet marker fixes */
+.leaflet-container {
+  font-family: var(--font-sans);
+  background-color: #f7f4ea;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 18px !important;
+  box-shadow: 0 10px 25px -5px rgba(14, 44, 32, 0.2) !important;
+  border: 1px solid rgba(23, 61, 45, 0.15) !important;
+  padding: 4px !important;
+}
+
+.leaflet-popup-tip {
+  background: #ffffff !important;
+}
