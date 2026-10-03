@@ -4,7 +4,7 @@ import { MapPin, Mail, Phone, ArrowUpRight, ShieldCheck } from 'lucide-react'
 
 export const SiteFooter: React.FC = () => {
   return (
-    <footer className="bg-forest-950 text-cream/80 pt-16 pb-12 border-t border-forest-900">
+    <footer data-bg-color="#0E2C20" className="bg-forest-950 text-cream/80 pt-16 pb-12 border-t border-forest-900">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-6 xl:gap-8 items-center pb-16 border-b border-forest-800/60">
           {/* Columna 1: Marca & Identidad */}

@@ -572,18 +572,18 @@ export const SedesMap: React.FC = () => {
   }
 
   return (
-    <section className="py-20 bg-cream">
+    <section data-bg-color="#081E15" className="py-20 sm:py-24 transition-colors duration-700 relative z-10">
       <div className="max-w-7xl mx-auto px-6">
         {/* Encabezado */}
-        <div className="mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-forest-800/10 text-forest-800 text-xs font-bold uppercase tracking-widest mb-3">
-            <Compass className="w-3.5 h-3.5" />
+        <div className="mb-8 space-y-3">
+          <div className="section-badge">
+            <span className="section-badge-dot" />
             <span>Valle Sagrado de los Incas • Cusco, Perú</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-forest-950 leading-tight">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream leading-tight">
             Nuestra Sede y Fundo Agrícola
           </h2>
-          <p className="text-muted text-base md:text-lg mt-3 max-w-3xl leading-relaxed">
+          <p className="text-cream/80 text-base md:text-lg max-w-3xl leading-relaxed font-light">
             Explora nuestros campos de cultivo de Palta Hass en fotografía satelital real de alta resolución, a más de 2,900 metros de altitud en el Valle Sagrado de los Incas.
           </p>
         </div>
@@ -594,7 +594,7 @@ export const SedesMap: React.FC = () => {
           <button
             type="button"
             onClick={() => copyCoordinates(selectedSede)}
-            className="group inline-flex items-center gap-2 px-3.5 py-2.5 rounded-full bg-forest-950 hover:bg-forest-900 border border-forest-800 text-cream text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-forest-950 hover:bg-forest-900 border border-avocado-400/40 text-cream text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
             title="Haz clic para copiar las coordenadas GPS"
           >
             <div className="w-5 h-5 rounded-full bg-avocado-400 text-forest-950 flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform">
@@ -621,15 +621,15 @@ export const SedesMap: React.FC = () => {
             href={selectedSede.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-white hover:bg-sand border border-charcoal/15 text-charcoal text-xs font-semibold shadow-xs transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream text-xs font-semibold shadow-xs transition-all hover:scale-[1.02]"
           >
-            <ExternalLink className="w-3.5 h-3.5 text-forest-800" />
+            <ExternalLink className="w-3.5 h-3.5 text-avocado-400" />
             <span>Abrir en Google Maps</span>
           </a>
 
           {/* 3. Altitud */}
-          <span className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-full bg-sand/80 text-forest-900 text-xs font-semibold border border-charcoal/10 shadow-xs">
-            <Mountain className="w-3.5 h-3.5 text-avocado-600" />
+          <span className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-forest-900/90 text-avocado-300 text-xs font-semibold border border-avocado-400/30 shadow-xs">
+            <Mountain className="w-3.5 h-3.5 text-avocado-400" />
             <span>{selectedSede.altitud}</span>
           </span>
 
@@ -637,11 +637,11 @@ export const SedesMap: React.FC = () => {
           <button
             onClick={triggerSpaceDescent}
             disabled={isDescending}
-            className="group px-4 py-2.5 rounded-full bg-forest-950 hover:bg-forest-900 border border-forest-800 text-avocado-400 font-bold text-xs tracking-wide transition-all shadow-sm flex items-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50 cursor-pointer"
+            className="group px-4 py-2.5 rounded-full bg-avocado-600 hover:bg-avocado-400 border border-avocado-400 text-forest-950 font-bold text-xs tracking-wide transition-all shadow-md flex items-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50 cursor-pointer"
             title="Iniciar descenso cinematográfico desde el espacio exterior"
           >
-            <div className="w-5 h-5 rounded-full bg-avocado-400/20 text-avocado-400 flex items-center justify-center shrink-0 border border-avocado-400/30 group-hover:border-avocado-400/60 transition-colors">
-              <Rocket className={`w-3.5 h-3.5 text-avocado-400 ${isDescending ? 'animate-bounce' : 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform'}`} />
+            <div className="w-5 h-5 rounded-full bg-forest-950/20 text-forest-950 flex items-center justify-center shrink-0 border border-forest-950/30 group-hover:border-forest-950/60 transition-colors">
+              <Rocket className={`w-3.5 h-3.5 text-forest-950 ${isDescending ? 'animate-bounce' : 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-transform'}`} />
             </div>
             <span>{isDescending ? 'Descendiendo...' : 'Vuelo desde el Espacio'}</span>
           </button>
@@ -649,25 +649,25 @@ export const SedesMap: React.FC = () => {
           {/* 5. Zoom Huerto */}
           <button
             onClick={handleZoomHuerto}
-            className="px-4 py-2.5 rounded-full bg-white hover:bg-sand border border-charcoal/15 text-charcoal font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+            className="px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
             title="Acercamiento máximo al huerto de palta"
           >
-            <ZoomIn className="w-3.5 h-3.5 text-forest-800" />
+            <ZoomIn className="w-3.5 h-3.5 text-avocado-400" />
             <span>Zoom Huerto (18x)</span>
           </button>
 
           {/* 6. Centrar Sede */}
           <button
             onClick={handleResetView}
-            className="px-4 py-2.5 rounded-full bg-white hover:bg-sand border border-charcoal/15 text-charcoal font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+            className="px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
           >
-            <Compass className="w-3.5 h-3.5 text-forest-800" />
+            <Compass className="w-3.5 h-3.5 text-avocado-400" />
             <span>Centrar Sede</span>
           </button>
         </div>
 
         {/* Contenedor del Mapa Leaflet Interactivo */}
-        <div className="rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-sand relative h-[600px]">
+        <div className="rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20 bg-forest-950 relative h-[600px]">
           <div ref={mapContainerRef} className="w-full h-full z-0" />
 
           {/* Efecto Cinematográfico de Descenso Espacial / HUD de Telemetría */}

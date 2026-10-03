@@ -91,7 +91,7 @@ export const FundoCarousel: React.FC = () => {
 
   return (
     <div 
-      className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-forest-950 h-[480px] sm:h-[500px] select-none group"
+      className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[480px] sm:h-[500px] select-none group"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >

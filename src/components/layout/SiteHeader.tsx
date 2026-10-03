@@ -16,6 +16,8 @@ export const SiteHeader: React.FC = () => {
   const [scrolled, setScrolled] = useState(false)
   const [currentLang, setCurrentLang] = useState<'ES' | 'EN'>('ES')
   const location = useLocation()
+  const isHome = location.pathname === '/'
+  const isSolid = !isHome || scrolled
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,19 +33,21 @@ export const SiteHeader: React.FC = () => {
 
   return (
     <header 
-      className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-cream/95 backdrop-blur-md shadow-sm border-b border-charcoal/10 py-3' 
-          : 'bg-cream/80 backdrop-blur-xs border-b border-charcoal/5 py-4'
+      className={`${
+        isHome ? 'fixed top-0 left-0 right-0' : 'sticky top-0'
+      } z-50 transition-all duration-500 ${
+        isSolid 
+          ? 'bg-[#F7F4EA] shadow-md border-b border-charcoal/10 py-3 text-charcoal' 
+          : 'bg-forest-950/40 backdrop-blur-xl border-b border-white/10 py-4 text-cream'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* LOGO PRINCIPAL (SIN CARD, SÓLO LOGO) */}
+        {/* LOGO PRINCIPAL (SIN CARD) */}
         <Link to="/" className="flex items-center group py-0.5">
           <img 
             src="/images/fundo/logopilcococha.png" 
             alt="Agrícola Pilcococha - Palta Hass Peruana de Exportación" 
-            className="h-12 sm:h-14 md:h-16 w-auto object-contain select-none transition-transform duration-300 group-hover:scale-105"
+            className="h-10 sm:h-12 md:h-14 w-auto object-contain select-none transition-transform duration-300 group-hover:scale-105"
             loading="eager"
           />
         </Link>
@@ -58,13 +62,15 @@ export const SiteHeader: React.FC = () => {
                 to={item.href}
                 className={`text-sm font-medium transition-colors relative py-1 ${
                   isActive 
-                    ? 'text-forest-950 font-semibold' 
-                    : 'text-charcoal/80 hover:text-forest-700'
+                    ? isSolid ? 'text-forest-950 font-bold' : 'text-cream font-bold'
+                    : isSolid ? 'text-charcoal/80 hover:text-forest-700' : 'text-cream/80 hover:text-white'
                 }`}
               >
                 {item.label}
                 {isActive && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-forest-800 rounded-full" />
+                  <span className={`absolute bottom-0 left-0 right-0 h-0.5 rounded-full ${
+                    isSolid ? 'bg-forest-800' : 'bg-avocado-400'
+                  }`} />
                 )}
               </Link>
             )
@@ -76,7 +82,11 @@ export const SiteHeader: React.FC = () => {
           {/* Selector de idioma */}
           <button 
             onClick={() => setCurrentLang(currentLang === 'ES' ? 'EN' : 'ES')}
-            className="flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full border border-charcoal/15 text-charcoal hover:border-forest-700 hover:text-forest-700 transition-colors"
+            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-colors ${
+              isSolid 
+                ? 'border-charcoal/15 text-charcoal hover:border-forest-700 hover:text-forest-700' 
+                : 'border-white/20 text-cream hover:border-avocado-400 hover:text-avocado-400 bg-white/5'
+            }`}
             title="Cambiar idioma"
           >
             <Globe className="w-3.5 h-3.5" />
@@ -86,7 +96,11 @@ export const SiteHeader: React.FC = () => {
           {/* CTA Cotización */}
           <Link
             to="/cotizar"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-800 hover:bg-forest-700 text-white text-sm font-semibold tracking-wide transition-all shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0"
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0 ${
+              isSolid 
+                ? 'bg-forest-800 hover:bg-forest-700 text-white' 
+                : 'bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold shadow-lg shadow-avocado-600/20'
+            }`}
           >
             <span>Cotizar</span>
             <ArrowRight className="w-4 h-4" />
@@ -97,13 +111,17 @@ export const SiteHeader: React.FC = () => {
         <div className="flex items-center gap-3 lg:hidden">
           <Link
             to="/cotizar"
-            className="text-xs font-semibold px-3 py-1.5 rounded-full bg-forest-800 text-white"
+            className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
+              isSolid ? 'bg-forest-800 text-white' : 'bg-avocado-600 text-forest-950 font-bold'
+            }`}
           >
             Cotizar
           </Link>
           <button 
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-2 rounded-lg hover:bg-charcoal/10 transition-colors text-charcoal"
+            className={`p-2 rounded-lg transition-colors ${
+              isSolid ? 'text-charcoal hover:bg-charcoal/10' : 'text-cream hover:bg-white/10'
+            }`}
             aria-label="Menú principal"
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -113,7 +131,7 @@ export const SiteHeader: React.FC = () => {
 
       {/* MENÚ DESPLEGABLE MÓVIL */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-charcoal/10 bg-cream px-6 py-6 flex flex-col gap-4 shadow-xl">
+        <div className="lg:hidden border-t border-charcoal/10 bg-cream px-6 py-6 flex flex-col gap-4 shadow-xl" style={{ backgroundColor: '#F7F4EA' }}>
           <nav className="flex flex-col gap-3">
             {navLinks.map((item) => (
               <Link

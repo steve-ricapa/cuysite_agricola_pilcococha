@@ -43,7 +43,7 @@ export const App: React.FC = () => {
   return (
     <BrowserRouter>
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-cream text-charcoal font-sans selection:bg-forest-800 selection:text-white">
+      <div className="min-h-screen flex flex-col bg-transparent text-charcoal font-sans selection:bg-forest-800 selection:text-white transition-colors duration-700">
         <SiteHeader />
         <main className="flex-1 flex flex-col">
           <AnimatedRoutes />

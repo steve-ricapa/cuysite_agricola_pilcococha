@@ -68,7 +68,7 @@ export const PaltaCarousel: React.FC = () => {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Marco de Imagen Principal con Transición Ken-Burns & Crossfade */}
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-forest-950 h-[460px] sm:h-[490px] group">
+      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[460px] sm:h-[490px] group">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide.id}
@@ -90,11 +90,11 @@ export const PaltaCarousel: React.FC = () => {
 
         {/* Badge flotante de Calidad */}
         <div className="absolute top-5 left-5 z-20 flex flex-wrap items-center gap-2">
-          <span className="px-3.5 py-1.5 rounded-full bg-forest-950/85 backdrop-blur-md text-avocado-400 font-bold text-xs border border-white/15 shadow-lg flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-avocado-400" />
+          <span className="matucana-pill matucana-pill-emerald shadow-lg">
+            <Sparkles className="w-3.5 h-3.5" />
             <span>{activeSlide.tag}</span>
           </span>
-          <span className="px-3 py-1 rounded-full bg-avocado-400/90 text-forest-950 font-bold text-xs shadow-md">
+          <span className="matucana-pill shadow-md">
             {activeSlide.badgeText}
           </span>
         </div>
@@ -116,7 +116,7 @@ export const PaltaCarousel: React.FC = () => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
               transition={{ duration: 0.4 }}
-              className="bg-forest-950/85 backdrop-blur-md p-4 sm:p-5 rounded-2xl border border-white/15 shadow-xl text-cream"
+              className="liquid-glass-panel p-4 sm:p-5 rounded-2xl backdrop-blur-xl border border-white/20 shadow-xl text-cream"
             >
               <div className="flex items-center justify-between gap-3 mb-1">
                 <span className="text-xs uppercase font-extrabold tracking-wider text-avocado-400">
@@ -145,13 +145,13 @@ export const PaltaCarousel: React.FC = () => {
             <button
               key={slide.id}
               onClick={() => setActiveIndex(idx)}
-              className={`group flex items-center gap-3 p-2.5 rounded-2xl text-left transition-all border ${
+              className={`group flex items-center gap-3 p-2.5 rounded-2xl text-left transition-all cursor-pointer ${
                 isCurrent
-                  ? 'bg-forest-950 text-cream border-forest-700 shadow-md ring-2 ring-avocado-400/40 scale-[1.02]'
-                  : 'bg-white hover:bg-sand/60 text-charcoal border-charcoal/10 shadow-xs'
+                  ? 'liquid-glass-card-active ring-2 ring-avocado-400/90 shadow-md scale-[1.02]'
+                  : 'liquid-glass-card hover:border-white/40'
               }`}
             >
-              <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-black/10 relative">
+              <div className="w-11 h-11 rounded-xl overflow-hidden shrink-0 border border-white/20 relative">
                 <img
                   src={slide.image}
                   alt={slide.title}
@@ -163,12 +163,12 @@ export const PaltaCarousel: React.FC = () => {
               </div>
               <div className="min-w-0 flex-1">
                 <span className={`text-[10px] font-bold block truncate uppercase tracking-wider ${
-                  isCurrent ? 'text-avocado-400' : 'text-forest-800'
+                  isCurrent ? 'text-avocado-300 font-mono' : 'text-cream/70'
                 }`}>
                   {slide.tag}
                 </span>
                 <h4 className={`text-xs font-bold font-serif truncate ${
-                  isCurrent ? 'text-cream' : 'text-forest-950'
+                  isCurrent ? 'text-cream' : 'text-cream/90'
                 }`}>
                   {slide.badgeText}
                 </h4>
