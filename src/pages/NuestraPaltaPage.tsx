@@ -49,35 +49,186 @@ const calibresData: CalibreItem[] = [
   { calibre: '28', peso: '135 - 144 g', fr: '28 frutos / caja 4kg', count: 28, sizeLabel: 'Foodservice / Bolsa', category: 'retail', avocados: 8, description: 'Gran eficiencia de costo para catering y procesamiento.' },
 ]
 
-// Partículas ambientales para la sección de formatos
-const ambientParticles = {
-  caja: [
-    { icon: '🥑', left: 6, top: 18, delay: 0.1, duration: 4.2, size: 26, opacity: 0.85 },
-    { icon: '🍃', left: 19, top: 40, delay: 1.0, duration: 3.6, size: 22, opacity: 0.8 },
-    { icon: '✨', left: 34, top: 22, delay: 0.5, duration: 3.0, size: 18, opacity: 0.9 },
-    { icon: '🌱', left: 48, top: 50, delay: 1.6, duration: 4.4, size: 24, opacity: 0.75 },
-    { icon: '🥑', left: 64, top: 16, delay: 0.8, duration: 3.9, size: 28, opacity: 0.9 },
-    { icon: '🍃', left: 78, top: 38, delay: 1.3, duration: 3.5, size: 22, opacity: 0.8 },
-    { icon: '✨', left: 91, top: 24, delay: 0.3, duration: 3.2, size: 20, opacity: 0.95 },
-  ],
-  master: [
-    { icon: '📦', left: 8, top: 22, delay: 0.1, duration: 4.0, size: 26, opacity: 0.85 },
-    { icon: '🏷️', left: 23, top: 46, delay: 1.2, duration: 3.7, size: 22, opacity: 0.8 },
-    { icon: '⚡', left: 39, top: 18, delay: 0.4, duration: 3.1, size: 20, opacity: 0.9 },
-    { icon: '📦', left: 54, top: 48, delay: 1.5, duration: 4.2, size: 28, opacity: 0.85 },
-    { icon: '📐', left: 69, top: 28, delay: 0.7, duration: 3.6, size: 22, opacity: 0.75 },
-    { icon: '📦', left: 84, top: 20, delay: 1.3, duration: 3.9, size: 26, opacity: 0.85 },
-    { icon: '⚡', left: 94, top: 38, delay: 0.2, duration: 3.3, size: 18, opacity: 0.95 },
-  ],
-  reefer: [
-    { icon: '❄️', left: 5, top: 15, delay: 0.1, duration: 3.6, size: 28, opacity: 0.95 },
-    { icon: '🧊', left: 18, top: 32, delay: 0.9, duration: 4.0, size: 24, opacity: 0.85 },
-    { icon: '✦', left: 33, top: 20, delay: 0.3, duration: 3.0, size: 20, opacity: 0.95 },
-    { icon: '❄', left: 47, top: 44, delay: 1.4, duration: 3.7, size: 30, opacity: 0.9 },
-    { icon: '🧊', left: 62, top: 12, delay: 0.7, duration: 4.1, size: 22, opacity: 0.8 },
-    { icon: '❄️', left: 77, top: 26, delay: 1.1, duration: 3.5, size: 28, opacity: 0.95 },
-    { icon: '✧', left: 90, top: 36, delay: 0.4, duration: 3.2, size: 22, opacity: 0.95 },
-  ]
+interface Isometric3DBoxProps {
+  depthX?: number
+  depthY?: number
+  borderColor: string
+  topBg: string
+  topContent?: React.ReactNode
+  sideBg: string
+  sideContent?: React.ReactNode
+  frontClassName?: string
+  frontStyle?: React.CSSProperties
+  containerClassName?: string
+  children: React.ReactNode
+  onClick?: () => void
+  onMouseEnter?: () => void
+  onMouseLeave?: () => void
+  style?: React.CSSProperties
+}
+
+const Isometric3DBox: React.FC<Isometric3DBoxProps> = ({
+  depthX = 24,
+  depthY = 24,
+  borderColor,
+  topBg,
+  topContent,
+  sideBg,
+  sideContent,
+  frontClassName = '',
+  frontStyle = {},
+  containerClassName = '',
+  children,
+  onClick,
+  onMouseEnter,
+  onMouseLeave,
+  style = {}
+}) => {
+  return (
+    <div
+      onClick={onClick}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`relative h-full flex flex-col ${containerClassName}`}
+      style={{
+        paddingTop: `${depthY}px`,
+        paddingRight: `${depthX}px`,
+        ...style
+      }}
+    >
+      {/* Cara Frontal (Elemento Maestro con anclaje 3D de todas las aristas y caras) */}
+      <div
+        className={`relative z-10 border-2 overflow-visible h-full flex-1 flex flex-col justify-between ${frontClassName}`}
+        style={{
+          borderColor: borderColor,
+          ...frontStyle
+        }}
+      >
+        {/* 1. Cara Superior 3D (Anclada directamente en la parte superior de la cara frontal) */}
+        <div
+          className="absolute left-0 z-10 overflow-hidden pointer-events-none"
+          style={{
+            bottom: '100%',
+            height: `${depthY}px`,
+            width: `calc(100% + ${depthX}px)`,
+            clipPath: `polygon(${depthX}px 0px, 100% 0px, calc(100% - ${depthX}px) 100%, 0px 100%)`,
+            background: topBg,
+          }}
+        >
+          {topContent}
+        </div>
+
+        {/* 2. Cara Lateral Derecha 3D (Anclada directamente al borde derecho y altura de la cara frontal) */}
+        <div
+          className="absolute z-10 overflow-hidden pointer-events-none"
+          style={{
+            left: '100%',
+            top: `-${depthY}px`,
+            bottom: '0px',
+            width: `${depthX}px`,
+            clipPath: `polygon(0px ${depthY}px, 100% 0px, 100% calc(100% - ${depthY}px), 0px 100%)`,
+            background: sideBg,
+          }}
+        >
+          {sideContent}
+        </div>
+
+        {/* ============================================================== */}
+        {/* 3. LÍNEAS ESTRUCTURALES 3D (Aristas vectoriales conectadas)     */}
+        {/* ============================================================== */}
+        
+        {/* Arista diagonal superior izquierda */}
+        <svg
+          className="absolute pointer-events-none z-20 overflow-visible"
+          style={{
+            bottom: '100%',
+            left: 0,
+            width: `${depthX}px`,
+            height: `${depthY}px`,
+          }}
+        >
+          <line
+            x1="0"
+            y1={depthY}
+            x2={depthX}
+            y2="0"
+            stroke={borderColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Arista horizontal trasera superior */}
+        <div
+          className="absolute pointer-events-none z-20"
+          style={{
+            bottom: `calc(100% + ${depthY}px - 2px)`,
+            left: `${depthX}px`,
+            width: '100%',
+            height: '2px',
+            backgroundColor: borderColor,
+          }}
+        />
+
+        {/* Arista diagonal superior derecha (Unión en Y entre tapa, frontal y lateral) */}
+        <svg
+          className="absolute pointer-events-none z-20 overflow-visible"
+          style={{
+            bottom: '100%',
+            left: '100%',
+            width: `${depthX}px`,
+            height: `${depthY}px`,
+          }}
+        >
+          <line
+            x1="0"
+            y1={depthY}
+            x2={depthX}
+            y2="0"
+            stroke={borderColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Arista vertical trasera derecha */}
+        <div
+          className="absolute pointer-events-none z-20"
+          style={{
+            left: `calc(100% + ${depthX}px - 2px)`,
+            top: `-${depthY}px`,
+            bottom: `${depthY}px`,
+            width: '2px',
+            backgroundColor: borderColor,
+          }}
+        />
+
+        {/* Arista diagonal inferior derecha: une frontal-inf-der con lateral-inf-der */}
+        <svg
+          className="absolute pointer-events-none z-20 overflow-visible"
+          style={{
+            bottom: 0,
+            left: '100%',
+            width: `${depthX}px`,
+            height: `${depthY}px`,
+          }}
+        >
+          <line
+            x1="0"
+            y1={depthY}
+            x2={depthX}
+            y2="0"
+            stroke={borderColor}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        {/* Contenido frontal */}
+        {children}
+      </div>
+    </div>
+  )
 }
 
 export const NuestraPaltaPage: React.FC = () => {
@@ -365,127 +516,116 @@ export const NuestraPaltaPage: React.FC = () => {
           {/* Grilla con Diseño de Cajas de Exportación en 3D Isométrico con Relieve */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 pt-4 pb-8">
             {filteredCalibres.map((item) => (
-              <div 
-                key={item.calibre} 
-                className="group/box relative transition-all duration-300 ease-out transform hover:-translate-y-3.5 hover:scale-[1.02] cursor-pointer"
+              <Isometric3DBox
+                key={item.calibre}
+                depthX={24}
+                depthY={24}
+                borderColor="#bfa179"
+                containerClassName="group/box cursor-pointer transition-all duration-300 ease-out transform hover:-translate-y-3 hover:scale-[1.01]"
                 style={{
                   filter: 'drop-shadow(0 18px 20px rgba(0, 0, 0, 0.45)) drop-shadow(-6px 20px 24px rgba(10, 30, 20, 0.35))'
                 }}
+                topBg="linear-gradient(135deg, #f7ebd9 0%, #ebd7be 50%, #dfc5a6 100%)"
+                topContent={
+                  <>
+                    <div 
+                      className="absolute inset-0 pointer-events-none opacity-40"
+                      style={{
+                        backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(160, 110, 60, 0.15) 4px)'
+                      }}
+                    />
+                    <div className="absolute inset-x-3 top-1/2 -translate-y-1/2 h-3.5 bg-[#dfc5a6]/80 border border-[#b89569] rounded-xs flex items-center justify-center shadow-inner px-2 pointer-events-none">
+                      <span className="text-[7.5px] font-black text-[#5c3e24] tracking-widest uppercase truncate">
+                        AGRÍCOLA PILCOCOCHA • EXPORT PACK
+                      </span>
+                    </div>
+                  </>
+                }
+                sideBg="linear-gradient(90deg, #cfab7d 0%, #ba9363 50%, #a87f4c 100%)"
+                sideContent={
+                  <>
+                    <div 
+                      className="absolute inset-0 pointer-events-none opacity-40"
+                      style={{
+                        backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(55, 30, 8, 0.20) 4px)'
+                      }}
+                    />
+                    <div className="absolute inset-0 flex flex-col items-center justify-around py-10 pointer-events-none">
+                      <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
+                      <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
+                    </div>
+                    <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
+                      <span className="text-[7px] font-mono font-black text-[#563417] rotate-90 tracking-widest whitespace-nowrap opacity-80">
+                        HASS • PERÚ
+                      </span>
+                    </div>
+                  </>
+                }
+                frontClassName="bg-gradient-to-b from-[#f3e3ce] via-[#ebd9c1] to-[#dfcbb1] p-5 shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_-2px_-2px_0_rgba(90,55,25,0.2)] flex flex-col justify-between group-hover/box:bg-[#f6e9d7] transition-colors duration-300 relative"
               >
-                {/* 1. CARA SUPERIOR (TAPA EN PERSPECTIVA 3D) */}
-                <div 
-                  className="absolute top-0 left-0 right-0 h-[28px] z-10 overflow-hidden border-t-2 border-l border-[#c4a57b] transition-all duration-300 group-hover/box:brightness-105"
-                  style={{
-                    clipPath: 'polygon(22px 0px, 100% 0px, calc(100% - 22px) 100%, 0px 100%)',
-                    background: 'linear-gradient(135deg, #f7ebd9 0%, #ebd7be 50%, #dfc5a6 100%)',
-                    backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(160, 110, 60, 0.12) 4px)'
-                  }}
-                >
-                  {/* Troquel superior de ventilación / agarradera de la caja */}
-                  <div className="absolute inset-0 flex items-center justify-center pl-3">
-                    <div className="w-24 sm:w-28 h-3.5 bg-[#3a2313] rounded-full shadow-[inset_0_2px_4px_rgba(0,0,0,0.7)] border border-[#211208] flex items-center justify-center">
-                      <div className="w-16 h-1 bg-[#1a0c04] rounded-full opacity-60" />
-                    </div>
-                  </div>
-
-                  {/* Orejas de encastre superiores (tabs) */}
-                  <div className="absolute -top-1 left-7 w-7 h-2 bg-[#b89569] rounded-t-sm shadow-xs border-t border-l border-r border-[#8d693f]" />
-                  <div className="absolute -top-1 right-10 w-7 h-2 bg-[#b89569] rounded-t-sm shadow-xs border-t border-l border-r border-[#8d693f]" />
-                </div>
-
-                {/* 2. CARA LATERAL DERECHA (LADO EN PERSPECTIVA 3D CON SOMBRA Y VENTILACIÓN) */}
-                <div 
-                  className="absolute top-0 right-0 w-[22px] bottom-0 z-10 overflow-hidden border-r-2 border-b-2 border-[#876337] transition-all duration-300 group-hover/box:brightness-105"
-                  style={{
-                    clipPath: 'polygon(0px 28px, 100% 0px, 100% calc(100% - 28px), 0px 100%)',
-                    background: 'linear-gradient(90deg, #cfab7d 0%, #ba9363 50%, #a87f4c 100%)',
-                    backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(55, 30, 8, 0.18) 4px)'
-                  }}
-                >
-                  {/* Orificios laterales troquelados para flujo de frío en contenedor marítimo */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-around py-12 pl-0.5 pointer-events-none">
-                    <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
-                    <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
-                  </div>
-
-                  {/* Sello vertical impreso en tinta marrón */}
-                  <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
-                    <span className="text-[7px] font-mono font-black text-[#563417] rotate-90 tracking-widest whitespace-nowrap opacity-80">
-                      HASS • PERÚ
+                {/* Cabecera estampada de la caja */}
+                <div>
+                  <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[#714f2e] border-b border-[#c8ad88] pb-2 mb-3">
+                    <span className="flex items-center gap-1.5">
+                      <span>📦</span>
+                      <span className="tracking-wider">AGRÍCOLA PILCOCOCHA</span>
+                    </span>
+                    <span className="bg-[#b89569]/30 border border-[#b89569]/40 px-1.5 py-0.5 rounded text-[9px] font-bold text-[#5c3917]">
+                      PERÚ
                     </span>
                   </div>
-                </div>
 
-                {/* 3. CARA FRONTAL (FRENTE DE LA CAJA CON RELIEVE 3D, ESTAMPADOS Y CALIBRE) */}
-                <div 
-                  className="relative mr-[22px] mt-[28px] bg-gradient-to-b from-[#f3e3ce] via-[#ebd9c1] to-[#dfcbb1] rounded-bl-xl p-5 border-2 border-[#c5a982] shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_-2px_-2px_0_rgba(90,55,25,0.2)] flex flex-col justify-between overflow-visible transition-all duration-300 group-hover/box:bg-[#f6e9d7]"
-                >
-                  {/* Orejas de encastre inferiores de la base de la caja */}
-                  <div className="absolute -bottom-2 left-6 w-8 h-2.5 bg-[#b89569] rounded-b-md shadow-xs border-b border-l border-r border-[#8d693f]" />
-                  <div className="absolute -bottom-2 right-8 w-8 h-2.5 bg-[#b89569] rounded-b-md shadow-xs border-b border-l border-r border-[#8d693f]" />
-
-                  {/* Cabecera estampada de la caja */}
-                  <div>
-                    <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest text-[#714f2e] border-b border-[#c8ad88] pb-2 mb-3">
-                      <span className="flex items-center gap-1.5">
-                        <span>📦</span>
-                        <span className="tracking-wider">AGRÍCOLA PILCOCOCHA</span>
+                  {/* Cuerpo Central de la Caja con Estampado de Calibre */}
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div>
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#7e5b38] block">
+                        {item.sizeLabel}
                       </span>
-                      <span className="bg-[#b89569]/30 border border-[#b89569]/40 px-1.5 py-0.5 rounded text-[9px] font-bold text-[#5c3917]">
-                        PERÚ
+                      <h3 className="text-3xl font-black font-serif text-[#332212] tracking-tight">
+                        CALIBRE {item.calibre}
+                      </h3>
+                    </div>
+
+                    {/* Sello de peso en tinta de empaque */}
+                    <div className="text-right">
+                      <span className="inline-block px-2.5 py-1 rounded bg-[#d8b88c] text-[#3d2716] font-mono text-xs font-black border border-[#ad8858] shadow-xs">
+                        {item.peso}
                       </span>
                     </div>
-
-                    {/* Cuerpo Central de la Caja con Estampado de Calibre */}
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <div>
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-[#7e5b38] block">
-                          {item.sizeLabel}
-                        </span>
-                        <h3 className="text-3xl font-black font-serif text-[#332212] tracking-tight">
-                          CALIBRE {item.calibre}
-                        </h3>
-                      </div>
-
-                      {/* Sello de peso en tinta de empaque */}
-                      <div className="text-right">
-                        <span className="inline-block px-2.5 py-1 rounded bg-[#d8b88c] text-[#3d2716] font-mono text-xs font-black border border-[#ad8858] shadow-xs">
-                          {item.peso}
-                        </span>
-                      </div>
-                    </div>
-
-                    <p className="text-[11px] text-[#6b4c2b] mb-3 leading-snug">
-                      {item.description}
-                    </p>
                   </div>
 
-                  {/* Ranura troquelada central de ventilación / agarradera de la caja */}
-                  <div className="my-2 py-0.5 flex items-center justify-center">
-                    <div className="w-20 h-4 bg-[#342011] rounded-full shadow-[inset_0_3px_5px_rgba(0,0,0,0.75)] border border-[#211309] flex items-center justify-center">
-                      <div className="w-14 h-1.5 bg-[#190d05] rounded-full opacity-70" />
-                    </div>
-                  </div>
+                  <p className="text-[11px] text-[#6b4c2b] mb-3 leading-snug">
+                    {item.description}
+                  </p>
+                </div>
 
-                  {/* Visualización de Paltas adentro de la caja (Bandeja / Alvéolo interior) */}
-                  <div className="bg-[#dbc3a3] p-2.5 rounded-xl border border-[#c4a57b] shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] mb-3 flex items-center justify-between">
-                    <span className="text-xs font-bold text-[#4a3421]">
-                      {item.fr}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {Array.from({ length: item.avocados }).map((_, aIdx) => (
-                        <span key={aIdx} className="text-sm drop-shadow-xs transition-transform duration-200 group-hover/box:scale-110" title="Palta Hass">🥑</span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Pie de caja con sellos de exportación */}
-                  <div className="pt-2 border-t border-[#c8ad88] flex items-center justify-between text-[10px] font-bold text-[#6d4d2d]">
-                    <span className="tracking-widest uppercase">CAT 1 • EXPORT GRADE</span>
-                    <span className="font-mono text-[#8a633b]">4.0 KG NET WT</span>
+                {/* Ranura troquelada central de ventilación / agarradera de la caja */}
+                <div className="my-2 py-0.5 flex items-center justify-center">
+                  <div className="w-20 h-4 bg-[#342011] rounded-full shadow-[inset_0_3px_5px_rgba(0,0,0,0.75)] border border-[#211309] flex items-center justify-center">
+                    <div className="w-14 h-1.5 bg-[#190d05] rounded-full opacity-70" />
                   </div>
                 </div>
-              </div>
+
+                {/* Visualización de Paltas adentro de la caja (Bandeja / Alvéolo interior) */}
+                <div className="bg-[#dbc3a3] p-2.5 rounded-xl border border-[#c4a57b] shadow-[inset_0_2px_4px_rgba(0,0,0,0.12)] mb-3 flex items-center justify-between relative overflow-hidden">
+                  <span className="text-xs font-bold text-[#4a3421]">
+                    {item.fr}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    {Array.from({ length: item.avocados }).map((_, aIdx) => (
+                      <span key={aIdx} className="text-sm drop-shadow-xs transition-transform duration-200 group-hover/box:scale-110" title="Palta Hass">🥑</span>
+                    ))}
+                  </div>
+                  {/* Brillo interactivo contenido estrictamente dentro del cajón */}
+                  <span className="absolute top-1 right-2 text-xs opacity-0 group-hover/box:opacity-100 transition-opacity duration-300 pointer-events-none">✨</span>
+                </div>
+
+                {/* Pie de caja con sellos de exportación */}
+                <div className="pt-2 border-t border-[#c8ad88] flex items-center justify-between text-[10px] font-bold text-[#6d4d2d]">
+                  <span className="tracking-widest uppercase">CAT 1 • EXPORT GRADE</span>
+                  <span className="font-mono text-[#8a633b]">4.0 KG NET WT</span>
+                </div>
+              </Isometric3DBox>
             ))}
           </div>
         </div>
@@ -500,36 +640,15 @@ export const NuestraPaltaPage: React.FC = () => {
         className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto relative">
-          {/* Capa de Partículas Ambientales para todo el Layout */}
+          {/* Fondo sutil para la sección de formatos (sin partículas flotando afuera en el hero) */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-3xl -z-10">
-            {/* Ambient Glow según el formato activo */}
             <div className={`absolute inset-0 transition-opacity duration-700 ${
               currentFormat === 'reefer' 
-                ? 'opacity-100 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-900/20 via-transparent to-transparent'
+                ? 'opacity-80 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cyan-950/30 via-transparent to-transparent'
                 : currentFormat === 'master'
-                ? 'opacity-100 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-600/15 via-transparent to-transparent'
-                : 'opacity-100 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-600/15 via-transparent to-transparent'
+                ? 'opacity-80 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-950/25 via-transparent to-transparent'
+                : 'opacity-80 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-emerald-950/30 via-transparent to-transparent'
             }`} />
-
-            {/* Partículas flotantes que vuelan por todo el layout según el formato seleccionado */}
-            {ambientParticles[currentFormat].map((p, idx) => (
-              <div
-                key={`${currentFormat}-${idx}`}
-                className={`absolute select-none pointer-events-none transition-all ${
-                  currentFormat === 'reefer' ? 'animate-snow-flutter' : 'animate-float-particles'
-                }`}
-                style={{
-                  left: `${p.left}%`,
-                  top: `${p.top}%`,
-                  animationDelay: `${p.delay}s`,
-                  animationDuration: `${p.duration}s`,
-                  fontSize: `${p.size}px`,
-                  opacity: p.opacity,
-                }}
-              >
-                {p.icon}
-              </div>
-            ))}
           </div>
 
           <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
@@ -580,423 +699,447 @@ export const NuestraPaltaPage: React.FC = () => {
                 }`}
               >
                 <span>❄️</span>
-                <span>Reefer 40&apos; High Cube</span>
+                <span>Contenedor Reefer 40'</span>
               </button>
             </div>
           </div>
 
-          {/* Las 3 Cards en 3D Isométrico con relieve, perspectiva y partículas vivas */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10 pt-4 pb-8">
+          {/* Las 3 Cards en 3D Isométrico con aristas vectoriales conectadas y altura completa equilibrada */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 sm:gap-10 pt-4 pb-8 items-stretch">
             
             {/* FORMATO 1: CAJA 4.0 KG NETA (Plató / Display Tray de Retail) en 3D */}
-            <div 
+            <Isometric3DBox
+              depthX={26}
+              depthY={28}
+              borderColor={selectedFormat === 'caja' ? '#10b981' : '#c4a57b'}
               onClick={() => setSelectedFormat('caja')}
               onMouseEnter={() => setHoveredFormat('caja')}
               onMouseLeave={() => setHoveredFormat(null)}
-              className={`group/format relative transition-all duration-300 ease-out transform hover:-translate-y-3.5 hover:scale-[1.02] cursor-pointer ${
-                selectedFormat === 'caja' ? 'scale-[1.02] -translate-y-2' : ''
-              }`}
+              containerClassName="group/format cursor-pointer transition-all duration-300 ease-out transform hover:-translate-y-2"
               style={{
                 filter: selectedFormat === 'caja'
-                  ? 'drop-shadow(0 22px 24px rgba(40, 70, 30, 0.40)) drop-shadow(-8px 24px 28px rgba(30, 50, 20, 0.30))'
-                  : 'drop-shadow(0 16px 18px rgba(0, 0, 0, 0.40)) drop-shadow(-6px 18px 22px rgba(20, 30, 20, 0.25))'
+                  ? 'drop-shadow(0 20px 24px rgba(16, 185, 129, 0.35)) drop-shadow(-6px 20px 24px rgba(20, 40, 20, 0.30))'
+                  : 'drop-shadow(0 14px 16px rgba(0, 0, 0, 0.35)) drop-shadow(-4px 14px 18px rgba(20, 30, 20, 0.20))'
               }}
-            >
-              {/* 1. Cara Superior 3D (Tapa Abierta con visión de bandeja retail) */}
-              <div 
-                className="absolute top-0 left-0 right-0 h-[28px] z-10 overflow-hidden border-t-2 border-l border-[#c4a57b] transition-all duration-300 group-hover/format:brightness-105"
-                style={{
-                  clipPath: 'polygon(22px 0px, 100% 0px, calc(100% - 22px) 100%, 0px 100%)',
-                  background: 'linear-gradient(135deg, #f7ebd9 0%, #ebd7be 50%, #dfc5a6 100%)',
-                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(160, 110, 60, 0.12) 4px)'
-                }}
-              >
-                <div className="absolute inset-0 flex items-center justify-center pl-3">
-                  <div className="w-28 h-3.5 bg-[#dfc5a6] rounded-full border border-[#b89569] shadow-inner flex items-center justify-center gap-1.5">
-                    <span className="text-[9px]">🥑</span>
-                    <span className="text-[8px] font-bold text-[#5c3e24]">RETAIL DISPLAY TRAY</span>
-                    <span className="text-[9px]">🥑</span>
+              topBg="linear-gradient(135deg, #f7ebd9 0%, #ebd7be 50%, #dfc5a6 100%)"
+              topContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-40"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(160, 110, 60, 0.12) 4px)'
+                    }}
+                  />
+                  {/* Cinta/Título superior de la caja de retail perfectamente centrado y simétrico */}
+                  <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-4 bg-emerald-800/90 border-y border-emerald-500/70 rounded-xs flex items-center justify-center shadow-xs px-2 pointer-events-none">
+                    <span className="text-[8px] font-black tracking-widest uppercase text-emerald-100 flex items-center gap-1.5 whitespace-nowrap">
+                      <span>🥑</span>
+                      <span>RETAIL DISPLAY TRAY • 4.0 KG NET</span>
+                      <span>🥑</span>
+                    </span>
                   </div>
-                </div>
-                <div className="absolute -top-1 left-7 w-7 h-2 bg-[#b89569] rounded-t-sm shadow-xs border-t border-l border-r border-[#8d693f]" />
-                <div className="absolute -top-1 right-10 w-7 h-2 bg-[#b89569] rounded-t-sm shadow-xs border-t border-l border-r border-[#8d693f]" />
+                </>
+              }
+              sideBg="linear-gradient(90deg, #cfab7d 0%, #ba9363 50%, #a87f4c 100%)"
+              sideContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-40"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(55, 30, 8, 0.18) 4px)'
+                    }}
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-around py-12 pl-0.5 pointer-events-none">
+                    <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
+                    <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
+                  </div>
+                  <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
+                    <span className="text-[7px] font-mono font-black text-[#563417] rotate-90 tracking-widest whitespace-nowrap opacity-80">
+                      4.0 KG • RET
+                    </span>
+                  </div>
+                </>
+              }
+              frontClassName={`p-6 shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_-2px_-2px_0_rgba(90,55,25,0.2)] transition-all duration-300 relative ${
+                selectedFormat === 'caja' 
+                  ? 'bg-gradient-to-b from-[#fbf4ea] via-[#f2e5d3] to-[#e4d1b9] shadow-[0_0_20px_rgba(5,150,105,0.25)]' 
+                  : 'bg-gradient-to-b from-[#f5e8d7] via-[#ebdac2] to-[#dfcbb1] hover:bg-[#fbf4ea]'
+              }`}
+            >
+              {/* Partículas flotantes locales (estrictamente contenidas dentro de la card) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+                <span className={`absolute bottom-6 left-6 text-xl animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'caja' ? 'opacity-90' : 'opacity-0 group-hover/format:opacity-90'
+                }`} style={{ animationDelay: '0.1s' }}>🥑</span>
+                <span className={`absolute bottom-16 right-10 text-lg animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'caja' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
+                }`} style={{ animationDelay: '0.8s' }}>🍃</span>
+                <span className={`absolute bottom-28 left-1/2 text-sm animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'caja' ? 'opacity-95' : 'opacity-0 group-hover/format:opacity-95'
+                }`} style={{ animationDelay: '1.5s' }}>✨</span>
+                <span className={`absolute bottom-8 right-1/4 text-lg animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'caja' ? 'opacity-80' : 'opacity-0 group-hover/format:opacity-80'
+                }`} style={{ animationDelay: '2.1s' }}>🥑</span>
               </div>
 
-              {/* 2. Cara Lateral Derecha 3D (Lado de cartón C-Flute con ventilación) */}
-              <div 
-                className="absolute top-0 right-0 w-[22px] bottom-0 z-10 overflow-hidden border-r-2 border-b-2 border-[#876337] transition-all duration-300 group-hover/format:brightness-105"
-                style={{
-                  clipPath: 'polygon(0px 28px, 100% 0px, 100% calc(100% - 28px), 0px 100%)',
-                  background: 'linear-gradient(90deg, #cfab7d 0%, #ba9363 50%, #a87f4c 100%)',
-                  backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(55, 30, 8, 0.18) 4px)'
-                }}
-              >
-                <div className="absolute inset-0 flex flex-col items-center justify-around py-12 pl-0.5 pointer-events-none">
-                  <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
-                  <div className="w-2 h-7 bg-[#2d1a0d] rounded-full shadow-inner opacity-85" />
-                </div>
-                <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
-                  <span className="text-[7px] font-mono font-black text-[#563417] rotate-90 tracking-widest whitespace-nowrap opacity-80">
-                    4.0 KG • RET
+              {/* Cabecera y badge de estado */}
+              <div className="pt-1">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 rounded-full bg-[#3d2716] text-[#dfc59f] font-mono text-[11px] font-black tracking-wider uppercase shadow-xs">
+                    Plató Abierto • 4.0 kg
+                  </span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
+                    selectedFormat === 'caja' 
+                      ? 'bg-emerald-600/20 text-emerald-800 border-emerald-600/40 flex items-center gap-1 font-mono' 
+                      : 'bg-[#b89569]/30 text-[#714f2e] border-[#b89569]/40'
+                  }`}>
+                    {selectedFormat === 'caja' ? <><span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"/>ACTIVO</> : 'Retail Ready'}
                   </span>
                 </div>
+
+                {/* Panel de Especificación Técnica de Caja Retail */}
+                <div className="bg-[#dfcbaf]/70 backdrop-blur-xs p-3 rounded-2xl border border-[#b9986d]/50 mb-4 flex items-center justify-between shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#cbb292] border border-[#a8865c] flex items-center justify-center text-[#2e1d0f] shadow-xs">
+                      <Box className="w-5 h-5 text-[#2e1d0f]" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[#6d4d2d] uppercase tracking-widest block font-bold">Estructura Kraft</span>
+                      <span className="text-xl font-mono font-black text-[#2e1d0f] tracking-tight">
+                        C-Flute
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right border-l border-[#c5a77f] pl-3">
+                    <span className="text-[10px] text-[#6d4d2d] uppercase tracking-widest block font-bold">Ventilación</span>
+                    <span className="text-xs font-mono text-emerald-800 font-bold">Flujo Lateral</span>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-black font-serif text-[#2e1d0f] mb-2 group-hover/format:text-forest-950 transition-colors">
+                  Caja 4.0 kg Neta
+                </h3>
+                <p className="text-xs text-[#5c3e24] leading-relaxed mb-4">
+                  Caja abierta de cartón corrugado de alta resistencia estructural (C-Flute). Diseñada para exposición directa en góndola de supermercados en Europa y EE.UU.
+                </p>
               </div>
 
-              {/* 3. Cara Frontal 3D con relieve */}
-              <div className={`relative mr-[22px] mt-[28px] rounded-bl-2xl p-6 border-2 shadow-[inset_1px_1px_0_rgba(255,255,255,0.7),inset_-2px_-2px_0_rgba(90,55,25,0.2)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${
-                selectedFormat === 'caja' 
-                  ? 'bg-gradient-to-b from-[#fbf4ea] via-[#f2e5d3] to-[#e4d1b9] border-emerald-600/70 ring-2 ring-emerald-500/50' 
-                  : 'bg-gradient-to-b from-[#f5e8d7] via-[#ebdac2] to-[#dfcbb1] border-[#c5a982] hover:bg-[#fbf4ea]'
-              }`}>
-                {/* Partículas flotantes locales (aguacates y hojitas frescas) */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-bl-xl z-20">
-                  <span className={`absolute bottom-6 left-6 text-xl animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'caja' ? 'opacity-90' : 'opacity-0 group-hover/format:opacity-90'
-                  }`} style={{ animationDelay: '0.1s' }}>🥑</span>
-                  <span className={`absolute bottom-16 right-10 text-lg animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'caja' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
-                  }`} style={{ animationDelay: '0.8s' }}>🍃</span>
-                  <span className={`absolute bottom-28 left-1/2 text-sm animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'caja' ? 'opacity-95' : 'opacity-0 group-hover/format:opacity-95'
-                  }`} style={{ animationDelay: '1.5s' }}>✨</span>
-                  <span className={`absolute bottom-8 right-1/4 text-lg animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'caja' ? 'opacity-80' : 'opacity-0 group-hover/format:opacity-80'
-                  }`} style={{ animationDelay: '2.1s' }}>🥑</span>
+              {/* Especificaciones Técnicas */}
+              <div className="space-y-2 py-4 border-y border-[#cbaf8a] text-xs font-medium text-[#46301d]">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Dimensiones:</span>
+                  <span className="font-bold">40 × 30 × 10 cm</span>
                 </div>
-
-                {/* Orejas de encastre inferiores */}
-                <div className="absolute -bottom-2 left-6 w-8 h-2.5 bg-[#b89569] rounded-b-md shadow-xs border-b border-l border-r border-[#8d693f]" />
-                <div className="absolute -bottom-2 right-8 w-8 h-2.5 bg-[#b89569] rounded-b-md shadow-xs border-b border-l border-r border-[#8d693f]" />
-
-                {/* Cabecera y badge de estado */}
-                <div className="pt-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full bg-[#3d2716] text-[#dfc59f] font-mono text-[11px] font-black tracking-wider uppercase shadow-xs">
-                      Plató Abierto • 4.0 kg
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
-                      selectedFormat === 'caja' 
-                        ? 'bg-emerald-600/20 text-emerald-800 border-emerald-600/40 flex items-center gap-1 font-mono' 
-                        : 'bg-[#b89569]/30 text-[#714f2e] border-[#b89569]/40'
-                    }`}>
-                      {selectedFormat === 'caja' ? <><span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse"/>ACTIVO</> : 'Retail Ready'}
-                    </span>
-                  </div>
-
-                  <div className="w-14 h-14 rounded-2xl bg-[#dfcbaf] border-2 border-[#b9986d] flex items-center justify-center mb-4 text-[#3d2716] shadow-sm transition-transform duration-300 group-hover/format:scale-110 group-hover/format:rotate-3">
-                    <Box className="w-7 h-7" />
-                  </div>
-
-                  <h3 className="text-2xl font-black font-serif text-[#2e1d0f] mb-2 group-hover/format:text-forest-950 transition-colors">
-                    Caja 4.0 kg Neta
-                  </h3>
-                  <p className="text-xs text-[#5c3e24] leading-relaxed mb-4">
-                    Caja abierta de cartón corrugado de alta resistencia estructural (C-Flute). Diseñada para exposición directa en góndola de supermercados en Europa y EE.UU.
-                  </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Palletizado:</span>
+                  <span className="font-bold text-forest-800">264 cajas / pallet marítimo</span>
                 </div>
-
-                {/* Especificaciones Técnicas */}
-                <div className="space-y-2 py-4 border-y border-[#cbaf8a] text-xs font-medium text-[#46301d]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Dimensiones:</span>
-                    <span className="font-bold">40 × 30 × 10 cm</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Palletizado:</span>
-                    <span className="font-bold text-forest-800">264 cajas / pallet marítimo</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Ventilación:</span>
-                    <span className="font-bold">Orificios laterales para flujo de frío</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-2 flex items-center justify-between text-xs">
-                  <span className="font-bold text-forest-900">Uso: Supermercados B2C</span>
-                  <span className="text-[11px] font-mono bg-white/80 px-2 py-0.5 rounded border border-[#b9986d] shadow-xs">Top Seller</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Ventilación:</span>
+                  <span className="font-bold">Orificios laterales para flujo de frío</span>
                 </div>
               </div>
-            </div>
+
+              <div className="mt-4 pt-2 flex items-center justify-between text-xs">
+                <span className="font-bold text-[#2e1d0f]">Uso: Supermercados B2C</span>
+                <span className="text-[11px] font-mono font-bold text-[#2e1d0f] bg-[#fcf5ec] px-2.5 py-0.5 rounded border border-[#b9986d] shadow-xs">
+                  Top Seller
+                </span>
+              </div>
+            </Isometric3DBox>
 
             {/* FORMATO 2: CAJA 10.0 KG GRANEL (Master Box Industrial) en 3D */}
-            <div 
+            <Isometric3DBox
+              depthX={26}
+              depthY={28}
+              borderColor={selectedFormat === 'master' ? '#f59e0b' : '#a47f52'}
               onClick={() => setSelectedFormat('master')}
               onMouseEnter={() => setHoveredFormat('master')}
               onMouseLeave={() => setHoveredFormat(null)}
-              className={`group/format relative transition-all duration-300 ease-out transform hover:-translate-y-3.5 hover:scale-[1.02] cursor-pointer ${
-                selectedFormat === 'master' ? 'scale-[1.02] -translate-y-2' : ''
-              }`}
+              containerClassName="group/format cursor-pointer transition-all duration-300 ease-out transform hover:-translate-y-2"
               style={{
                 filter: selectedFormat === 'master'
-                  ? 'drop-shadow(0 22px 24px rgba(90, 50, 10, 0.40)) drop-shadow(-8px 24px 28px rgba(70, 40, 10, 0.30))'
-                  : 'drop-shadow(0 16px 18px rgba(0, 0, 0, 0.40)) drop-shadow(-6px 18px 22px rgba(40, 20, 10, 0.25))'
+                  ? 'drop-shadow(0 20px 24px rgba(245, 158, 11, 0.35)) drop-shadow(-6px 20px 24px rgba(50, 25, 10, 0.30))'
+                  : 'drop-shadow(0 14px 16px rgba(0, 0, 0, 0.35)) drop-shadow(-4px 14px 18px rgba(40, 20, 10, 0.20))'
               }}
+              topBg="linear-gradient(135deg, #ecd6b8 0%, #dfc49f 50%, #d1b188 100%)"
+              topContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-40"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(140, 95, 50, 0.14) 4px)'
+                    }}
+                  />
+                  {/* Cinta industrial zunchada superior simétrica */}
+                  <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-4 bg-amber-400 border-y border-amber-600 rounded-xs flex items-center justify-center shadow-xs px-2 pointer-events-none">
+                    <span className="text-[8px] font-black text-black tracking-widest uppercase whitespace-nowrap">
+                      HEAVY DUTY PACK • B2B EXPORT
+                    </span>
+                  </div>
+                </>
+              }
+              sideBg="linear-gradient(90deg, #c49d6d 0%, #b28854 50%, #9e7440 100%)"
+              sideContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-40"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(50, 25, 5, 0.20) 4px)'
+                    }}
+                  />
+                  <div className="absolute inset-x-0 top-1/3 h-3 bg-amber-500/80 border-y border-amber-700 pointer-events-none" />
+                  <div className="absolute inset-0 flex flex-col items-center justify-around py-12 pl-0.5 pointer-events-none">
+                    <div className="w-2.5 h-8 bg-[#241306] rounded-full shadow-inner opacity-85" />
+                  </div>
+                  <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
+                    <span className="text-[7px] font-mono font-black text-[#4e2d12] rotate-90 tracking-widest whitespace-nowrap opacity-80">
+                      10.0 KG • HEAVY
+                    </span>
+                  </div>
+                </>
+              }
+              frontClassName={`p-6 shadow-[inset_1px_1px_0_rgba(255,255,255,0.6),inset_-2px_-2px_0_rgba(70,40,15,0.25)] transition-all duration-300 relative ${
+                selectedFormat === 'master'
+                  ? 'bg-gradient-to-b from-[#f3e3ce] via-[#ebd5bb] to-[#dcbfa3] shadow-[0_0_20px_rgba(217,119,6,0.25)]'
+                  : 'bg-gradient-to-b from-[#ebd7be] via-[#dfc4a2] to-[#d2b18b] hover:bg-[#f3e3ce]'
+              }`}
             >
-              {/* 1. Cara Superior 3D (Tapa con cinta zunchada industrial de alta resistencia) */}
-              <div 
-                className="absolute top-0 left-0 right-0 h-[28px] z-10 overflow-hidden border-t-2 border-l border-[#a47f52] transition-all duration-300 group-hover/format:brightness-105"
-                style={{
-                  clipPath: 'polygon(22px 0px, 100% 0px, calc(100% - 22px) 100%, 0px 100%)',
-                  background: 'linear-gradient(135deg, #ecd6b8 0%, #dfc49f 50%, #d1b188 100%)',
-                  backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(140, 95, 50, 0.14) 4px)'
-                }}
-              >
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-3 bg-amber-400 border-y border-amber-600 flex items-center justify-center shadow-xs">
-                  <span className="text-[7.5px] font-black text-black tracking-widest uppercase">HEAVY DUTY PACK • B2B EXPORT</span>
-                </div>
-                <div className="absolute -top-1 left-7 w-7 h-2 bg-[#9c7748] rounded-t-sm shadow-xs border-t border-l border-r border-[#7a5930]" />
-                <div className="absolute -top-1 right-10 w-7 h-2 bg-[#9c7748] rounded-t-sm shadow-xs border-t border-l border-r border-[#7a5930]" />
+              {/* Partículas flotantes locales (estrictamente contenidas dentro de la card) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+                <span className={`absolute bottom-6 left-8 text-xl animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'master' ? 'opacity-90' : 'opacity-0 group-hover/format:opacity-90'
+                }`} style={{ animationDelay: '0.1s' }}>📦</span>
+                <span className={`absolute bottom-16 right-8 text-base animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'master' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
+                }`} style={{ animationDelay: '0.7s' }}>🏷️</span>
+                <span className={`absolute bottom-28 left-1/3 text-sm animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'master' ? 'opacity-95' : 'opacity-0 group-hover/format:opacity-95'
+                }`} style={{ animationDelay: '1.4s' }}>⚡</span>
+                <span className={`absolute bottom-8 right-1/3 text-xl animate-float-particles transition-opacity duration-300 ${
+                  currentFormat === 'master' ? 'opacity-80' : 'opacity-0 group-hover/format:opacity-80'
+                }`} style={{ animationDelay: '2.0s' }}>📦</span>
               </div>
 
-              {/* 2. Cara Lateral Derecha 3D (Lado reforzado BC-Flute con cinta y fleje) */}
-              <div 
-                className="absolute top-0 right-0 w-[22px] bottom-0 z-10 overflow-hidden border-r-2 border-b-2 border-[#79542a] transition-all duration-300 group-hover/format:brightness-105"
-                style={{
-                  clipPath: 'polygon(0px 28px, 100% 0px, 100% calc(100% - 28px), 0px 100%)',
-                  background: 'linear-gradient(90deg, #c49d6d 0%, #b28854 50%, #9e7440 100%)',
-                  backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 3px, rgba(50, 25, 5, 0.20) 4px)'
-                }}
-              >
-                <div className="absolute inset-x-0 top-1/3 h-3 bg-amber-500/80 border-y border-amber-700 pointer-events-none" />
-                <div className="absolute inset-0 flex flex-col items-center justify-around py-12 pl-0.5 pointer-events-none">
-                  <div className="w-2.5 h-8 bg-[#241306] rounded-full shadow-inner opacity-85" />
-                </div>
-                <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
-                  <span className="text-[7px] font-mono font-black text-[#4e2d12] rotate-90 tracking-widest whitespace-nowrap opacity-80">
-                    10.0 KG • HEAVY
+              <div className="pt-1">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 rounded-full bg-[#271a0f] text-amber-300 font-mono text-[11px] font-black tracking-wider uppercase shadow-xs">
+                    Master Box • 10.0 kg
+                  </span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
+                    selectedFormat === 'master'
+                      ? 'bg-amber-600/20 text-amber-900 border-amber-600/40 flex items-center gap-1 font-mono'
+                      : 'bg-amber-400/20 text-[#5c3e24] border-amber-500/30'
+                  }`}>
+                    {selectedFormat === 'master' ? <><span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"/>ACTIVO</> : 'Granel B2B'}
                   </span>
                 </div>
+
+                {/* Panel de Especificación Técnica de Master Box */}
+                <div className="bg-[#cbaf8a]/70 backdrop-blur-xs p-3 rounded-2xl border border-[#a47f52]/50 mb-4 flex items-center justify-between shadow-[inset_0_1px_3px_rgba(0,0,0,0.06)]">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-[#ba9b72] border border-[#917145] flex items-center justify-center text-[#271a0f] shadow-xs">
+                      <Layers className="w-5 h-5 text-[#271a0f]" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-[#5c3e24] uppercase tracking-widest block font-bold">Carga Pesada</span>
+                      <span className="text-xl font-mono font-black text-[#271a0f] tracking-tight">
+                        BC-Flute
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right border-l border-[#b5956a] pl-3">
+                    <span className="text-[10px] text-[#5c3e24] uppercase tracking-widest block font-bold">Flejado</span>
+                    <span className="text-xs font-mono text-amber-900 font-bold">Perimetral</span>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-black font-serif text-[#271a0f] mb-2 group-hover/format:text-amber-950 transition-colors">
+                  Caja 10.0 kg Granel
+                </h3>
+                <p className="text-xs text-[#5c3e24] leading-relaxed mb-4">
+                  Caja telescópica reforzada con doble onda de cartón kraft. Formato de alta eficiencia logística optimizado para distribuidores mayoristas y centros de maduración.
+                </p>
               </div>
 
-              {/* 3. Cara Frontal 3D con relieve */}
-              <div className={`relative mr-[22px] mt-[28px] rounded-bl-2xl p-6 border-2 shadow-[inset_1px_1px_0_rgba(255,255,255,0.6),inset_-2px_-2px_0_rgba(70,40,15,0.25)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${
-                selectedFormat === 'master'
-                  ? 'bg-gradient-to-b from-[#f3e3ce] via-[#ebd5bb] to-[#dcbfa3] border-amber-600/70 ring-2 ring-amber-500/50'
-                  : 'bg-gradient-to-b from-[#ebd7be] via-[#dfc4a2] to-[#d2b18b] border-[#b89569] hover:bg-[#f3e3ce]'
-              }`}>
-                {/* Partículas flotantes locales (paquetes y sellos industriales) */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-bl-xl z-20">
-                  <span className={`absolute bottom-6 left-8 text-xl animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'master' ? 'opacity-90' : 'opacity-0 group-hover/format:opacity-90'
-                  }`} style={{ animationDelay: '0.1s' }}>📦</span>
-                  <span className={`absolute bottom-16 right-8 text-base animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'master' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
-                  }`} style={{ animationDelay: '0.7s' }}>🏷️</span>
-                  <span className={`absolute bottom-28 left-1/3 text-sm animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'master' ? 'opacity-95' : 'opacity-0 group-hover/format:opacity-95'
-                  }`} style={{ animationDelay: '1.4s' }}>⚡</span>
-                  <span className={`absolute bottom-8 right-1/3 text-xl animate-float-particles transition-opacity duration-300 ${
-                    currentFormat === 'master' ? 'opacity-80' : 'opacity-0 group-hover/format:opacity-80'
-                  }`} style={{ animationDelay: '2.0s' }}>📦</span>
+              {/* Especificaciones Técnicas */}
+              <div className="space-y-2 py-4 border-y border-[#b89569] text-xs font-medium text-[#46301d]">
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Dimensiones:</span>
+                  <span className="font-bold">50 × 30 × 20 cm</span>
                 </div>
-
-                {/* Orejas de encastre inferiores */}
-                <div className="absolute -bottom-2 left-6 w-8 h-2.5 bg-[#9c7748] rounded-b-md shadow-xs border-b border-l border-r border-[#7a5930]" />
-                <div className="absolute -bottom-2 right-8 w-8 h-2.5 bg-[#9c7748] rounded-b-md shadow-xs border-b border-l border-r border-[#7a5930]" />
-
-                <div className="pt-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full bg-[#271a0f] text-amber-300 font-mono text-[11px] font-black tracking-wider uppercase shadow-xs">
-                      Master Box • 10.0 kg
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
-                      selectedFormat === 'master'
-                        ? 'bg-amber-600/20 text-amber-900 border-amber-600/40 flex items-center gap-1 font-mono'
-                        : 'bg-amber-400/20 text-[#5c3e24] border-amber-500/30'
-                    }`}>
-                      {selectedFormat === 'master' ? <><span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"/>ACTIVO</> : 'Granel B2B'}
-                    </span>
-                  </div>
-
-                  <div className="w-14 h-14 rounded-2xl bg-[#cbaf8a] border-2 border-[#a47f52] flex items-center justify-center mb-4 text-[#2e1d0f] shadow-sm transition-transform duration-300 group-hover/format:scale-110 group-hover/format:-rotate-3">
-                    <Layers className="w-7 h-7" />
-                  </div>
-
-                  <h3 className="text-2xl font-black font-serif text-[#271a0f] mb-2 group-hover/format:text-amber-950 transition-colors">
-                    Caja 10.0 kg Granel
-                  </h3>
-                  <p className="text-xs text-[#5c3e24] leading-relaxed mb-4">
-                    Caja telescópica reforzada con doble onda de cartón kraft. Formato de alta eficiencia logística optimizado para distribuidores mayoristas y centros de maduración.
-                  </p>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Palletizado:</span>
+                  <span className="font-bold text-forest-800">100 cajas / pallet (1,000 kg netos)</span>
                 </div>
-
-                {/* Especificaciones Técnicas */}
-                <div className="space-y-2 py-4 border-y border-[#b89569] text-xs font-medium text-[#46301d]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Dimensiones:</span>
-                    <span className="font-bold">50 × 30 × 20 cm</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Palletizado:</span>
-                    <span className="font-bold text-forest-800">100 cajas / pallet (1,000 kg netos)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-muted">Resistencia:</span>
-                    <span className="font-bold">Flejado perimetral antichoque</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-2 flex items-center justify-between text-xs">
-                  <span className="font-bold text-forest-900">Uso: Maduradores y Horeca</span>
-                  <span className="text-[11px] font-mono bg-white/80 px-2 py-0.5 rounded border border-[#a47f52] shadow-xs">Económico</span>
+                <div className="flex items-center justify-between">
+                  <span className="text-muted">Resistencia:</span>
+                  <span className="font-bold">Flejado perimetral antichoque</span>
                 </div>
               </div>
-            </div>
 
-            {/* FORMATO 3: CONTENEDOR REFRIGERADO 40' HIGH CUBE (Reefer Marítimo con copos de nieve y frío) */}
-            <div 
+              <div className="mt-4 pt-2 flex items-center justify-between text-xs">
+                <span className="font-bold text-[#271a0f]">Uso: Maduradores y Horeca</span>
+                <span className="text-[11px] font-mono font-bold text-[#271a0f] bg-[#fbf3e8] px-2.5 py-0.5 rounded border border-[#a47f52] shadow-xs">
+                  Económico
+                </span>
+              </div>
+            </Isometric3DBox>
+
+            {/* FORMATO 3: CONTENEDOR REFRIGERADO 40' HIGH CUBE (Reefer Marítimo) en 3D */}
+            <Isometric3DBox
+              depthX={26}
+              depthY={28}
+              borderColor={selectedFormat === 'reefer' ? '#22d3ee' : '#0891b2'}
               onClick={() => setSelectedFormat('reefer')}
               onMouseEnter={() => setHoveredFormat('reefer')}
               onMouseLeave={() => setHoveredFormat(null)}
-              className={`group/format relative transition-all duration-300 ease-out transform hover:-translate-y-3.5 hover:scale-[1.02] cursor-pointer ${
-                selectedFormat === 'reefer' ? 'scale-[1.02] -translate-y-2' : ''
-              }`}
+              containerClassName="group/format cursor-pointer transition-all duration-300 ease-out transform hover:-translate-y-2"
               style={{
                 filter: selectedFormat === 'reefer'
-                  ? 'drop-shadow(0 22px 26px rgba(6, 182, 212, 0.35)) drop-shadow(-8px 24px 30px rgba(15, 23, 42, 0.45))'
-                  : 'drop-shadow(0 16px 18px rgba(15, 23, 42, 0.35)) drop-shadow(-6px 18px 22px rgba(6, 78, 99, 0.20))'
+                  ? 'drop-shadow(0 20px 24px rgba(6, 182, 212, 0.35)) drop-shadow(-6px 20px 24px rgba(15, 23, 42, 0.45))'
+                  : 'drop-shadow(0 14px 16px rgba(15, 23, 42, 0.35)) drop-shadow(-4px 14px 18px rgba(6, 78, 99, 0.20))'
               }}
-            >
-              {/* 1. Cara Superior 3D (Techo acanalado metálico de contenedor reefer con esquineros de izaje) */}
-              <div 
-                className="absolute top-0 left-0 right-0 h-[28px] z-10 overflow-hidden border-t-2 border-l border-cyan-600 transition-all duration-300 group-hover/format:brightness-110"
-                style={{
-                  clipPath: 'polygon(22px 0px, 100% 0px, calc(100% - 22px) 100%, 0px 100%)',
-                  background: 'linear-gradient(135deg, #1e3a5f 0%, #0f233a 50%, #0b1a2c 100%)',
-                  backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(34, 211, 238, 0.22) 7px)'
-                }}
-              >
-                <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-center">
-                  <span className="text-[7.5px] font-mono font-black text-cyan-300 tracking-widest uppercase">
-                    REEFER 40&apos; HIGH CUBE • COLD CHAIN 5°C
-                  </span>
-                </div>
-                {/* Esquineros de izaje portuario (corner castings) */}
-                <div className="absolute top-1 left-7 w-4 h-3 bg-cyan-900 border border-cyan-400/60 rounded-xs shadow-inner" />
-                <div className="absolute top-1 right-9 w-4 h-3 bg-cyan-900 border border-cyan-400/60 rounded-xs shadow-inner" />
-              </div>
-
-              {/* 2. Cara Lateral Derecha 3D (Pared acanalada de acero naval con barras de cierre) */}
-              <div 
-                className="absolute top-0 right-0 w-[22px] bottom-0 z-10 overflow-hidden border-r-2 border-b-2 border-cyan-900 transition-all duration-300 group-hover/format:brightness-110"
-                style={{
-                  clipPath: 'polygon(0px 28px, 100% 0px, 100% calc(100% - 28px), 0px 100%)',
-                  background: 'linear-gradient(90deg, #0f1f33 0%, #091522 50%, #040910 100%)',
-                  backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(34, 211, 238, 0.15) 5px)'
-                }}
-              >
-                {/* Barra de cierre vertical de la puerta del contenedor */}
-                <div className="absolute inset-y-6 left-1/2 -translate-x-1/2 w-1 bg-cyan-500/40 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.4)]" />
-                <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
-                  <span className="text-[7px] font-mono font-black text-cyan-400/80 rotate-90 tracking-widest whitespace-nowrap">
-                    CA-TECH • 5°C
-                  </span>
-                </div>
-              </div>
-
-              {/* 3. Cara Frontal 3D con pantalla digital y atmósfera controlada */}
-              <div className={`relative mr-[22px] mt-[28px] rounded-bl-2xl p-6 border-2 text-white shadow-[inset_1px_1px_0_rgba(34,211,238,0.4),inset_-2px_-2px_0_rgba(0,0,0,0.6)] flex flex-col justify-between overflow-hidden transition-all duration-300 ${
+              topBg="linear-gradient(135deg, #1e3a5f 0%, #0f233a 50%, #0b1a2c 100%)"
+              topContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-30"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 6px, rgba(34, 211, 238, 0.22) 7px)'
+                    }}
+                  />
+                  {/* Rótulo superior de telemetría de contenedor marítimo perfectamente legible y sin colisiones */}
+                  <div className="absolute inset-x-6 top-1/2 -translate-y-1/2 h-4 bg-slate-900/95 border-y border-cyan-500/60 rounded-xs flex items-center justify-center shadow-[0_0_10px_rgba(6,182,212,0.3)] px-2 pointer-events-none">
+                    <span className="text-[8px] font-mono font-black text-cyan-300 tracking-widest uppercase flex items-center gap-1.5 whitespace-nowrap">
+                      <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                      <span>REEFER 40&apos; HIGH CUBE • COLD CHAIN 5°C</span>
+                    </span>
+                  </div>
+                  {/* Esquineros de izaje portuario (ISO Corner Castings) en esquinas libres */}
+                  <div className="absolute top-1.5 left-2 w-3.5 h-3.5 bg-slate-800 border border-cyan-400/50 rounded-xs shadow-inner flex items-center justify-center pointer-events-none">
+                    <div className="w-1.5 h-1.5 bg-slate-950 rounded-xs border border-cyan-500/40" />
+                  </div>
+                  <div className="absolute top-1.5 right-2 w-3.5 h-3.5 bg-slate-800 border border-cyan-400/50 rounded-xs shadow-inner flex items-center justify-center pointer-events-none">
+                    <div className="w-1.5 h-1.5 bg-slate-950 rounded-xs border border-cyan-500/40" />
+                  </div>
+                </>
+              }
+              sideBg="linear-gradient(90deg, #0f1f33 0%, #091522 50%, #040910 100%)"
+              sideContent={
+                <>
+                  <div 
+                    className="absolute inset-0 pointer-events-none opacity-30"
+                    style={{
+                      backgroundImage: 'repeating-linear-gradient(90deg, transparent, transparent 4px, rgba(34, 211, 238, 0.15) 5px)'
+                    }}
+                  />
+                  <div className="absolute inset-y-6 left-1/2 -translate-x-1/2 w-1 bg-cyan-500/40 rounded-full shadow-[0_0_6px_rgba(34,211,238,0.4)] pointer-events-none" />
+                  <div className="absolute inset-y-0 right-1 flex items-center justify-center pointer-events-none">
+                    <span className="text-[7px] font-mono font-black text-cyan-400/80 rotate-90 tracking-widest whitespace-nowrap">
+                      CA-TECH • 5°C
+                    </span>
+                  </div>
+                </>
+              }
+              frontClassName={`p-6 text-white shadow-[inset_1px_1px_0_rgba(34,211,238,0.4),inset_-2px_-2px_0_rgba(0,0,0,0.6)] transition-all duration-300 relative ${
                 selectedFormat === 'reefer'
-                  ? 'bg-gradient-to-b from-[#11243c] via-[#0b1828] to-[#040912] border-cyan-400 ring-2 ring-cyan-400/60 shadow-[0_0_24px_rgba(6,182,212,0.3)]'
-                  : 'bg-gradient-to-b from-[#0e1e33] via-[#091524] to-[#040a12] border-cyan-700/60 hover:border-cyan-400/60'
-              }`}>
-                {/* COPOS DE NIEVE Y CRISTALES DE HIELO VOLANDO POR LA CARD */}
-                <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-bl-xl z-20">
-                  <span className={`absolute -top-1 left-8 text-2xl animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-100 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-100'
-                  }`} style={{ animationDelay: '0.1s' }}>❄️</span>
-                  <span className={`absolute top-12 right-8 text-xl animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-90 drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]' : 'opacity-0 group-hover/format:opacity-90'
-                  }`} style={{ animationDelay: '0.7s' }}>🧊</span>
-                  <span className={`absolute top-28 left-1/3 text-lg animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-95 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-95'
-                  }`} style={{ animationDelay: '1.3s' }}>❄</span>
-                  <span className={`absolute top-44 right-1/4 text-sm animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-90 drop-shadow-[0_0_6px_rgba(255,255,255,0.9)]' : 'opacity-0 group-hover/format:opacity-90'
-                  }`} style={{ animationDelay: '1.9s' }}>✦</span>
-                  <span className={`absolute bottom-10 left-12 text-2xl animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-95 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-95'
-                  }`} style={{ animationDelay: '2.5s' }}>❄️</span>
-                  <span className={`absolute bottom-24 right-10 text-lg animate-snow-flutter transition-opacity duration-300 ${
-                    currentFormat === 'reefer' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
-                  }`} style={{ animationDelay: '3.1s' }}>🧊</span>
-                </div>
+                  ? 'bg-gradient-to-b from-[#11243c] via-[#0b1828] to-[#040912] shadow-[0_0_24px_rgba(6,182,212,0.35)]'
+                  : 'bg-gradient-to-b from-[#0e1e33] via-[#091524] to-[#040a12] hover:border-cyan-400/60'
+              }`}
+            >
+              {/* Copos de nieve y cristales de hielo (estrictamente contenidos dentro de la card) */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden z-20">
+                <span className={`absolute -top-1 left-8 text-2xl animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-100 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-100'
+                }`} style={{ animationDelay: '0.1s' }}>❄️</span>
+                <span className={`absolute top-12 right-8 text-xl animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-90 drop-shadow-[0_0_6px_rgba(34,211,238,0.8)]' : 'opacity-0 group-hover/format:opacity-90'
+                }`} style={{ animationDelay: '0.7s' }}>🧊</span>
+                <span className={`absolute top-28 left-1/3 text-lg animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-95 drop-shadow-[0_0_8px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-95'
+                }`} style={{ animationDelay: '1.3s' }}>❄</span>
+                <span className={`absolute top-44 right-1/4 text-sm animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-90 drop-shadow-[0_0_6px_rgba(255,255,255,0.9)]' : 'opacity-0 group-hover/format:opacity-90'
+                }`} style={{ animationDelay: '1.9s' }}>✦</span>
+                <span className={`absolute bottom-10 left-12 text-2xl animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-95 drop-shadow-[0_0_10px_rgba(34,211,238,0.9)]' : 'opacity-0 group-hover/format:opacity-95'
+                }`} style={{ animationDelay: '2.5s' }}>❄️</span>
+                <span className={`absolute bottom-24 right-10 text-lg animate-snow-flutter transition-opacity duration-300 ${
+                  currentFormat === 'reefer' ? 'opacity-85' : 'opacity-0 group-hover/format:opacity-85'
+                }`} style={{ animationDelay: '3.1s' }}>🧊</span>
+              </div>
 
-                {/* Patas de acero del contenedor */}
-                <div className="absolute -bottom-2 left-6 w-8 h-2.5 bg-cyan-950 rounded-b-md shadow-xs border-b border-l border-r border-cyan-800" />
-                <div className="absolute -bottom-2 right-8 w-8 h-2.5 bg-cyan-950 rounded-b-md shadow-xs border-b border-l border-r border-cyan-800" />
-
-                <div className="pt-1">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono text-[11px] font-black tracking-wider uppercase flex items-center gap-1.5 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                      <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
-                      <span>Atmósfera Controlada</span>
-                    </span>
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
-                      selectedFormat === 'reefer'
-                        ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400/50 flex items-center gap-1 font-mono shadow-[0_0_8px_rgba(6,182,212,0.3)]'
-                        : 'bg-cyan-950 text-cyan-400 border-cyan-800'
-                    }`}>
-                      {selectedFormat === 'reefer' ? <><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"/>ACTIVO</> : 'CA TECH'}
-                    </span>
-                  </div>
-
-                  {/* Unidad de Refrigeración con Pantalla Digital */}
-                  <div className="bg-slate-950/90 backdrop-blur-xs p-3.5 rounded-2xl border border-cyan-500/30 mb-4 flex items-center justify-between shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
-                    <div className="flex items-center gap-3">
-                      <div className="relative">
-                        <ThermometerSnowflake className="w-7 h-7 text-cyan-400 animate-pulse" />
-                        <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
-                      </div>
-                      <div>
-                        <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">Temperatura Set</span>
-                        <span className="text-2xl font-mono font-black text-emerald-400 tracking-wider flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">
-                          +5.0 °C
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="text-right border-l border-slate-800 pl-3">
-                      <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">Atmósfera</span>
-                      <span className="text-xs font-mono text-cyan-300 font-bold drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]">O₂ 4% | CO₂ 5%</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-2xl font-black font-serif text-white mb-2 group-hover/format:text-cyan-300 transition-colors">
-                    Contenedor Marítimo
-                  </h3>
-                  <p className="text-xs text-slate-300 leading-relaxed mb-4">
-                    Embarque en unidades marítimas de 40 pies refrigeradas. La fruta entra en latencia vegetal durante el trayecto oceánico de 28 días hasta destino.
-                  </p>
-                </div>
-
-                {/* Especificaciones Técnicas */}
-                <div className="space-y-2 py-4 border-y border-slate-800 text-xs font-medium text-slate-300">
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Capacidad Total:</span>
-                    <span className="font-bold text-white">5,280 cajas de 4kg (20 pallets)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Monitoreo:</span>
-                    <span className="font-bold text-emerald-400 flex items-center gap-1.5 drop-shadow-[0_0_6px_rgba(52,211,153,0.4)]">
-                      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                      <span>GPS y T° Satelital en Vivo</span>
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-slate-400">Tránsito Garantizado:</span>
-                    <span className="font-bold text-white">Hasta 28 días sin merma</span>
-                  </div>
-                </div>
-
-                <div className="mt-4 pt-2 flex items-center justify-between text-xs">
-                  <span className="font-bold text-cyan-300">Rotterdam / Filadelfia</span>
-                  <span className="text-[11px] font-mono bg-cyan-950 text-cyan-300 px-2.5 py-0.5 rounded border border-cyan-700/80 shadow-[0_0_8px_rgba(6,182,212,0.3)]">
-                    Export Ready
+              <div className="pt-1">
+                <div className="flex items-center justify-between mb-4">
+                  <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-mono text-[11px] font-black tracking-wider uppercase flex items-center gap-1.5 shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    <Radio className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+                    <span>Atmósfera Controlada</span>
+                  </span>
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold border transition-colors ${
+                    selectedFormat === 'reefer'
+                      ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400/50 flex items-center gap-1 font-mono shadow-[0_0_8px_rgba(6,182,212,0.3)]'
+                      : 'bg-cyan-950 text-cyan-400 border-cyan-800'
+                  }`}>
+                    {selectedFormat === 'reefer' ? <><span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"/>ACTIVO</> : 'CA TECH'}
                   </span>
                 </div>
+
+                {/* Unidad de Refrigeración con Pantalla Digital */}
+                <div className="bg-slate-950/90 backdrop-blur-xs p-3 rounded-2xl border border-cyan-500/30 mb-4 flex items-center justify-between shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)]">
+                  <div className="flex items-center gap-3">
+                    <div className="relative">
+                      <ThermometerSnowflake className="w-7 h-7 text-cyan-400 animate-pulse" />
+                      <span className="absolute -top-1 -right-1 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                    </div>
+                    <div>
+                      <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">Temperatura Set</span>
+                      <span className="text-xl font-mono font-black text-emerald-400 tracking-wider flex items-center gap-1 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]">
+                        +5.0 °C
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="text-right border-l border-slate-800 pl-3">
+                    <span className="text-[10px] text-slate-400 uppercase tracking-widest block font-bold">Atmósfera</span>
+                    <span className="text-xs font-mono text-cyan-300 font-bold drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]">O₂ 4% | CO₂ 5%</span>
+                  </div>
+                </div>
+
+                <h3 className="text-2xl font-black font-serif text-white mb-2 group-hover/format:text-cyan-300 transition-colors">
+                  Contenedor Marítimo
+                </h3>
+                <p className="text-xs text-slate-300 leading-relaxed mb-4">
+                  Embarque en unidades marítimas de 40 pies refrigeradas. La fruta entra en latencia vegetal durante el trayecto oceánico de 28 días hasta destino.
+                </p>
               </div>
-            </div>
+
+              {/* Especificaciones Técnicas */}
+              <div className="space-y-2 py-4 border-y border-slate-800 text-xs font-medium text-slate-300">
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Capacidad Total:</span>
+                  <span className="font-bold text-white">5,280 cajas de 4kg (20 pallets)</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Monitoreo:</span>
+                  <span className="font-bold text-emerald-400 flex items-center gap-1.5 drop-shadow-[0_0_6px_rgba(52,211,153,0.4)]">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                    <span>GPS y T° Satelital en Vivo</span>
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400">Tránsito Garantizado:</span>
+                  <span className="font-bold text-white">Hasta 28 días sin merma</span>
+                </div>
+              </div>
+
+              <div className="mt-4 pt-2 flex items-center justify-between text-xs">
+                <span className="font-bold text-cyan-300">Rotterdam / Filadelfia</span>
+                <span className="text-[11px] font-mono font-bold text-cyan-300 bg-cyan-950 px-2.5 py-0.5 rounded border border-cyan-700/80 shadow-[0_0_8px_rgba(6,182,212,0.3)]">
+                  Export Ready
+                </span>
+              </div>
+            </Isometric3DBox>
 
           </div>
         </div>

@@ -156,13 +156,13 @@ export const MercadosPage: React.FC = () => {
             <div className="max-w-3xl space-y-3">
               <div className="section-badge">
                 <span className="section-badge-dot" />
-                <span>Monitoreo Logístico Nacional en Tiempo Real</span>
+                <span>Logística Terrestre & Salida Multipuerto</span>
               </div>
               <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-cream leading-tight">
-                Corredores Logísticos del Perú
+                Corredores Logísticos hacia Puertos de Exportación
               </h2>
               <p className="text-cream/80 text-base font-light leading-relaxed">
-                Visualice las rutas directas que parten desde nuestra sede andina en Calca hacia los principales megapuertos marítimos y centros de distribución de todo el país con control de frío ininterrumpido.
+                Rutas terrestres refrigeradas que conectan directamente nuestro fundo en Calca (Cusco) con los megapuertos del Callao, Chancay y Paita con temperatura garantizada a 5.0°C.
               </p>
             </div>
 
@@ -170,8 +170,8 @@ export const MercadosPage: React.FC = () => {
               <div className="liquid-glass-panel rounded-2xl px-4 py-2.5 flex items-center gap-3 border border-white/20">
                 <span className="w-3 h-3 rounded-full bg-emerald-400 animate-ping" />
                 <div>
-                  <span className="text-[10px] font-mono uppercase text-avocado-300 font-bold block">Flota Satelital</span>
-                  <span className="text-xs font-bold text-cream">7 Corredores Activos</span>
+                  <span className="text-[10px] font-mono uppercase text-avocado-300 font-bold block">Cadena de Frío Activa</span>
+                  <span className="text-xs font-bold text-cream">3 Corredores a Ultramar</span>
                 </div>
               </div>
             </div>
