@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { motion } from 'motion/react'
 import { FundoCarousel } from '@/components/sections/FundoCarousel'
-import { TraceabilityFlowInteractive } from '@/components/sections/TraceabilityFlowInteractive'
 import { AnimatedCounter } from '@/components/ui/AnimatedCounter'
 import { ScrollColorTransition } from '@/components/motion/ScrollColorTransition'
 import { 
@@ -18,21 +16,13 @@ import {
   Sun, 
   CheckCircle2, 
   Globe2, 
-  Sprout, 
-  Clock, 
-  ChevronRight, 
-  FileCheck, 
-  Phone, 
-  MessageSquare, 
-  Layers,
-  ThermometerSnowflake,
-  ExternalLink
+  Sprout
 } from 'lucide-react'
 
 export const NosotrosPage: React.FC = () => {
   return (
     <div className="text-cream font-sans transition-colors duration-700 min-h-screen relative overflow-hidden">
-      {/* Transición suave de color de fondo al hacer scroll */}
+      {/* Indicador de avance al desplazarse */}
       <ScrollColorTransition showProgressBar={true} />
 
       {/* ========================================================================= */}
@@ -40,10 +30,10 @@ export const NosotrosPage: React.FC = () => {
       {/* ========================================================================= */}
       <section 
         data-bg-color="#091E16" 
-        className="pt-6 sm:pt-8 md:pt-12 pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        className="pt-24 sm:pt-28 md:pt-[136px] pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
-          <div className="liquid-glass-panel rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+          <div className="liquid-glass-panel editorial-hero rounded-3xl p-0 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Esferas de resplandor ambiental */}
             <div className="absolute -right-24 -bottom-24 w-[480px] h-[480px] bg-avocado-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -85,7 +75,7 @@ export const NosotrosPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <a
                     href="#fundo"
-                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0"
+                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span>Explorar Nuestro Fundo</span>
                     <ArrowRight className="w-4 h-4" />
@@ -93,7 +83,7 @@ export const NosotrosPage: React.FC = () => {
 
                   <Link
                     to="/cotizar"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <span>Iniciar Diálogo Comercial</span>
                   </Link>
@@ -146,8 +136,8 @@ export const NosotrosPage: React.FC = () => {
       {/* 2. FRANJA DE MÉTRICAS AUDITABLES (LIQUID GLASS CAPSULES)                  */}
       {/* ========================================================================= */}
       <section 
-        data-bg-color="#0B241A" 
-        className="py-12 sm:py-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-20"
+        data-bg-color="#F0E7D6"
+        className="editorial-light editorial-open py-12 sm:py-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-20"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -227,8 +217,8 @@ export const NosotrosPage: React.FC = () => {
       {/* ========================================================================= */}
       <section 
         id="fundo"
-        data-bg-color="#0D271D" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#F7F4EA"
+        className="editorial-light editorial-open py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -297,8 +287,8 @@ export const NosotrosPage: React.FC = () => {
       {/* 4. PILARES CORPORATIVOS & VALORES DE COSECHA                              */}
       {/* ========================================================================= */}
       <section 
-        data-bg-color="#0A2218" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#E8EFDA"
+        className="editorial-light editorial-open py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -563,98 +553,6 @@ export const NosotrosPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 6. EL CAMINO DE LA CALIDAD (FLUJO INTERACTIVO ANIMADO)                   */}
-      {/* ========================================================================= */}
-      <section 
-        data-bg-color="#091E16" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
-      >
-        <div className="max-w-[1720px] mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-14 space-y-4">
-            <div className="section-badge mx-auto">
-              <span className="section-badge-dot" />
-              <span>Trazabilidad Total de Punta a Punta</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-cream leading-tight">
-              De Nuestra Tierra a su Mesa: 4 Pasos de Rigor
-            </h2>
-            <p className="text-cream/80 text-base sm:text-lg font-light leading-relaxed">
-              Un viaje agronómico y logístico continuo en tiempo real: desde la nutrición del árbol en los Andes peruanos hasta el contenedor reefer rumbo a ultramar.
-            </p>
-          </div>
-
-          {/* Componente Dinámico con Pipeline Láser, Reproducción Automática y Teatro Visual */}
-          <TraceabilityFlowInteractive />
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 7. MASTER CTA COMERCIAL B2B                                              */}
-      {/* ========================================================================= */}
-      <section 
-        data-bg-color="#071811" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="liquid-glass-panel rounded-3xl p-10 sm:p-14 lg:p-16 relative overflow-hidden border border-avocado-400/30">
-            {/* Resplandor central esmeralda */}
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-96 h-96 bg-avocado-500/15 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative z-10 space-y-6">
-              <div className="section-badge mx-auto">
-                <span className="section-badge-dot" />
-                <span>Campaña Palta Hass Perú 2026</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream leading-tight">
-                ¿Desea planificar su programa de suministro con nosotros?
-              </h2>
-
-              <p className="text-cream/85 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
-                Establezcamos ventanas de embarque, calibres prioritarios y especificaciones contractuales para abastecer a su mercado con la máxima confiabilidad.
-              </p>
-
-              {/* Botones de Acción */}
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <Link
-                  to="/cotizar"
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-xl shadow-avocado-900/40 hover:shadow-avocado-500/50 hover:scale-105 active:scale-100"
-                >
-                  <span>Solicitar Cotización & Ficha Técnica</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <Link
-                  to="/contacto"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-100"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Contactar con Gerencia Agrícola</span>
-                </Link>
-              </div>
-
-              {/* Reaseguros Comerciales */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-6 text-xs text-cream/70 border-t border-white/10 max-w-xl mx-auto">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Respuesta B2B en &lt;24 horas</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Fichas Técnicas Oficiales SENASA</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Muestras Comerciales Disponibles</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

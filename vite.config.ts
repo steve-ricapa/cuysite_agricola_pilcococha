@@ -10,4 +10,8 @@ export default defineConfig({
       '@': '/src',
     },
   },
+  worker: {
+    // MapLibre carga su worker como módulo ES (`new Worker(url, { type: 'module' })`).
+    format: 'es',
+  },
 })

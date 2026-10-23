@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
+import { maplibreGL } from '@maplibre/maplibre-gl-leaflet'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import { setWorkerUrl } from 'maplibre-gl'
+import workerUrl from 'maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url'
 import { 
-  MapPin, 
   ExternalLink, 
   Mountain, 
   Compass, 
@@ -12,11 +15,14 @@ import {
   Satellite, 
   ZoomIn, 
   Eye, 
-  Globe, 
   Sparkles,
   Navigation,
   Rocket
 } from 'lucide-react'
+
+// MapLibre decodifica los estilos vectoriales en un worker propio; Vite lo emite
+// como asset aparte, así que hay que darle la URL antes de crear el primer mapa.
+setWorkerUrl(workerUrl)
 
 export interface Sede {
   id: string
@@ -53,76 +59,71 @@ export const SEDES_DATA: Sede[] = [
   },
 ]
 
-// Key pública de CARTO basemaps (expuesta en frontend por diseño — no es secreta)
-const CARTO_API_KEY = 'cb1_47p3_1_8b3ada91baa16541cf10907e'
-const isBasemapKey = true
+// Capas sin claves de API: Esri (satélite y relieve) y OpenFreeMap (vectorial).
+// Ambas son gratuitas, sin límites de uso ocultos y requieren solo atribución.
+const ESRI_IMAGERY_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}'
+const ESRI_LABELS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}'
+const ESRI_HILLSHADE_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Elevation/World_Hillshade/MapServer/tile/{z}/{y}/{x}'
+const OPENFREEMAP_STYLE_URL = 'https://tiles.openfreemap.org/styles/liberty'
 
-export type LayerType = 'satellite' | 'terrain' | 'esri' | 'editorial'
+const esriImageryTileUrl = (z: number, y: number, x: number) =>
+  ESRI_IMAGERY_URL.replace('{z}', String(z)).replace('{y}', String(y)).replace('{x}', String(x))
+
+export type LayerType = 'satellite' | 'terrain' | 'editorial'
 
 export interface LayerConfig {
-  name: string
-  label: string
-  desc: string
-  url: string
   attribution: string
-  maxZoom: number
-  maxNativeZoom?: number
-  subdomains?: string[]
-  recommendedZoom?: number
+  recommendedZoom: number
+  createLayer: () => L.Layer
 }
 
 const TILES: Record<LayerType, LayerConfig> = {
   satellite: {
-    name: 'Satélite HD Realista',
-    label: 'Satélite HD',
-    desc: 'Fotografía satelital ultra nítida con nombres de vías y parcelas',
-    url: 'https://mt{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}',
-    attribution: '&copy; Google Maps &mdash; Maxar, CNES/Airbus',
-    maxZoom: 20,
-    subdomains: ['0', '1', '2', '3'],
+    // Imagen real con la capa de referencia de Esri encima: aporta nombres de
+    // poblados y límites administrativos (transparente cuando no hay datos).
+    attribution:
+      'Tiles &copy; <a href="https://www.esri.com/">Esri</a>, Maxar, Earthstar Geographics, CNES/Airbus, USDA, USGS, Aerogrid, IGN, GPX, GIS User Community',
     recommendedZoom: 16.5, // Enfoque cercano de huertos y árboles
+    createLayer: () =>
+      L.layerGroup([
+        // La cobertura nativa de Esri llega a zoom 17 en zonas rurales: por encima
+        // se estira el último tile válido en lugar de servir el tile de "sin datos".
+        L.tileLayer(ESRI_IMAGERY_URL, {
+          maxZoom: 19,
+          maxNativeZoom: 17,
+          updateWhenZooming: true,
+          updateWhenIdle: false,
+          keepBuffer: 8,
+        }),
+        L.tileLayer(ESRI_LABELS_URL, { maxZoom: 19, keepBuffer: 8 }),
+      ]),
   },
   terrain: {
-    name: 'Relieve Andino 3D',
-    label: 'Relieve 3D',
-    desc: 'Sombras de montaña, elevación y topografía 3D de la cordillera andina',
-    url: 'https://mt{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}',
-    attribution: '&copy; Google Maps &mdash; Topografía y Sombras 3D',
-    maxZoom: 20,
-    maxNativeZoom: 15,
-    subdomains: ['0', '1', '2', '3'],
+    attribution: 'Relief &copy; <a href="https://www.esri.com/">Esri</a>',
     recommendedZoom: 12.5, // Altitud panorámica donde se aprecian las montañas y el cañón del Valle Sagrado
-  },
-  esri: {
-    name: 'Satélite Natural (Esri)',
-    label: 'Foto Pura',
-    desc: 'Imagen satelital natural de alta fidelidad sin textos',
-    url: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    attribution: 'Tiles &copy; Esri &mdash; Maxar, Earthstar Geographics',
-    maxZoom: 19,
-    maxNativeZoom: 15, // Evita "Map data not yet available" escalando tiles nativos de Esri
-    recommendedZoom: 14.5, // Vista de valle natural limpia y completa
+    createLayer: () =>
+      L.tileLayer(ESRI_HILLSHADE_URL, {
+        maxZoom: 19,
+        maxNativeZoom: 13,
+        updateWhenZooming: true,
+        updateWhenIdle: false,
+        keepBuffer: 8,
+      }),
   },
   editorial: {
-    name: isBasemapKey ? 'Mapa Editorial (CARTO)' : 'Mapa Callejero (OSM)',
-    label: 'Editorial',
-    desc: 'Plano gráfico vectorial ilustrado',
-    url: isBasemapKey
-      ? `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=${CARTO_API_KEY}`
-      : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    attribution: isBasemapKey
-      ? '&copy; <a href="https://carto.com/" target="_blank">CARTO</a>, &copy; <a href="https://openstreetmap.org">OpenStreetMap</a>'
-      : '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a>',
-    maxZoom: 19,
-    subdomains: ['a', 'b', 'c', 'd'],
+    attribution:
+      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="https://openfreemap.org/">OpenFreeMap</a>',
     recommendedZoom: 15.0,
+    createLayer: () => maplibreGL({ style: OPENFREEMAP_STYLE_URL }),
   },
 }
 
 export const SedesMap: React.FC = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null)
   const mapInstanceRef = useRef<L.Map | null>(null)
-  const tileLayerRef = useRef<L.TileLayer | null>(null)
+  const baseLayerRef = useRef<L.Layer | null>(null)
+  const activeLayerRef = useRef<LayerType | null>(null)
+  const attributionRef = useRef<string>('')
   const markersRef = useRef<{ [key: string]: L.Marker }>({})
   const circlesRef = useRef<{ [key: string]: L.Circle }>({})
   const [selectedSede, setSelectedSede] = useState<Sede>(SEDES_DATA[0])
@@ -178,9 +179,9 @@ export const SedesMap: React.FC = () => {
       const latRad = (lat * Math.PI) / 180
       const y = Math.floor(((1 - Math.asinh(Math.tan(latRad)) / Math.PI) / 2) * n)
 
-      const sub = ['0', '1', '2', '3'][(x + y) % 4]
+      // Esri usa el orden {z}/{y}/{x} y no tiene subdominios.
       const img = new Image()
-      img.src = `https://mt${sub}.google.com/vt/lyrs=y&x=${x}&y=${y}&z=${z}`
+      img.src = esriImageryTileUrl(z, y, x)
     })
   }
 
@@ -196,19 +197,7 @@ export const SedesMap: React.FC = () => {
 
     // Cambiar de inmediato a Satélite HD si estamos en otra capa
     if (activeLayer !== 'satellite') {
-      const satConfig = TILES.satellite
-      if (tileLayerRef.current) {
-        map.removeLayer(tileLayerRef.current)
-      }
-      const newTile = L.tileLayer(satConfig.url, {
-        attribution: satConfig.attribution,
-        maxZoom: satConfig.maxZoom,
-        subdomains: satConfig.subdomains,
-        updateWhenZooming: true,
-        updateWhenIdle: false,
-        keepBuffer: 8,
-      }).addTo(map)
-      tileLayerRef.current = newTile
+      applyBaseLayer('satellite')
       setActiveLayer('satellite')
     }
 
@@ -329,6 +318,33 @@ export const SedesMap: React.FC = () => {
     })
   }
 
+  // Atribución de la capa base activa. Se gestiona a mano porque la capa vectorial
+  // de MapLibre no expone su atribución a Leaflet (viene vacía del estilo).
+  const applyAttribution = (text: string) => {
+    const control = mapInstanceRef.current?.attributionControl
+    if (!control || attributionRef.current === text) return
+    control.removeAttribution(attributionRef.current)
+    control.addAttribution(text)
+    attributionRef.current = text
+  }
+
+  // Montar o desmontar la capa base (satélite, relieve u editorial) sin duplicar trabajo
+  const applyBaseLayer = (type: LayerType) => {
+    const map = mapInstanceRef.current
+    if (!map || activeLayerRef.current === type) return
+
+    applyAttribution('')
+    if (baseLayerRef.current) {
+      map.removeLayer(baseLayerRef.current)
+      baseLayerRef.current = null
+    }
+
+    const config = TILES[type]
+    baseLayerRef.current = config.createLayer().addTo(map)
+    activeLayerRef.current = type
+    applyAttribution(config.attribution)
+  }
+
   // Inicializar mapa
   useEffect(() => {
     if (!mapContainerRef.current || mapInstanceRef.current) return
@@ -340,25 +356,11 @@ export const SedesMap: React.FC = () => {
       zoom: 16.5,
       zoomControl: true,
       scrollWheelZoom: true,
-      maxZoom: 20,
+      maxZoom: 19,
     })
 
-    const currentTileConfig = TILES[activeLayer]
-    const tileOptions: L.TileLayerOptions = {
-      attribution: currentTileConfig.attribution,
-      maxZoom: currentTileConfig.maxZoom,
-      subdomains: currentTileConfig.subdomains || ['a', 'b', 'c', 'd'],
-      updateWhenZooming: true,
-      updateWhenIdle: false,
-      keepBuffer: 8,
-    }
-    if (currentTileConfig.maxNativeZoom) {
-      tileOptions.maxNativeZoom = currentTileConfig.maxNativeZoom
-    }
-    const tile = L.tileLayer(currentTileConfig.url, tileOptions).addTo(map)
-
-    tileLayerRef.current = tile
     mapInstanceRef.current = map
+    applyBaseLayer(activeLayer)
 
     // Ocultar círculos a zooms muy lejanos (<12.5) para no ensuciar la vista de país o cordillera
     map.on('zoomend', () => {
@@ -410,7 +412,7 @@ export const SedesMap: React.FC = () => {
             ${sede.valle} (${sede.altitud})
           </p>
           <div style="display: flex; gap: 6px; flex-wrap: wrap;">
-            <a href="${sede.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #173d2d; color: #ffffff; text-decoration: none; border-radius: 9999px; font-size: 11px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
+            <a href="${sede.googleMapsUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-flex; align-items: center; gap: 4px; padding: 6px 12px; background: #173d2d; color: #ffffff; text-decoration: none; border-radius: 10px; font-size: 11px; font-weight: 700; box-shadow: 0 2px 6px rgba(0,0,0,0.15);">
               Abrir Google Maps ↗
             </a>
           </div>
@@ -429,6 +431,9 @@ export const SedesMap: React.FC = () => {
       clearDescentTimers()
       map.remove()
       mapInstanceRef.current = null
+      baseLayerRef.current = null
+      activeLayerRef.current = null
+      attributionRef.current = ''
     }
   }, [])
 
@@ -459,29 +464,13 @@ export const SedesMap: React.FC = () => {
 
   // Cambiar capa de mapa y ajustar automáticamente altitud para la mejor perspectiva
   useEffect(() => {
-    if (!mapInstanceRef.current || !tileLayerRef.current) return
-    mapInstanceRef.current.removeLayer(tileLayerRef.current)
-    const layerConfig = TILES[activeLayer]
+    if (!mapInstanceRef.current) return
+    applyBaseLayer(activeLayer)
 
-    const tileOptions: L.TileLayerOptions = {
-      attribution: layerConfig.attribution,
-      maxZoom: layerConfig.maxZoom,
-      subdomains: layerConfig.subdomains || ['a', 'b', 'c', 'd'],
-      updateWhenZooming: true,
-      updateWhenIdle: false,
-      keepBuffer: 8,
-    }
-    if (layerConfig.maxNativeZoom) {
-      tileOptions.maxNativeZoom = layerConfig.maxNativeZoom
-    }
-
-    const newTile = L.tileLayer(layerConfig.url, tileOptions).addTo(mapInstanceRef.current)
-    tileLayerRef.current = newTile
-
-    // Al cambiar de capa, alejarse o acercarse al zoom óptimo (Relieve 3D panorámico o Foto Pura de valle)
+    // Al cambiar de capa, alejarse o acercarse al zoom óptimo (Relieve panorámico o Foto de valle)
     // Se ejecuta SOLO si no estamos en pleno descenso espacial
-    if (layerConfig.recommendedZoom && !isDescending) {
-      mapInstanceRef.current.flyTo(selectedSede.coordenadas, layerConfig.recommendedZoom, {
+    if (!isDescending) {
+      mapInstanceRef.current.flyTo(selectedSede.coordenadas, TILES[activeLayer].recommendedZoom, {
         animate: true,
         duration: 1.2,
       })
@@ -527,6 +516,7 @@ export const SedesMap: React.FC = () => {
     setIsDescending(false)
     showMarkersAndCircles()
     if (activeLayer !== 'satellite') {
+      applyBaseLayer('satellite')
       setActiveLayer('satellite')
     }
     if (mapInstanceRef.current) {
@@ -542,6 +532,7 @@ export const SedesMap: React.FC = () => {
     setIsDescending(false)
     showMarkersAndCircles()
     if (activeLayer !== 'satellite') {
+      applyBaseLayer('satellite')
       setActiveLayer('satellite')
     }
     if (mapInstanceRef.current) {
@@ -594,7 +585,7 @@ export const SedesMap: React.FC = () => {
           <button
             type="button"
             onClick={() => copyCoordinates(selectedSede)}
-            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-forest-950 hover:bg-forest-900 border border-avocado-400/40 text-cream text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
+            className="group inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-forest-950 hover:bg-forest-900 border border-avocado-400/40 text-cream text-xs font-semibold shadow-sm transition-all hover:scale-[1.02] active:scale-95 cursor-pointer"
             title="Haz clic para copiar las coordenadas GPS"
           >
             <div className="w-5 h-5 rounded-full bg-avocado-400 text-forest-950 flex items-center justify-center shrink-0 group-hover:rotate-12 transition-transform">
@@ -621,7 +612,7 @@ export const SedesMap: React.FC = () => {
             href={selectedSede.googleMapsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream text-xs font-semibold shadow-xs transition-all hover:scale-[1.02]"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream text-xs font-semibold shadow-xs transition-all hover:scale-[1.02]"
           >
             <ExternalLink className="w-3.5 h-3.5 text-avocado-400" />
             <span>Abrir en Google Maps</span>
@@ -637,7 +628,7 @@ export const SedesMap: React.FC = () => {
           <button
             onClick={triggerSpaceDescent}
             disabled={isDescending}
-            className="group px-4 py-2.5 rounded-full bg-avocado-600 hover:bg-avocado-400 border border-avocado-400 text-forest-950 font-bold text-xs tracking-wide transition-all shadow-md flex items-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50 cursor-pointer"
+            className="group px-4 py-2.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 border border-avocado-400 text-forest-950 font-bold text-xs tracking-wide transition-all shadow-md flex items-center gap-2 hover:scale-[1.02] active:scale-95 disabled:opacity-50 cursor-pointer"
             title="Iniciar descenso cinematográfico desde el espacio exterior"
           >
             <div className="w-5 h-5 rounded-full bg-forest-950/20 text-forest-950 flex items-center justify-center shrink-0 border border-forest-950/30 group-hover:border-forest-950/60 transition-colors">
@@ -649,7 +640,7 @@ export const SedesMap: React.FC = () => {
           {/* 5. Zoom Huerto */}
           <button
             onClick={handleZoomHuerto}
-            className="px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
             title="Acercamiento máximo al huerto de palta"
           >
             <ZoomIn className="w-3.5 h-3.5 text-avocado-400" />
@@ -659,7 +650,7 @@ export const SedesMap: React.FC = () => {
           {/* 6. Centrar Sede */}
           <button
             onClick={handleResetView}
-            className="px-4 py-2.5 rounded-full bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
+            className="px-4 py-2.5 rounded-xl bg-forest-900/90 hover:bg-forest-800 border border-white/20 text-cream font-semibold text-xs tracking-wide transition-all shadow-xs flex items-center gap-1.5 hover:scale-[1.02] cursor-pointer"
           >
             <Compass className="w-3.5 h-3.5 text-avocado-400" />
             <span>Centrar Sede</span>
@@ -667,7 +658,7 @@ export const SedesMap: React.FC = () => {
         </div>
 
         {/* Contenedor del Mapa Leaflet Interactivo */}
-        <div className="rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20 bg-forest-950 relative h-[600px]">
+        <div className="rounded-3xl overflow-hidden shadow-2xl border-2 border-white/20 bg-forest-950 relative h-[420px] sm:h-[600px]">
           <div ref={mapContainerRef} className="w-full h-full z-0" />
 
           {/* Efecto Cinematográfico de Descenso Espacial / HUD de Telemetría */}
@@ -683,7 +674,7 @@ export const SedesMap: React.FC = () => {
               />
 
               {/* HUD Superior de Telemetría Satelital */}
-              <div className="relative z-10 bg-forest-950/95 backdrop-blur-md px-5 py-2.5 rounded-full border border-avocado-400/50 shadow-2xl flex items-center gap-3 text-cream text-xs">
+              <div className="relative z-10 max-w-full bg-forest-950/95 backdrop-blur-md px-3 sm:px-5 py-2.5 rounded-2xl sm:rounded-full border border-avocado-400/50 shadow-2xl flex flex-wrap justify-center items-center gap-2 sm:gap-3 text-cream text-xs text-center">
                 <div className="w-2.5 h-2.5 rounded-full bg-avocado-400 animate-ping" />
                 <span className="font-bold text-avocado-400 uppercase tracking-widest text-[11px] font-mono">
                   DESCENSO SATELITAL:
@@ -707,17 +698,17 @@ export const SedesMap: React.FC = () => {
               </div>
 
               {/* Indicador inferior */}
-              <div className="relative z-10 bg-forest-950/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 text-[11px] text-cream/70 font-mono">
+              <div className="relative z-10 hidden sm:block bg-forest-950/80 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/10 text-[11px] text-cream/70 font-mono">
                 COORD: -13.3217° S, -71.9522° W &bull; TARGET: SEDE CALCA - PISAC
               </div>
             </div>
           )}
 
           {/* Selector Flotante de Modos de Vista (Top-Right) */}
-          <div className="absolute top-4 right-4 z-[1000] bg-forest-950/90 backdrop-blur-md p-1.5 rounded-2xl border border-white/15 shadow-2xl flex items-center gap-1">
+          <div className="absolute top-3 right-3 z-[1000] bg-forest-950/90 backdrop-blur-md p-1 rounded-2xl border border-white/15 shadow-2xl flex items-center gap-0.5 sm:top-4 sm:right-4 sm:gap-1 sm:p-1.5">
             <button
               onClick={() => setActiveLayer('satellite')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-2 py-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeLayer === 'satellite'
                   ? 'bg-avocado-400 text-forest-950 shadow-md scale-[1.02]'
                   : 'text-cream/80 hover:text-white hover:bg-white/10'
@@ -725,12 +716,12 @@ export const SedesMap: React.FC = () => {
               title="Fotografía satelital realista de alta definición con nombres de poblados y caminos"
             >
               <Satellite className="w-3.5 h-3.5" />
-              <span>Satélite HD</span>
+              <span className="hidden sm:inline">Satélite HD</span>
             </button>
 
             <button
               onClick={() => setActiveLayer('terrain')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-2 py-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeLayer === 'terrain'
                   ? 'bg-avocado-400 text-forest-950 shadow-md scale-[1.02]'
                   : 'text-cream/80 hover:text-white hover:bg-white/10'
@@ -738,25 +729,12 @@ export const SedesMap: React.FC = () => {
               title="Relieve topográfico 3D con sombras de las montañas andinas"
             >
               <Mountain className="w-3.5 h-3.5" />
-              <span>Relieve 3D</span>
-            </button>
-
-            <button
-              onClick={() => setActiveLayer('esri')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
-                activeLayer === 'esri'
-                  ? 'bg-avocado-400 text-forest-950 shadow-md scale-[1.02]'
-                  : 'text-cream/80 hover:text-white hover:bg-white/10'
-              }`}
-              title="Foto aérea satelital pura (sin etiquetas)"
-            >
-              <Globe className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Foto Pura</span>
+              <span className="hidden sm:inline">Relieve 3D</span>
             </button>
 
             <button
               onClick={() => setActiveLayer('editorial')}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+              className={`px-2 py-2 sm:px-3 sm:py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
                 activeLayer === 'editorial'
                   ? 'bg-avocado-400 text-forest-950 shadow-md scale-[1.02]'
                   : 'text-cream/80 hover:text-white hover:bg-white/10'
@@ -869,16 +847,6 @@ export const SedesMap: React.FC = () => {
                         </>
                       )}
                     </button>
-
-                    {isBasemapKey && (
-                      <span 
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-forest-800/60 text-emerald-300 text-[10px] font-mono font-bold border border-emerald-500/30"
-                        title="Motor de mapa vectorial CARTO Voyager activo"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span>CARTO Ready</span>
-                      </span>
-                    )}
                   </div>
                 </div>
               </div>

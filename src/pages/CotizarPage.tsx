@@ -20,7 +20,7 @@ import {
 export const CotizarPage: React.FC = () => {
   return (
     <div className="text-cream font-sans transition-colors duration-700 min-h-screen relative overflow-hidden">
-      {/* Transición suave de color de fondo al hacer scroll */}
+      {/* Indicador de avance al desplazarse */}
       <ScrollColorTransition showProgressBar={true} />
 
       {/* ===================================================================== */}
@@ -28,10 +28,10 @@ export const CotizarPage: React.FC = () => {
       {/* ===================================================================== */}
       <section 
         data-bg-color="#091E16" 
-        className="pt-6 sm:pt-8 md:pt-12 pb-12 sm:pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        className="pt-24 sm:pt-28 md:pt-[136px] pb-12 sm:pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
-          <div className="liquid-glass-panel rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+          <div className="liquid-glass-panel editorial-hero rounded-3xl p-0 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Esferas luminosas de fondo */}
             <div className="absolute -right-24 -bottom-24 w-[480px] h-[480px] bg-avocado-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -72,7 +72,7 @@ export const CotizarPage: React.FC = () => {
                 <div className="pt-3">
                   <a
                     href="#cotizador-interactivo"
-                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                   >
                     <span>Configurar Pedido en Línea</span>
                     <ArrowRight className="w-4 h-4" />
@@ -136,8 +136,8 @@ export const CotizarPage: React.FC = () => {
       {/* 3. CONDICIONES COMERCIALES & GARANTÍAS PARA IMPORTADORES            */}
       {/* ===================================================================== */}
       <section 
-        data-bg-color="#071811" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#E7F0EE"
+        className="editorial-light editorial-open py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
@@ -233,7 +233,7 @@ export const CotizarPage: React.FC = () => {
             <div className="flex flex-wrap items-center gap-3 shrink-0">
               <Link
                 to="/contacto"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-forest-900/90 hover:bg-forest-800 text-cream text-xs font-bold border border-white/20 transition-all hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-forest-900/90 hover:bg-forest-800 text-cream text-xs font-bold border border-white/20 transition-all hover:scale-105"
               >
                 <MessageSquare className="w-3.5 h-3.5" />
                 <span>Ir a Canales de Contacto</span>
@@ -243,7 +243,7 @@ export const CotizarPage: React.FC = () => {
                 href="https://wa.me/51987654321?text=Hola%20Agr%C3%ADcola%20Pilcococha%2C%20deseo%20coordinar%20una%20reuni%C3%B3n%20para%20un%20programa%20de%20exportaci%C3%B3n"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 text-xs font-bold transition-all shadow-md hover:scale-105"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 text-xs font-bold transition-all shadow-md hover:scale-105"
               >
                 <PhoneCall className="w-3.5 h-3.5" />
                 <span>WhatsApp Comercial</span>

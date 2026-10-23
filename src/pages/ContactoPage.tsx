@@ -55,7 +55,7 @@ export const ContactoPage: React.FC = () => {
 
   return (
     <div className="text-cream font-sans transition-colors duration-700 min-h-screen relative overflow-hidden">
-      {/* Transición suave de color de fondo al hacer scroll */}
+      {/* Indicador de avance al desplazarse */}
       <ScrollColorTransition showProgressBar={true} />
 
       {/* ===================================================================== */}
@@ -63,10 +63,10 @@ export const ContactoPage: React.FC = () => {
       {/* ===================================================================== */}
       <section 
         data-bg-color="#091E16" 
-        className="pt-6 sm:pt-8 md:pt-12 pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        className="pt-24 sm:pt-28 md:pt-[136px] pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
-          <div className="liquid-glass-panel rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+            <div className="liquid-glass-panel editorial-hero rounded-3xl p-0 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Esferas luminosas de fondo */}
             <div className="absolute -right-24 -bottom-24 w-[480px] h-[480px] bg-avocado-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -107,7 +107,7 @@ export const ContactoPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-3 pt-4">
                   <a
                     href="#formulario-contacto"
-                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
                   >
                     <span>Enviar Consulta Comercial</span>
                     <ArrowRight className="w-4 h-4" />
@@ -115,7 +115,7 @@ export const ContactoPage: React.FC = () => {
 
                   <Link
                     to="/cotizar"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <span>Cotizador B2B Interactivo</span>
                   </Link>
@@ -166,8 +166,8 @@ export const ContactoPage: React.FC = () => {
       {/* ===================================================================== */}
       <section 
         id="formulario-contacto"
-        data-bg-color="#0B2319" 
-        className="py-16 sm:py-20 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#F7F4EA"
+        className="editorial-light editorial-open py-16 sm:py-20 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
@@ -306,7 +306,7 @@ export const ContactoPage: React.FC = () => {
 
             {/* Columna Derecha: Formulario B2B Liquid Glass (7 Cols) */}
             <div className="lg:col-span-7">
-              <div className="liquid-glass-card rounded-3xl p-8 sm:p-10 border border-white/15 shadow-2xl relative overflow-hidden">
+              <div className="liquid-glass-card editorial-surface rounded-3xl p-8 sm:p-10 border border-white/15 shadow-2xl relative overflow-hidden">
                 <div className="mb-6 space-y-1">
                   <span className="text-[11px] font-mono uppercase font-bold text-avocado-400 tracking-wider block">
                     Formulario Oficial de Consulta
@@ -363,7 +363,7 @@ export const ContactoPage: React.FC = () => {
                               mensaje: ''
                             })
                           }}
-                          className="px-6 py-2.5 rounded-full bg-forest-800 hover:bg-forest-700 text-cream text-xs font-bold transition-colors cursor-pointer"
+                          className="px-6 py-2.5 rounded-xl bg-forest-800 hover:bg-forest-700 text-cream text-xs font-bold transition-colors cursor-pointer"
                         >
                           Enviar Otra Consulta
                         </button>
@@ -487,7 +487,7 @@ export const ContactoPage: React.FC = () => {
                         <button
                           type="submit"
                           disabled={isSubmitting}
-                          className="w-full py-4 px-8 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-xl shadow-avocado-900/40 hover:shadow-avocado-500/50 hover:scale-[1.01] active:scale-100 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+                          className="w-full py-4 px-8 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-xl shadow-avocado-900/40 hover:shadow-avocado-500/50 hover:scale-[1.01] active:scale-100 disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
                         >
                           <Send className="w-4 h-4" />
                           <span>{isSubmitting ? 'Procesando Envío...' : 'Enviar Consulta Comercial'}</span>

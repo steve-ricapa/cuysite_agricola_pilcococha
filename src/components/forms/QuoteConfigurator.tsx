@@ -134,12 +134,12 @@ export const QuoteConfigurator: React.FC = () => {
 
           {/* Indicador de Pasos */}
           {!quoteCode && (
-            <div className="flex items-center gap-1.5 bg-forest-950/80 p-1.5 rounded-full border border-white/15 text-xs font-bold backdrop-blur-md">
+            <div className="flex w-full items-center gap-0.5 rounded-xl border border-white/15 bg-forest-950/80 p-1 text-[10px] font-bold backdrop-blur-md sm:w-auto sm:gap-1.5 sm:p-1.5 sm:text-xs">
               <button
                 onClick={() => setStep(1)}
-                className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+                className={`min-w-0 flex-1 rounded-xl px-1 py-2 transition-all cursor-pointer sm:flex-none sm:px-4 sm:py-1.5 ${
                   step === 1 
-                    ? 'bg-avocado-600 text-forest-950 shadow-md font-bold' 
+                    ? 'bg-avocado-400 text-forest-950 shadow-md font-bold'
                     : 'text-cream/60 hover:text-white'
                 }`}
               >
@@ -148,9 +148,9 @@ export const QuoteConfigurator: React.FC = () => {
               <button
                 onClick={() => selectedCalibres.length > 0 && setStep(2)}
                 disabled={selectedCalibres.length === 0}
-                className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+                className={`min-w-0 flex-1 rounded-xl px-1 py-2 transition-all cursor-pointer sm:flex-none sm:px-4 sm:py-1.5 ${
                   step === 2 
-                    ? 'bg-avocado-600 text-forest-950 shadow-md font-bold' 
+                    ? 'bg-avocado-400 text-forest-950 shadow-md font-bold'
                     : 'text-cream/60 hover:text-white disabled:opacity-40'
                 }`}
               >
@@ -158,9 +158,9 @@ export const QuoteConfigurator: React.FC = () => {
               </button>
               <button
                 onClick={() => setStep(3)}
-                className={`px-4 py-1.5 rounded-full transition-all cursor-pointer ${
+                className={`min-w-0 flex-1 rounded-xl px-1 py-2 transition-all cursor-pointer sm:flex-none sm:px-4 sm:py-1.5 ${
                   step === 3 
-                    ? 'bg-avocado-600 text-forest-950 shadow-md font-bold' 
+                    ? 'bg-avocado-400 text-forest-950 shadow-md font-bold'
                     : 'text-cream/60 hover:text-white'
                 }`}
               >
@@ -202,23 +202,23 @@ export const QuoteConfigurator: React.FC = () => {
           </div>
 
           <div className="p-5 rounded-2xl bg-forest-950/80 border border-white/10 text-left text-xs space-y-2.5 text-cream/80 font-mono">
-            <p className="flex justify-between">
+            <p className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-cream/50">Empresa:</span>
-              <strong className="text-cream">{formData.empresa || 'Empresa Importadora'}</strong>
+              <strong className="break-words text-cream">{formData.empresa || 'Empresa Importadora'}</strong>
             </p>
-            <p className="flex justify-between">
+            <p className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-cream/50">Destino / Puerto:</span>
-              <strong className="text-avocado-300">{formData.puertoDestino || formData.pais || 'No especificado'}</strong>
+              <strong className="break-words text-avocado-300">{formData.puertoDestino || formData.pais || 'No especificado'}</strong>
             </p>
-            <p className="flex justify-between">
+            <p className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-cream/50">Volumen configurado:</span>
               <strong className="text-cream">{cantidad} {volumenTipo} (~{pesoToneladas} TM Netas)</strong>
             </p>
-            <p className="flex justify-between">
+            <p className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-cream/50">Calibres seleccionados:</span>
               <strong className="text-cream">{selectedCalibres.join(', ')}</strong>
             </p>
-            <p className="flex justify-between">
+            <p className="flex flex-col gap-1 sm:flex-row sm:justify-between">
               <span className="text-cream/50">Condición Comercial:</span>
               <strong className="text-cream">{incoterm}</strong>
             </p>
@@ -233,7 +233,7 @@ export const QuoteConfigurator: React.FC = () => {
               href={`https://wa.me/51987654321?text=${encodeURIComponent(`Hola Agrícola Pilcococha, he configurado la cotización ${quoteCode} para ${cantidad} ${volumenTipo} de Palta Hass hacia ${formData.puertoDestino || formData.pais || 'nuestro puerto'}.`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl transition-all hover:scale-105"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm shadow-xl transition-all hover:scale-105"
             >
               <MessageCircle className="w-4 h-4" />
               <span>Contactar por WhatsApp Directo</span>
@@ -349,7 +349,7 @@ export const QuoteConfigurator: React.FC = () => {
                       type="button"
                       onClick={() => setStep(2)}
                       disabled={selectedCalibres.length === 0}
-                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm shadow-md transition-all disabled:opacity-50 cursor-pointer"
+                      className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm shadow-md transition-all disabled:opacity-50 cursor-pointer"
                     >
                       <span>Siguiente: Volumen y Logística</span>
                       <ArrowRight className="w-4 h-4" />
@@ -383,7 +383,7 @@ export const QuoteConfigurator: React.FC = () => {
                       onClick={() => setVolumenTipo('contenedores')}
                       className={`p-3.5 rounded-2xl border text-center font-bold text-xs transition-all cursor-pointer ${
                         volumenTipo === 'contenedores'
-                          ? 'bg-avocado-600 text-forest-950 border-avocado-400 shadow-md'
+                          ? 'bg-avocado-400 text-forest-950 border-avocado-400 shadow-md'
                           : 'bg-forest-950/60 border-white/10 text-cream/70 hover:bg-forest-900/60'
                       }`}
                     >
@@ -394,7 +394,7 @@ export const QuoteConfigurator: React.FC = () => {
                       onClick={() => setVolumenTipo('pallets')}
                       className={`p-3.5 rounded-2xl border text-center font-bold text-xs transition-all cursor-pointer ${
                         volumenTipo === 'pallets'
-                          ? 'bg-avocado-600 text-forest-950 border-avocado-400 shadow-md'
+                          ? 'bg-avocado-400 text-forest-950 border-avocado-400 shadow-md'
                           : 'bg-forest-950/60 border-white/10 text-cream/70 hover:bg-forest-900/60'
                       }`}
                     >
@@ -469,7 +469,7 @@ export const QuoteConfigurator: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStep(1)}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-cream text-xs font-semibold cursor-pointer border border-white/10"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-cream text-xs font-semibold cursor-pointer border border-white/10"
                     >
                       <ArrowLeft className="w-3.5 h-3.5" />
                       <span>Volver</span>
@@ -478,7 +478,7 @@ export const QuoteConfigurator: React.FC = () => {
                     <button
                       type="button"
                       onClick={() => setStep(3)}
-                      className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm shadow-md transition-all cursor-pointer"
+                      className="inline-flex items-center gap-2 px-7 py-3 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm shadow-md transition-all cursor-pointer"
                     >
                       <span>Siguiente: Datos de la Empresa</span>
                       <ArrowRight className="w-4 h-4" />
@@ -605,7 +605,7 @@ export const QuoteConfigurator: React.FC = () => {
                       <button
                         type="button"
                         onClick={() => setStep(2)}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-forest-900 hover:bg-forest-800 text-cream text-xs font-semibold border border-white/10 cursor-pointer"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-forest-900 hover:bg-forest-800 text-cream text-xs font-semibold border border-white/10 cursor-pointer"
                       >
                         <ArrowLeft className="w-3.5 h-3.5" />
                         <span>Volver</span>
@@ -614,7 +614,7 @@ export const QuoteConfigurator: React.FC = () => {
                       <button
                         type="submit"
                         disabled={isSubmitting}
-                        className="inline-flex items-center gap-3 px-8 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-black text-sm shadow-xl transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
+                        className="inline-flex items-center gap-3 px-8 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-black text-sm shadow-xl transition-all hover:scale-105 disabled:opacity-50 cursor-pointer"
                       >
                         {isSubmitting ? (
                           <>

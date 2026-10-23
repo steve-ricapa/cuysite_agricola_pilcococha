@@ -3,7 +3,11 @@ import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { SiteHeader } from './components/layout/SiteHeader'
 import { SiteFooter } from './components/layout/SiteFooter'
+import { FaqAssistant } from './components/layout/FaqAssistant'
+import { LanguageProvider } from './i18n/LanguageProvider'
 import { ScrollToTop } from './components/motion/ScrollToTop'
+import { ScrollEntrance } from './components/motion/ScrollEntrance'
+import { PageReady } from './components/layout/PageReady'
 import { HomePage } from './pages/HomePage'
 import { NuestraPaltaPage } from './pages/NuestraPaltaPage'
 import { AboutPage } from './pages/AboutPage'
@@ -42,14 +46,19 @@ const AnimatedRoutes: React.FC = () => {
 export const App: React.FC = () => {
   return (
     <BrowserRouter>
-      <ScrollToTop />
-      <div className="min-h-screen flex flex-col bg-transparent text-charcoal font-sans selection:bg-forest-800 selection:text-white transition-colors duration-700">
-        <SiteHeader />
-        <main className="flex-1 flex flex-col">
-          <AnimatedRoutes />
-        </main>
-        <SiteFooter />
-      </div>
+      <LanguageProvider>
+        <ScrollToTop />
+        <ScrollEntrance />
+        <PageReady />
+        <div className="min-h-screen flex flex-col bg-transparent text-charcoal font-sans selection:bg-forest-800 selection:text-white transition-colors duration-700">
+          <SiteHeader />
+          <main className="flex-1 flex flex-col">
+            <AnimatedRoutes />
+          </main>
+          <SiteFooter />
+          <FaqAssistant />
+        </div>
+      </LanguageProvider>
     </BrowserRouter>
   )
 }

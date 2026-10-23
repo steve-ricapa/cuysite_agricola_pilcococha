@@ -68,7 +68,7 @@ export const PaltaCarousel: React.FC = () => {
       onMouseLeave={() => setIsPaused(false)}
     >
       {/* Marco de Imagen Principal con Transición Ken-Burns & Crossfade */}
-      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[460px] sm:h-[490px] group">
+      <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[370px] sm:h-[490px] group">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide.id}
@@ -138,14 +138,14 @@ export const PaltaCarousel: React.FC = () => {
       </div>
 
       {/* Miniaturas Interactivas Estilo Switcher de Lujo */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="flex snap-x gap-3 overflow-x-auto pb-2 sm:grid sm:grid-cols-3 sm:overflow-visible sm:pb-0">
         {PALTA_SLIDES.map((slide, idx) => {
           const isCurrent = idx === activeIndex
           return (
             <button
               key={slide.id}
               onClick={() => setActiveIndex(idx)}
-              className={`group flex items-center gap-3 p-2.5 rounded-2xl text-left transition-all cursor-pointer ${
+              className={`group flex min-w-[165px] snap-start items-center gap-3 rounded-2xl p-2.5 text-left transition-all cursor-pointer sm:min-w-0 ${
                 isCurrent
                   ? 'liquid-glass-card-active ring-2 ring-avocado-400/90 shadow-md scale-[1.02]'
                   : 'liquid-glass-card hover:border-white/40'

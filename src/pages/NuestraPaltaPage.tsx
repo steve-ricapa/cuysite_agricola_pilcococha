@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import { motion, AnimatePresence } from 'motion/react'
 import { PaltaCarousel } from '@/components/sections/PaltaCarousel'
 import { ScrollColorTransition } from '@/components/motion/ScrollColorTransition'
 import { 
@@ -12,18 +11,9 @@ import {
   ShieldCheck, 
   ThermometerSnowflake, 
   Layers, 
-  Activity, 
   Radio, 
-  Truck,
   Award,
-  CheckCircle2,
-  MapPin,
-  Droplets,
-  Scale,
-  Globe2,
-  FileText,
-  Clock,
-  MessageSquare
+  CheckCircle2
 } from 'lucide-react'
 
 export interface CalibreItem {
@@ -99,7 +89,7 @@ export const NuestraPaltaPage: React.FC = () => {
 
   return (
     <div className="text-cream font-sans transition-colors duration-700 min-h-screen relative overflow-hidden">
-      {/* Transición suave de color de fondo al hacer scroll */}
+      {/* Indicador de avance al desplazarse */}
       <ScrollColorTransition showProgressBar={true} />
 
       {/* ========================================================================= */}
@@ -107,10 +97,10 @@ export const NuestraPaltaPage: React.FC = () => {
       {/* ========================================================================= */}
       <section 
         data-bg-color="#091E16" 
-        className="pt-6 sm:pt-8 md:pt-12 pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        className="pt-24 sm:pt-28 md:pt-[136px] pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
-          <div className="liquid-glass-panel rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+          <div className="liquid-glass-panel editorial-hero rounded-3xl p-0 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Esferas luminosas de fondo */}
             <div className="absolute -right-24 -bottom-24 w-[480px] h-[480px] bg-avocado-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -151,7 +141,7 @@ export const NuestraPaltaPage: React.FC = () => {
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <a
                     href="#calibres"
-                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0"
+                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     <span>Ver Cajones de Calibres</span>
                     <ArrowRight className="w-4 h-4" />
@@ -159,7 +149,7 @@ export const NuestraPaltaPage: React.FC = () => {
 
                   <a
                     href="#formatos"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <span>Formatos de Embarque</span>
                   </a>
@@ -210,8 +200,8 @@ export const NuestraPaltaPage: React.FC = () => {
       {/* ========================================================================= */}
       <section 
         id="caracteristicas"
-        data-bg-color="#0B241A" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#F7F4EA"
+        className="editorial-light editorial-open py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -273,7 +263,7 @@ export const NuestraPaltaPage: React.FC = () => {
               <div className="pt-4 flex flex-wrap gap-4">
                 <Link
                   to="/cotizar"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all shadow-lg hover:shadow-avocado-500/30 hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm tracking-wide transition-all shadow-lg hover:shadow-avocado-500/30 hover:-translate-y-0.5"
                 >
                   <span>Cotizar Programa de Palta</span>
                   <ArrowRight className="w-4 h-4" />
@@ -282,7 +272,7 @@ export const NuestraPaltaPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={handleDownloadPdf}
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all shadow-xs cursor-pointer hover:-translate-y-0.5"
+                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all shadow-xs cursor-pointer hover:-translate-y-0.5"
                 >
                   <Download className="w-4 h-4 text-avocado-300" />
                   <span>Ficha Técnica PDF (2026)</span>
@@ -545,11 +535,11 @@ export const NuestraPaltaPage: React.FC = () => {
             </p>
 
             {/* Selector interactivo de formato */}
-            <div className="mt-6 inline-flex p-1.5 rounded-full bg-forest-950/80 border border-white/15 backdrop-blur-md shadow-md gap-1.5">
+            <div className="mt-6 inline-flex p-1.5 rounded-xl bg-forest-950/80 border border-white/15 backdrop-blur-md shadow-md gap-1.5">
               <button
                 type="button"
                 onClick={() => setSelectedFormat('caja')}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   currentFormat === 'caja'
                     ? 'bg-avocado-500 text-forest-950 shadow-md scale-105 font-black'
                     : 'text-cream/70 hover:text-white'
@@ -561,7 +551,7 @@ export const NuestraPaltaPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFormat('master')}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   currentFormat === 'master'
                     ? 'bg-amber-600 text-white shadow-md scale-105 font-black'
                     : 'text-cream/70 hover:text-white'
@@ -573,7 +563,7 @@ export const NuestraPaltaPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFormat('reefer')}
-                className={`px-4 py-2 rounded-full text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                   currentFormat === 'reefer'
                     ? 'bg-cyan-600 text-white shadow-md scale-105 ring-1 ring-cyan-300 font-black'
                     : 'text-cream/70 hover:text-white'
@@ -1002,72 +992,6 @@ export const NuestraPaltaPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 5. MASTER CTA COMERCIAL B2B                                              */}
-      {/* ========================================================================= */}
-      <section 
-        data-bg-color="#071811" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="liquid-glass-panel rounded-3xl p-10 sm:p-14 lg:p-16 relative overflow-hidden border border-avocado-400/30">
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-96 h-96 bg-avocado-500/15 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative z-10 space-y-6">
-              <div className="section-badge mx-auto">
-                <span className="section-badge-dot" />
-                <span>Campaña Palta Hass Perú 2026</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream leading-tight">
-                ¿Listo para programar sus calibres y formatos de entrega?
-              </h2>
-
-              <p className="text-cream/85 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
-                Coordinemos volúmenes por calibre, especificaciones de rotulado de cajas y cronogramas de embarque marítimo FOB Callao o CIF en puerto de destino.
-              </p>
-
-              {/* Botones de Acción */}
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <Link
-                  to="/cotizar"
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-xl shadow-avocado-900/40 hover:shadow-avocado-500/50 hover:scale-105 active:scale-100"
-                >
-                  <span>Iniciar Cotización de Lote</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <button
-                  type="button"
-                  onClick={handleDownloadPdf}
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-100 cursor-pointer"
-                >
-                  <Download className="w-4 h-4 text-avocado-300" />
-                  <span>Descargar Ficha Técnica PDF</span>
-                </button>
-              </div>
-
-              {/* Reaseguros Comerciales */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-6 text-xs text-cream/70 border-t border-white/10 max-w-xl mx-auto">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Inspección Fitosanitaria SENASA</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Embalaje 100% Grado Exportación</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Contratos Comerciales Plurianuales</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }

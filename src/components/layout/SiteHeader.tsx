@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { Menu, X, ArrowRight, Globe } from 'lucide-react'
+import { useLanguage } from '@/i18n/languageContext'
 
 const navLinks = [
   { label: 'Inicio', href: '/' },
@@ -14,10 +15,9 @@ const navLinks = [
 export const SiteHeader: React.FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
-  const [currentLang, setCurrentLang] = useState<'ES' | 'EN'>('ES')
+  const { language: currentLang, setLanguage: setCurrentLang } = useLanguage()
   const location = useLocation()
-  const isHome = location.pathname === '/'
-  const isSolid = !isHome || scrolled
+  const isSolid = scrolled
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,31 +29,33 @@ export const SiteHeader: React.FC = () => {
 
   useEffect(() => {
     setMobileMenuOpen(false)
+    setScrolled(window.scrollY > 20)
   }, [location.pathname])
 
   return (
     <header 
-      className={`${
-        isHome ? 'fixed top-0 left-0 right-0' : 'sticky top-0'
-      } z-50 transition-all duration-500 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         isSolid 
-          ? 'bg-[#F7F4EA] shadow-md border-b border-charcoal/10 py-3 text-charcoal' 
+          ? 'bg-white/75 backdrop-blur-xl shadow-[0_4px_24px_rgba(14,44,32,0.10)] border-b border-white/10 py-3 text-charcoal'
           : 'bg-forest-950/40 backdrop-blur-xl border-b border-white/10 py-4 text-cream'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        {/* LOGO PRINCIPAL (SIN CARD) */}
-        <Link to="/" className="flex items-center group py-0.5">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between gap-2">
+        {/* Logo sobre una luz blanca intensa (sin recuadro) para mantener legible el nombre */}
+        <Link
+          to="/"
+          className="relative flex items-center group px-2 py-1 before:absolute before:-inset-x-4 before:-inset-y-2 before:rounded-full before:bg-white/90 before:blur-[7px] before:shadow-[0_0_26px_8px_rgba(255,255,255,0.65)] before:content-[''] before:pointer-events-none"
+        >
           <img 
             src="/images/fundo/logopilcococha.png" 
             alt="Agrícola Pilcococha - Palta Hass Peruana de Exportación" 
-            className="h-10 sm:h-12 md:h-14 w-auto object-contain select-none transition-transform duration-300 group-hover:scale-105"
+            className="relative h-10 sm:h-12 md:h-14 w-auto object-contain select-none transition-transform duration-300 group-hover:scale-105"
             loading="eager"
           />
         </Link>
 
         {/* NAVEGACIÓN DESKTOP */}
-        <nav className="hidden lg:flex items-center gap-7">
+        <nav className="hidden xl:flex items-center gap-5 2xl:gap-7">
           {navLinks.map((item) => {
             const isActive = location.pathname === item.href
             return (
@@ -78,16 +80,18 @@ export const SiteHeader: React.FC = () => {
         </nav>
 
         {/* ACCIONES LATERALES (ES/EN + BOTÓN COTIZAR) */}
-        <div className="hidden lg:flex items-center gap-4">
+        <div className="hidden xl:flex items-center gap-3">
           {/* Selector de idioma */}
           <button 
+            type="button"
             onClick={() => setCurrentLang(currentLang === 'ES' ? 'EN' : 'ES')}
-            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-full border transition-colors ${
+            className={`flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-xl border transition-colors ${
               isSolid 
                 ? 'border-charcoal/15 text-charcoal hover:border-forest-700 hover:text-forest-700' 
                 : 'border-white/20 text-cream hover:border-avocado-400 hover:text-avocado-400 bg-white/5'
             }`}
             title="Cambiar idioma"
+            aria-label={currentLang === 'ES' ? 'Cambiar a inglés' : 'Switch to Spanish'}
           >
             <Globe className="w-3.5 h-3.5" />
             <span>{currentLang}</span>
@@ -96,10 +100,10 @@ export const SiteHeader: React.FC = () => {
           {/* CTA Cotización */}
           <Link
             to="/cotizar"
-            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold tracking-wide transition-all shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0 ${
+            className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold tracking-wide transition-all shadow-sm hover:shadow hover:-translate-y-0.5 active:translate-y-0 ${
               isSolid 
                 ? 'bg-forest-800 hover:bg-forest-700 text-white' 
-                : 'bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold shadow-lg shadow-avocado-600/20'
+                : 'bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold shadow-lg shadow-avocado-600/20'
             }`}
           >
             <span>Cotizar</span>
@@ -108,21 +112,23 @@ export const SiteHeader: React.FC = () => {
         </div>
 
         {/* BOTÓN MENÚ MÓVIL */}
-        <div className="flex items-center gap-3 lg:hidden">
+        <div className="flex items-center gap-2 sm:gap-3 xl:hidden">
           <Link
             to="/cotizar"
-            className={`text-xs font-semibold px-3 py-1.5 rounded-full ${
-              isSolid ? 'bg-forest-800 text-white' : 'bg-avocado-600 text-forest-950 font-bold'
+            className={`text-xs font-semibold px-3 py-1.5 rounded-xl ${
+              isSolid ? 'bg-forest-800 text-white' : 'bg-avocado-400 text-forest-950 font-bold'
             }`}
           >
             Cotizar
           </Link>
-          <button 
+          <button
+            type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className={`p-2 rounded-lg transition-colors ${
               isSolid ? 'text-charcoal hover:bg-charcoal/10' : 'text-cream hover:bg-white/10'
             }`}
-            aria-label="Menú principal"
+            aria-label={mobileMenuOpen ? 'Cerrar menú principal' : 'Abrir menú principal'}
+            aria-expanded={mobileMenuOpen}
           >
             {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </button>
@@ -131,7 +137,7 @@ export const SiteHeader: React.FC = () => {
 
       {/* MENÚ DESPLEGABLE MÓVIL */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-charcoal/10 bg-cream px-6 py-6 flex flex-col gap-4 shadow-xl" style={{ backgroundColor: '#F7F4EA' }}>
+        <div className="xl:hidden max-h-[calc(100dvh-5rem)] overflow-y-auto border-t border-charcoal/10 bg-cream px-4 sm:px-6 py-6 flex flex-col gap-4 shadow-xl" style={{ backgroundColor: '#F7F4EA' }}>
           <nav className="flex flex-col gap-3">
             {navLinks.map((item) => (
               <Link
@@ -150,9 +156,11 @@ export const SiteHeader: React.FC = () => {
             ))}
           </nav>
 
-          <div className="pt-2 flex items-center justify-between">
+          <div className="pt-2 flex flex-wrap items-center justify-between gap-3">
             <button 
+              type="button"
               onClick={() => setCurrentLang(currentLang === 'ES' ? 'EN' : 'ES')}
+              aria-label={currentLang === 'ES' ? 'Cambiar a inglés' : 'Switch to Spanish'}
               className="flex items-center gap-2 text-sm font-medium text-charcoal"
             >
               <Globe className="w-4 h-4" />
@@ -161,7 +169,7 @@ export const SiteHeader: React.FC = () => {
             <Link
               to="/cotizar"
               onClick={() => setMobileMenuOpen(false)}
-              className="px-5 py-2 rounded-full bg-forest-800 text-white text-sm font-semibold"
+              className="px-5 py-2 rounded-xl bg-forest-800 text-white text-sm font-semibold"
             >
               Solicitar Cotización
             </Link>

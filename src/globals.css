@@ -12,7 +12,13 @@
   --color-forest-600: #2F684E;
   --color-forest-500: #3E8B67;
   --color-avocado-600: #6E8F3D;
+  --color-avocado-500: #87AA50;
   --color-avocado-400: #9AB55D;
+  --color-avocado-300: #B9D37C;
+  --color-avocado-900: #29401B;
+  --color-river: #0A9BC2;
+  --color-sun: #F4B52B;
+  --color-leaf: #4F9239;
   --color-cream: #F7F4EA;
   --color-sand: #EFEBDD;
   --color-earth-950: #1D150E;
@@ -28,6 +34,25 @@
 }
 
 @layer base {
+  html {
+    scrollbar-color: #fff var(--color-forest-950);
+    scrollbar-width: thin;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-forest-950);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #fff;
+    border-radius: 8px;
+  }
+
   html, body {
     font-family: var(--font-sans);
     background-color: var(--color-cream);
@@ -96,45 +121,6 @@
 
 .leaflet-popup-tip {
   background: #ffffff !important;
-}
-
-@keyframes routeFlow {
-  from {
-    stroke-dashoffset: 40;
-  }
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-.animate-route-flow {
-  animation: routeFlow 1.2s linear infinite;
-}
-
-@keyframes progressFill {
-  from {
-    width: 0%;
-  }
-  to {
-    width: 100%;
-  }
-}
-
-.animate-progress-fill {
-  animation-name: progressFill;
-}
-
-@keyframes conveyorScroll {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: 32px 0;
-  }
-}
-
-.animate-conveyor-scroll {
-  animation: conveyorScroll 1.2s linear infinite;
 }
 
 /* Partículas flotantes para formatos de exportación */
@@ -263,88 +249,13 @@
   animation: borderConicSpin 4.5s linear infinite;
 }
 
-@property --border-angle {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 0deg;
-}
-
-@keyframes rotateBorderAngle {
-  0% {
-    --border-angle: 0deg;
-  }
-  100% {
-    --border-angle: 360deg;
-  }
-}
-
-/* Efecto de borde luminoso animado para cards verdes / oscuras */
-.card-highlight-green {
-  position: relative;
-  border-radius: 1.5rem;
-  border: 2px solid transparent !important;
-  background-origin: border-box !important;
-  background-clip: padding-box, border-box !important;
-  background-image: 
-    linear-gradient(#0e2c20, #0e2c20), 
-    conic-gradient(from var(--border-angle, 0deg), #a4e347 0%, #173d2d 25%, #9ab55d 50%, #173d2d 75%, #a4e347 100%) !important;
-  animation: rotateBorderAngle 5s linear infinite;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), 0 0 16px rgba(164, 227, 71, 0.22) !important;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
-}
-
-.card-highlight-green:hover {
-  transform: translateY(-5px) scale(1.015);
-  box-shadow: 0 22px 50px -10px rgba(0, 0, 0, 0.85), 0 0 35px rgba(164, 227, 71, 0.45) !important;
-}
-
-/* Efecto de borde luminoso animado para cards blancas / claras */
-.card-highlight-white {
-  position: relative;
-  border-radius: 1.5rem;
-  border: 2px solid transparent !important;
-  background-origin: border-box !important;
-  background-clip: padding-box, border-box !important;
-  background-image: 
-    linear-gradient(#ffffff, #ffffff), 
-    conic-gradient(from var(--border-angle, 0deg), #173d2d 0%, #a4e347 25%, #2f684e 50%, #6e8f3d 75%, #173d2d 100%) !important;
-  animation: rotateBorderAngle 5s linear infinite;
-  box-shadow: 0 8px 25px -5px rgba(14, 44, 32, 0.08), 0 0 14px rgba(110, 143, 61, 0.16) !important;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
-}
-
-.card-highlight-white:hover {
-  transform: translateY(-5px) scale(1.015);
-  box-shadow: 0 20px 45px -10px rgba(14, 44, 32, 0.18), 0 0 28px rgba(110, 143, 61, 0.35) !important;
-}
-
-/* Efecto de borde luminoso animado para cards color arena / sand */
-.card-highlight-sand {
-  position: relative;
-  border-radius: 1.5rem;
-  border: 2px solid transparent !important;
-  background-origin: border-box !important;
-  background-clip: padding-box, border-box !important;
-  background-image: 
-    linear-gradient(#efebdd, #efebdd), 
-    conic-gradient(from var(--border-angle, 0deg), #173d2d 0%, #a4e347 25%, #2f684e 50%, #6e8f3d 75%, #173d2d 100%) !important;
-  animation: rotateBorderAngle 5s linear infinite;
-  box-shadow: 0 8px 25px -5px rgba(14, 44, 32, 0.08), 0 0 14px rgba(110, 143, 61, 0.16) !important;
-  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.3s ease, filter 0.3s ease !important;
-}
-
-.card-highlight-sand:hover {
-  transform: translateY(-5px) scale(1.015);
-  box-shadow: 0 20px 45px -10px rgba(14, 44, 32, 0.18), 0 0 28px rgba(110, 143, 61, 0.35) !important;
-}
-
 /* Overlay Matucana: Mitad izquierda con efecto agua/desenfoque gradual hacia la derecha */
 .matucana-blur-overlay {
   background: linear-gradient(
     90deg, 
-    rgba(10, 34, 24, 0.96) 0%, 
-    rgba(10, 34, 24, 0.90) 55%, 
-    rgba(10, 34, 24, 0.55) 80%, 
+    rgba(10, 34, 24, 0.82) 0%,
+    rgba(10, 34, 24, 0.76) 55%,
+    rgba(10, 34, 24, 0.42) 80%,
     rgba(10, 34, 24, 0.0) 100%
   );
   backdrop-filter: blur(24px) saturate(180%);
@@ -506,4 +417,271 @@
   background-color: #a4e347;
   box-shadow: 0 0 10px #a4e347, 0 0 18px rgba(164, 227, 71, 0.8);
   flex-shrink: 0;
+}
+
+main .grid > * {
+  min-width: 0;
+}
+
+main :is(h1, h2, h3, p) {
+  overflow-wrap: break-word;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-enter {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 650ms ease, transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-enter.scroll-enter-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Give every section its own opaque background. A page-wide scroll color
+   used to turn dark sections white near the light footer. */
+[data-bg-color="#0E2C20"] { background-color: #0E2C20; }
+[data-bg-color="#0B241A"] { background-color: #0B241A; }
+[data-bg-color="#0A2419"] { background-color: #0A2419; }
+[data-bg-color="#091E16"] { background-color: #091E16; }
+[data-bg-color="#081E15"] { background-color: #081E15; }
+[data-bg-color="#071811"] { background-color: #071811; }
+[data-bg-color="#0A2218"] { background-color: #0A2218; }
+[data-bg-color="#0D271D"] { background-color: #0D271D; }
+
+/* Editorial sections: let the photography, typography and actual content lead.
+   Keep framed surfaces only for functional controls and the contact form. */
+.editorial-light[data-bg-color="#F7F4EA"] { background-color: #F7F4EA; }
+.editorial-light[data-bg-color="#F0E7D6"] { background-color: #F0E7D6; }
+.editorial-light[data-bg-color="#E8EFDA"] { background-color: #E8EFDA; }
+.editorial-light[data-bg-color="#E7F0EE"] { background-color: #E7F0EE; }
+
+.editorial-light {
+  color: #20251F;
+}
+
+.editorial-light [class*="text-cream"]:not(.editorial-surface *) {
+  color: #283629 !important;
+}
+
+.editorial-light [class*="text-avocado-"]:not(.editorial-surface *) {
+  color: #35683D !important;
+}
+
+.editorial-light [class*="text-emerald-"]:not(.editorial-surface *) {
+  color: #246447 !important;
+}
+
+.editorial-light [class*="text-cyan-"]:not(.editorial-surface *) {
+  color: #087492 !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-avocado"]:not(.editorial-surface *) {
+  background-color: #366B43 !important;
+  color: #fff !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-avocado"]:not(.editorial-surface *) span {
+  color: inherit !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-emerald"]:not(.editorial-surface *) {
+  background: #246447 !important;
+  color: #fff !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-emerald"]:not(.editorial-surface *) span,
+.editorial-light :is(a, button)[class*="bg-emerald"]:not(.editorial-surface *) [class*="text-emerald-"] {
+  color: inherit !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-white/10"]:not(.editorial-surface *) {
+  background: transparent !important;
+  border-color: #366B43 !important;
+  color: #24523D !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-white/10"]:not(.editorial-surface *) span {
+  color: inherit !important;
+}
+
+/* Los CTA oscuros conservan texto claro sobre secciones editoriales claras. */
+.editorial-light :is(a, button)[class*="bg-forest"]:is([class*="text-cream"], [class*="text-avocado-"]) {
+  color: #fff !important;
+}
+
+.editorial-light :is(a, button)[class*="bg-forest"] :is([class*="text-cream"], [class*="text-avocado-"]) {
+  color: inherit !important;
+}
+
+/* Photo captions stay readable on their dark overlays, even in light sections. */
+.editorial-light .relative:has(> img) [class*="text-cream"] {
+  color: #fff !important;
+}
+
+.editorial-light .relative:has(> img) [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-light .matucana-card .liquid-glass-panel [class*="text-cream"],
+.editorial-light .liquid-glass-card-active [class*="text-cream"] {
+  color: #F7F4EA !important;
+}
+
+.editorial-light .matucana-card .liquid-glass-panel [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-light .liquid-glass-panel:not(.editorial-hero) [class*="text-cream"] {
+  color: #F7F4EA !important;
+}
+
+.editorial-light .liquid-glass-panel:not(.editorial-hero) [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-light .liquid-glass-card-active [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-light [class*="bg-forest-950"]:not([class*="/60"]):not(.editorial-surface *) {
+  color: #F7F4EA !important;
+}
+
+.editorial-light [class*="bg-forest-950"]:not([class*="/60"]) [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-light [class*="bg-forest-950"]:not([class*="/60"]) [class*="text-cream"] {
+  color: #F7F4EA !important;
+}
+
+.editorial-light .editorial-surface.liquid-glass-card {
+  background: #173D2D !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.editorial-light .editorial-surface [class*="text-cream"] {
+  color: #F7F4EA !important;
+}
+
+.editorial-light .editorial-surface [class*="text-avocado-"] {
+  color: #C6DC8C !important;
+}
+
+.editorial-hero.liquid-glass-panel {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.editorial-hero.liquid-glass-panel::before {
+  display: none;
+}
+
+.editorial-open .liquid-glass-card,
+.editorial-open .matucana-card {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  transform: none;
+}
+
+.editorial-open .liquid-glass-card:hover,
+.editorial-open .matucana-card:hover {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+.editorial-open .matucana-card::before {
+  display: none;
+}
+
+.editorial-open .matucana-card {
+  padding: 0 !important;
+}
+
+.editorial-open .liquid-glass-card {
+  padding: 0 !important;
+}
+
+.editorial-open .liquid-glass-card [class*="rounded-xl"][class*="bg-avocado"],
+.editorial-open .liquid-glass-card [class*="rounded-2xl"][class*="bg-avocado"] {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.editorial-open .section-badge {
+  background: none;
+  border: 0;
+  box-shadow: none;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  padding: 0;
+  color: #F4B52B;
+}
+
+.editorial-light .section-badge {
+  color: #35683D;
+}
+
+.editorial-open .section-badge-dot {
+  background-color: #F4B52B;
+  box-shadow: none;
+}
+
+.editorial-light .section-badge-dot {
+  background-color: #0A9BC2;
+}
+
+/* A slim editorial accent in place of yet another row of outlined tiles. */
+.editorial-open .grid > div.liquid-glass-card {
+  border-top: 2px solid #F4B52B !important;
+  padding-top: 1.25rem !important;
+}
+
+.editorial-light.editorial-open .grid > div.liquid-glass-card {
+  border-top-color: #0A9BC2 !important;
+}
+
+.editorial-open .editorial-surface.liquid-glass-card {
+  background: #173D2D !important;
+  padding: 2rem !important;
+  border-radius: 1.25rem;
+}
+
+#formulario-contacto.editorial-light [class*="bg-forest-950/60"] {
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid rgba(36, 82, 61, 0.2);
+  border-radius: 0;
+  padding: 0 0 1.25rem;
+}
+
+#formulario-contacto.editorial-light [class*="bg-forest-950/60"] [class*="rounded-xl"] {
+  background: transparent;
+  border: 0;
+}
+
+@media (min-width: 640px) {
+  .editorial-open .editorial-surface.liquid-glass-card {
+    padding: 2.5rem !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .editorial-open .liquid-glass-card,
+  .editorial-open .matucana-card {
+    transition: none;
+  }
 }

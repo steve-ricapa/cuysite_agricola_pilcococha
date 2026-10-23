@@ -91,7 +91,7 @@ export const FundoCarousel: React.FC = () => {
 
   return (
     <div 
-      className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[480px] sm:h-[500px] select-none group"
+      className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-forest-950 h-[370px] sm:h-[500px] select-none group"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
@@ -139,7 +139,7 @@ export const FundoCarousel: React.FC = () => {
       {/* Controles Laterales Anterior / Siguiente */}
       <button
         onClick={() => paginate(-1)}
-        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-forest-950/70 hover:bg-forest-900 text-cream backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-110 shadow-xl"
+        className="absolute left-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-forest-950/70 hover:bg-forest-900 text-cream backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 hover:scale-110 shadow-xl"
         aria-label="Diapositiva anterior"
       >
         <ChevronLeft className="w-6 h-6" />
@@ -147,7 +147,7 @@ export const FundoCarousel: React.FC = () => {
 
       <button
         onClick={() => paginate(1)}
-        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-forest-950/70 hover:bg-forest-900 text-cream backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 hover:scale-110 shadow-xl"
+        className="absolute right-4 top-1/2 -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-forest-950/70 hover:bg-forest-900 text-cream backdrop-blur-md border border-white/20 flex items-center justify-center transition-all opacity-100 sm:opacity-0 sm:group-hover:opacity-100 focus-visible:opacity-100 hover:scale-110 shadow-xl"
         aria-label="Diapositiva siguiente"
       >
         <ChevronRight className="w-6 h-6" />

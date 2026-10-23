@@ -1,7 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-import { motion } from 'motion/react'
-import { ProcessTimeline } from '@/components/sections/ProcessTimeline'
 import { ScrollColorTransition } from '@/components/motion/ScrollColorTransition'
 import { 
   ShieldCheck, 
@@ -13,23 +10,13 @@ import {
   Microscope,
   Sparkles,
   MapPin,
-  Check,
-  Download,
-  Activity,
-  Layers,
-  Globe2,
-  FileSpreadsheet,
-  MessageSquare
+  Globe2
 } from 'lucide-react'
 
 export const ProcesoCalidadPage: React.FC = () => {
-  const handleDownloadDossier = () => {
-    alert('Dossier de Certificaciones y Protocolos Fitosanitarios 2026 listo. Iniciando descarga de especificaciones SENASA y GlobalG.A.P.')
-  }
-
   return (
     <div className="text-cream font-sans transition-colors duration-700 min-h-screen relative overflow-hidden">
-      {/* Transición suave de color de fondo al hacer scroll */}
+      {/* Indicador de avance al desplazarse */}
       <ScrollColorTransition showProgressBar={true} />
 
       {/* ========================================================================= */}
@@ -37,10 +24,10 @@ export const ProcesoCalidadPage: React.FC = () => {
       {/* ========================================================================= */}
       <section 
         data-bg-color="#091E16" 
-        className="pt-6 sm:pt-8 md:pt-12 pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        className="pt-24 sm:pt-28 md:pt-[136px] pb-16 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
-          <div className="liquid-glass-panel rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
+          <div className="liquid-glass-panel editorial-hero rounded-3xl p-0 sm:p-8 lg:p-12 relative overflow-hidden">
             {/* Esferas luminosas de fondo */}
             <div className="absolute -right-24 -bottom-24 w-[480px] h-[480px] bg-avocado-500/15 rounded-full blur-3xl pointer-events-none" />
             <div className="absolute -top-20 right-1/4 w-[400px] h-[400px] bg-emerald-500/15 rounded-full blur-3xl pointer-events-none" />
@@ -80,18 +67,11 @@ export const ProcesoCalidadPage: React.FC = () => {
                 {/* Botones de Acción */}
                 <div className="flex flex-wrap items-center gap-4 pt-4">
                   <a
-                    href="#proceso"
-                    className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-lg shadow-avocado-900/30 hover:shadow-avocado-500/40 hover:-translate-y-0.5 active:translate-y-0"
-                  >
-                    <span>Explorar Cadena de Valor</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </a>
-
-                  <a
                     href="#certificaciones"
-                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5"
+                    className="inline-flex items-center gap-2 px-7 py-3.5 rounded-xl bg-avocado-400 hover:bg-avocado-300 text-forest-950 font-bold text-sm transition-all duration-300 hover:-translate-y-0.5"
                   >
                     <span>Ver Certificaciones</span>
+                    <ArrowRight className="w-4 h-4" />
                   </a>
                 </div>
               </div>
@@ -136,39 +116,12 @@ export const ProcesoCalidadPage: React.FC = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 2. FLUJO PRODUCTIVO INTERACTIVO (5 ETAPAS EN TIEMPO REAL)                */}
-      {/* ========================================================================= */}
-      <section 
-        id="proceso"
-        data-bg-color="#0D271D" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
-      >
-        <div className="max-w-[1720px] mx-auto">
-          <div className="text-center max-w-3xl mx-auto mb-14 space-y-4">
-            <div className="section-badge mx-auto">
-              <span className="section-badge-dot" />
-              <span>Trazabilidad en 5 Etapas Continuas</span>
-            </div>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black font-serif text-cream leading-tight">
-              Cadena de Valor Integral
-            </h2>
-            <p className="text-cream/80 text-base sm:text-lg font-light leading-relaxed">
-              Explore cada fase interactiva para conocer los protocolos agronómicos, calibración óptica y especificaciones de frío garantizadas.
-            </p>
-          </div>
-
-          {/* Componente de la Cinta Transportadora / Timeline */}
-          <ProcessTimeline />
-        </div>
-      </section>
-
-      {/* ========================================================================= */}
-      {/* 3. PROTOCOLOS DE INOCUIDAD, FITOSANIDAD Y CERTIFICACIONES               */}
+      {/* 2. PROTOCOLOS DE INOCUIDAD, FITOSANIDAD Y CERTIFICACIONES               */}
       {/* ========================================================================= */}
       <section 
         id="certificaciones"
-        data-bg-color="#0B241A" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
+        data-bg-color="#F0E7D6"
+        className="editorial-light editorial-open py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
       >
         <div className="max-w-[1720px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
@@ -232,17 +185,6 @@ export const ProcesoCalidadPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Botón de Descarga del Dossier */}
-              <div className="pt-2">
-                <button
-                  type="button"
-                  onClick={handleDownloadDossier}
-                  className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 cursor-pointer shadow-xs"
-                >
-                  <Download className="w-4 h-4 text-avocado-300" />
-                  <span>Descargar Dossier Fitosanitario (PDF)</span>
-                </button>
-              </div>
             </div>
 
             {/* Columna Derecha: Foto de Planta y Grid de 4 Certificaciones */}
@@ -338,71 +280,6 @@ export const ProcesoCalidadPage: React.FC = () => {
         </div>
       </section>
 
-      {/* ========================================================================= */}
-      {/* 4. MASTER CTA B2B                                                         */}
-      {/* ========================================================================= */}
-      <section 
-        data-bg-color="#071811" 
-        className="py-20 sm:py-24 px-6 sm:px-8 lg:px-12 xl:px-16 transition-colors duration-700 relative z-10"
-      >
-        <div className="max-w-5xl mx-auto text-center">
-          <div className="liquid-glass-panel rounded-3xl p-10 sm:p-14 lg:p-16 relative overflow-hidden border border-avocado-400/30">
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-96 h-96 bg-avocado-500/15 rounded-full blur-3xl" />
-            </div>
-
-            <div className="relative z-10 space-y-6">
-              <div className="section-badge mx-auto">
-                <span className="section-badge-dot" />
-                <span>Auditoría & Especificaciones B2B 2026</span>
-              </div>
-
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black font-serif text-cream leading-tight">
-                ¿Desea solicitar especificaciones técnicas para su mercado?
-              </h2>
-
-              <p className="text-cream/85 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed">
-                Nuestro equipo de calidad y comercio exterior coordinará el envío de análisis de materia seca, certificados de inocuidad y cronogramas de despacho.
-              </p>
-
-              {/* Botones de Acción */}
-              <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
-                <Link
-                  to="/cotizar"
-                  className="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-avocado-600 hover:bg-avocado-400 text-forest-950 font-bold text-sm tracking-wide transition-all duration-300 shadow-xl shadow-avocado-900/40 hover:shadow-avocado-500/50 hover:scale-105 active:scale-100"
-                >
-                  <span>Configurar Cotización B2B</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-
-                <Link
-                  to="/contacto"
-                  className="inline-flex items-center gap-2 px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-cream font-bold text-sm border border-white/25 hover:border-avocado-400/60 backdrop-blur-md transition-all duration-300 hover:scale-105 active:scale-100"
-                >
-                  <MessageSquare className="w-4 h-4" />
-                  <span>Contactar a Gerencia de Calidad</span>
-                </Link>
-              </div>
-
-              {/* Reaseguros Comerciales */}
-              <div className="flex flex-wrap items-center justify-center gap-6 pt-6 text-xs text-cream/70 border-t border-white/10 max-w-xl mx-auto">
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Reportes de Materia Seca Lote a Lote</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Auditorías Virtuales Disponibles</span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-avocado-400" />
-                  <span>Embarques FOB / CIF Callao</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
     </div>
   )
 }
