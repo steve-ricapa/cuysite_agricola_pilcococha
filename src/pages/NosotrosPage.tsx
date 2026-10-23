@@ -312,6 +312,7 @@ export const NosotrosPage: React.FC = () => {
                 <div className="aspect-16/10 rounded-2xl overflow-hidden mb-6 relative">
                   <img
                     src="/images/proceso/empaque.jpg"
+                    loading="lazy"
                     alt="Rigor de Calidad y Selección Óptica"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
@@ -355,6 +356,7 @@ export const NosotrosPage: React.FC = () => {
                 <div className="aspect-16/10 rounded-2xl overflow-hidden mb-6 relative">
                   <img
                     src="/images/fundo/team-field.jpg"
+                    loading="lazy"
                     alt="Alianzas y Trabajo en Equipo"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />
@@ -398,6 +400,7 @@ export const NosotrosPage: React.FC = () => {
                 <div className="aspect-16/10 rounded-2xl overflow-hidden mb-6 relative">
                   <img
                     src="/images/fundo/acopio-cosecha.jpg"
+                    loading="lazy"
                     alt="Acopio y Cuidado Agronómico"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                   />

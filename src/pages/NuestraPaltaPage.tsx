@@ -535,11 +535,11 @@ export const NuestraPaltaPage: React.FC = () => {
             </p>
 
             {/* Selector interactivo de formato */}
-            <div className="mt-6 inline-flex p-1.5 rounded-xl bg-forest-950/80 border border-white/15 backdrop-blur-md shadow-md gap-1.5">
+            <div className="mt-6 flex w-full flex-col p-1.5 rounded-xl bg-forest-950/80 border border-white/15 backdrop-blur-md shadow-md gap-1.5 sm:inline-flex sm:w-auto sm:flex-row">
               <button
                 type="button"
                 onClick={() => setSelectedFormat('caja')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                   currentFormat === 'caja'
                     ? 'bg-avocado-500 text-forest-950 shadow-md scale-105 font-black'
                     : 'text-cream/70 hover:text-white'
@@ -551,7 +551,7 @@ export const NuestraPaltaPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFormat('master')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                   currentFormat === 'master'
                     ? 'bg-amber-600 text-white shadow-md scale-105 font-black'
                     : 'text-cream/70 hover:text-white'
@@ -563,7 +563,7 @@ export const NuestraPaltaPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSelectedFormat('reefer')}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
+                className={`flex items-center justify-center gap-1.5 rounded-xl px-4 py-2 text-xs font-bold transition-all cursor-pointer ${
                   currentFormat === 'reefer'
                     ? 'bg-cyan-600 text-white shadow-md scale-105 ring-1 ring-cyan-300 font-black'
                     : 'text-cream/70 hover:text-white'

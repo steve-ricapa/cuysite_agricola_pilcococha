@@ -856,14 +856,11 @@ export const HomePage: React.FC = () => {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-forest-950/85 via-forest-950/20 to-transparent" />
 
-                    <div className="absolute top-3 left-3 flex gap-2 z-10">
+                    <div className="absolute top-3 left-3 right-3 flex flex-wrap gap-2 z-10">
                       <span className="matucana-pill matucana-pill-emerald shadow-lg">
                         <Sparkles className="w-3.5 h-3.5" />
                         Despachos Marítimos
                       </span>
-                    </div>
-
-                    <div className="absolute top-3 right-3 z-10">
                       <span className="matucana-pill shadow-lg">
                         <ThermometerSnowflake className="w-3.5 h-3.5 text-avocado-400" />
                         5°C Constante
